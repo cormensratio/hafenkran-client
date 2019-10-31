@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <label>File
+      <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
         <input type="file" id="file" @change="handleFileUpload"/>
+        <v-btn v-on:click="submitFile()">Submit</v-btn>
       </label>
-      <v-btn v-on:click="submitFile()">Submit</v-btn>
     </div>
   </div>
 </template>
@@ -58,6 +58,10 @@ export default {
 
 <style scoped>
   .container {
-    margin-top: 5%;
+    margin-top: 10%;
+    background-color: azure;
+  }
+  #uploadtext {
+    margin: auto;
   }
 </style>
