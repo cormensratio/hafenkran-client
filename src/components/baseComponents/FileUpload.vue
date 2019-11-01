@@ -1,15 +1,19 @@
 <template>
-  <div class="container">
-    <div class="a">
-      <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
-        <input type="file" ref="file" id="file" @change="getFile"/>
-        <v-btn v-on:click="submitFile()">Submit</v-btn>
-        <v-btn v-on:click="test">klick</v-btn>
-        <p v-if="timestamp!=null">Successfully uploaded at:{{timestamp}}</p><br>
-        <input id="name" ref="name" type="text" class="form-control"
-               placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
-      </label>
+  <div class="container" id="box">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend" id="uploadBox">
+        <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
+          <input type="file" ref="file" id="file" @change="getFile"/>
+          <v-btn v-on:click="submitFile()">Submit</v-btn>
+          <v-btn v-on:click="test">klick</v-btn>
+        </label>
+      </div>
     </div>
+    <p v-if="timestamp!=null">Successfully uploaded at: {{timestamp}}</p><br>
+    <label>You can rename your file here!
+      <input id="name" ref="name" type="text" class="form-control"
+             placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
+    </label>
   </div>
 </template>
 
@@ -70,10 +74,14 @@ export default {
 
 <style scoped>
   .container {
-    margin-top: 10%;
-    background-color: beige;
+    position: relative;
+    background-color: lightgray;
+    margin-top: 3%;
+    padding-left: 20%;
+    padding-right: 20%;
   }
-  #uploadtext {
+
+  #uploadBox {
     margin: auto;
   }
 </style>

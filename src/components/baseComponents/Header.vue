@@ -15,8 +15,8 @@ export default {
 <style scoped>
   .hafen-header {
     position: relative;
-    height: 100px;
-    width: 100px;
+    height: 120px;
+    width: 120px;
     padding-bottom: 5px;
     margin: auto;
     padding-top: 5px;
@@ -40,15 +40,15 @@ export default {
   }
   @keyframes scaling {
     50% {
-      transform: scale(3, 3);
+      transform: scale(2, 2);
     }
     100% {
-      transform: scale(2.5, 2.5);
+      transform: scale(1.5, 1.5);
     }
   }
   @keyframes leave {
     0% {
-      transform: scale(2.5, 2.5);
+      transform: scale(1.5, 1.5);
     }
     100% {
       transform: scale(1, 1);
