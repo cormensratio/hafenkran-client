@@ -6,7 +6,8 @@
         <v-btn v-on:click="submitFile()">Submit</v-btn>
         <v-btn v-on:click="test">klick</v-btn>
         <p v-if="timestamp!=null">Successfully uploaded at:{{timestamp}}</p><br>
-        <input id="name" ref="name" type="text" @change="updateFileName" :value="fileName"/>
+        <input id="name" ref="name" type="text" class="form-control"
+               placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
       </label>
     </div>
   </div>
@@ -29,9 +30,11 @@ export default {
   methods: {
     test() {
       console.log(this.datapack);
+      console.log(this.fileName);
     },
     updateFileName() {
-      this.fileName = this.$refs.name.name;
+      this.fileName = this.$refs.name.value;
+      this.datapack[2] = this.fileName;
     },
     getFile() {
       // create timestamp
@@ -39,12 +42,14 @@ export default {
       const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
       const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
       this.timestamp = `${date} ${time}`;
-      // fill datapack with data
-      this.file = this.$refs.file.files[0];
-      this.fileName = this.file.name;
-      this.datapack[0] = this.file;
-      this.datapack[1] = this.timestamp;
-      this.datapack[2] = this.fileName;
+      if (this.$refs.file.files[0] != null) {
+        // fill datapack with data
+        this.file = this.$refs.file.files[0];
+        this.fileName = this.file.name;
+        this.datapack[0] = this.file;
+        this.datapack[1] = this.timestamp;
+        this.datapack[2] = this.fileName;
+      }
       // debugging
       console.log(this.file);
       console.log(this.file.name);
