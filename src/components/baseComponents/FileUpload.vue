@@ -9,8 +9,8 @@
         </label>
       </div>
     </div>
-    <p v-if="timestamp!=null">Successfully uploaded at: {{timestamp}}</p><br>
-    <label>You can rename your file here!
+    <p v-if="timestamp!=null && correctFileType">Successfully uploaded at: {{timestamp}}</p><br>
+    <label v-if="fileName !== null && correctFileType">You can rename your file here!
       <input id="name" ref="name" type="text" class="form-control"
              placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
     </label>
@@ -29,12 +29,19 @@ export default {
       file: null,
       timestamp: null,
       fileName: null,
+      correctFileType: false,
     };
   },
   methods: {
     test() {
       console.log(this.datapack);
       console.log(this.fileName);
+      console.log(this.file.type);
+      if (this.file.type === 'application/zip' | this.file.type === 'application/x-zip-compressed') {
+        console.log('OK');
+      } else {
+        console.log('NOPE');
+      }
     },
     updateFileName() {
       this.fileName = this.$refs.name.value;
@@ -42,21 +49,29 @@ export default {
     },
     getFile() {
       // create timestamp
+      this.file = this.$refs.file.files[0];
       const today = new Date();
       const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
       const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
       this.timestamp = `${date} ${time}`;
-      if (this.$refs.file.files[0] != null) {
-        // fill datapack with data
-        this.file = this.$refs.file.files[0];
-        this.fileName = this.file.name;
-        this.datapack[0] = this.file;
-        this.datapack[1] = this.timestamp;
-        this.datapack[2] = this.fileName;
+      if (this.file != null) {
+        if (this.file.type === 'application/x-zip-compressed') {
+          // fill datapack with data
+          this.fileName = this.file.name;
+          this.datapack[0] = this.file;
+          this.datapack[1] = this.timestamp;
+          this.datapack[2] = this.fileName;
+          this.correctFileType = true;
+          console.log(this.file);
+          console.log(this.file.name);
+        } else {
+          console.log('file type not correct');
+          this.datapack[0] = null;
+          this.datapack[1] = null;
+          this.datapack[2] = null;
+          this.correctFileType = false;
+        }
       }
-      // debugging
-      console.log(this.file);
-      console.log(this.file.name);
     },
     submitFile() {
       const formData = new FormData();
