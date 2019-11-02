@@ -2,6 +2,7 @@
   <base-page>
     <template slot="body">
       <div>
+        <a href="/fileupload">Upload your File</a>
       </div>
     </template>
   </base-page>

@@ -1,28 +1,34 @@
 <template>
-  <div class="container" id="box">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend" id="uploadBox">
-        <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
-          <input type="file" ref="file" id="file" @change="getFile"/>
-          <v-btn v-on:click="submitFile()">Submit</v-btn>
-          <v-btn v-on:click="test">klick</v-btn>
+  <base-page>
+    <template slot="body">
+      <div class="container" id="box">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend" id="uploadBox">
+            <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
+              <input type="file" ref="file" id="file" @change="getFile"/>
+              <v-btn v-on:click="submitFile()">Submit</v-btn>
+              <v-btn v-on:click="test">klick</v-btn>
+            </label>
+          </div>
+        </div>
+        <p v-if="timestamp!=null && correctFileType">Successfully uploaded at: {{timestamp}}</p><br>
+        <label v-if="fileName !== null && correctFileType">You can rename your file here!
+          <input id="name" ref="name" type="text" class="form-control"
+                 placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
         </label>
       </div>
-    </div>
-    <p v-if="timestamp!=null && correctFileType">Successfully uploaded at: {{timestamp}}</p><br>
-    <label v-if="fileName !== null && correctFileType">You can rename your file here!
-      <input id="name" ref="name" type="text" class="form-control"
-             placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
-    </label>
-  </div>
+    </template>
+  </base-page>
 </template>
 
 <script>
 
 import ApiService from '../../service/ApiService';
+import BasePage from '../baseComponents/BasePage';
 
 export default {
   name: 'FileUpload',
+  components: { BasePage },
   data() {
     return {
       datapack: [{}],
@@ -37,6 +43,7 @@ export default {
       console.log(this.datapack);
       console.log(this.fileName);
       console.log(this.file.type);
+      // eslint-disable-next-line no-bitwise
       if (this.file.type === 'application/zip' | this.file.type === 'application/x-zip-compressed') {
         console.log('OK');
       } else {
