@@ -14,7 +14,7 @@ export default new Router({
       component: StartPage,
     },
     {
-      path: '/',
+      path: '/UploadedDockerfilesPage',
       name: 'UploadedDockerfilesPage',
       component: UploadedDockerfilesPage,
     },
