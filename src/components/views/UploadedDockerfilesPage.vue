@@ -2,10 +2,10 @@
   <base-page>
       <template slot="body">
         <div id="app">
-          <v-app id="inspire">
+          <v-app id="app">
             <v-data-table
               :headers="headers"
-              :items="uploadedDockerImages"
+              :items="uploadedDockerfiles"
               :items-per-page="10"
               class="elevation-1"
             ></v-data-table>
@@ -33,7 +33,7 @@ export default {
         { text: 'Uploaded', value: 'uploadDate' },
         { text: 'Size', value: 'size' },
       ],
-      uploadedDockerImages: [
+      uploadedDockerfiles: [
         {
           name: 'Pi calculation',
           uploadDate: 24,
