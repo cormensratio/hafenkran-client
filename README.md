@@ -4,6 +4,9 @@
 
 ## Build Setup
 
+To perform these actions, NodeJs needs to be installed on your machine:
+https://nodejs.org/en/
+
 ``` bash
 # install dependencies
 npm install
