@@ -2,7 +2,7 @@
   <base-page>
     <template slot="body">
       <div>
-        <v-btn href="/fileupload">Upload your File</v-btn>
+        <v-btn id="continue" href="/fileuploadpage">Upload your File</v-btn>
       </div>
     </template>
   </base-page>
@@ -20,5 +20,7 @@ export default {
 </script>
 
 <style scoped>
-
+  #continue {
+    margin-top: 4%;
+  }
 </style>

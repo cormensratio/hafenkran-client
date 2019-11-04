@@ -1,7 +1,7 @@
 <template>
  <div>
-   <div class="hafen-header">
-     <img src="../../assets/hafenkranlogo.svg" class="logo">
+   <div class="hafen-header .align-content-md-center">
+     <a href="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></a>
    </div>
  </div>
 </template>
@@ -17,9 +17,7 @@ export default {
     position: relative;
     height: 120px;
     width: 120px;
-    padding-bottom: 5px;
     margin: auto;
-    padding-top: 5px;
   }
   .logo {
     height: 100%;

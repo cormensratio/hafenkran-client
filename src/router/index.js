@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import StartPage from '../components/views/StartPage';
-import FileUpload from '../components/views/FileUpload';
+import FileUploadPage from '../components/views/FileUploadPage';
 
 Vue.use(Router);
 
@@ -14,9 +14,9 @@ export default new Router({
       component: StartPage,
     },
     {
-      path: '/fileupload',
-      name: 'FileUpload',
-      component: FileUpload,
+      path: '/fileuploadpage',
+      name: 'FileUploadPage',
+      component: FileUploadPage,
     },
   ],
 });
