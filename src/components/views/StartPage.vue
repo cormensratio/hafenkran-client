@@ -1,7 +1,7 @@
 <template>
   <base-page>
     <template slot="body">
-      <div>
+      <div id="upload">
         <v-btn href="/fileupload">Upload your File</v-btn>
       </div>
     </template>
@@ -20,5 +20,8 @@ export default {
 </script>
 
 <style scoped>
-
+  #upload {
+    position: relative;
+    padding-top: 4%;
+  }
 </style>

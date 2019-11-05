@@ -1,7 +1,7 @@
 <template>
  <div>
    <div class="hafen-header">
-     <img src="../../assets/hafenkranlogo.svg" class="logo">
+     <a href="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></a>
    </div>
  </div>
 </template>

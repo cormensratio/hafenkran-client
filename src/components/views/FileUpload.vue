@@ -5,17 +5,23 @@
         <div class="input-group mb-3">
           <div class="input-group-prepend" id="uploadBox">
             <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
-              <input type="file" ref="file" id="file" @change="getFile"/>
-              <v-btn v-on:click="submitFile()">Submit</v-btn>
-              <v-btn v-on:click="test">klick</v-btn>
+              <input type="file" ref="file" id="file"
+                     @change="getFile"/>
+              <div id="buttons">
+                <v-btn v-on:click="submitFile()">Submit</v-btn>
+                <v-btn v-on:click="test">klick</v-btn>
+              </div>
             </label>
           </div>
         </div>
-        <p v-if="timestamp!=null && correctFileType">Successfully uploaded at: {{timestamp}}</p><br>
-        <label v-if="fileName !== null && correctFileType">You can rename your file here!
-          <input id="name" ref="name" type="text" class="form-control"
-                 placeholder="<Your File>" @change="updateFileName" :value="fileName"/>
-        </label>
+        <div id="postUploadInfos">
+          <p v-if="timestamp!=null
+          && correctFileType">Successfully uploaded at: {{timestamp}}</p>
+          <label v-if="fileName !== null && correctFileType">You can rename your file here!
+            <input id="name" ref="name" type="text" class="form-control"
+                   @change="updateFileName"
+                   :value="fileName"/></label>
+        </div>
       </div>
     </template>
   </base-page>
@@ -31,11 +37,11 @@ export default {
   components: { BasePage },
   data() {
     return {
-      datapack: [{}],
       file: null,
       timestamp: null,
       fileName: null,
       correctFileType: false,
+      text: '',
     };
   },
   methods: {
@@ -54,36 +60,36 @@ export default {
       this.fileName = this.$refs.name.value;
       this.datapack[2] = this.fileName;
     },
-    getFile() {
-      // create timestamp
-      this.file = this.$refs.file.files[0];
+    createTimeStamp() {
       const today = new Date();
       const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
       const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
       this.timestamp = `${date} ${time}`;
+    },
+    getFile() {
+      this.file = this.$refs.file.files[0];
+      this.createTimeStamp();
       if (this.file != null) {
         if (this.file.type === 'application/x-zip-compressed') {
           // fill datapack with data
           this.fileName = this.file.name;
-          this.datapack[0] = this.file;
-          this.datapack[1] = this.timestamp;
-          this.datapack[2] = this.fileName;
           this.correctFileType = true;
           console.log(this.file);
           console.log(this.file.name);
         } else {
           console.log('file type not correct');
-          this.datapack[0] = null;
-          this.datapack[1] = null;
-          this.datapack[2] = null;
           this.correctFileType = false;
         }
       }
     },
     submitFile() {
       const formData = new FormData();
-      formData.append('datapack', this.datapack);
-      ApiService.doPost('/INSERT_ENDPOINT_HERE', formData, {
+      formData.append('data', {
+        file: this.file,
+        timestamp: this.timestamp,
+        filename: this.filename,
+      });
+      ApiService.doPost('https://webhook.site/a3c6a1cb-4fb4-4d81-b155-c77179b50311', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -98,12 +104,20 @@ export default {
   .container {
     position: relative;
     background-color: lightgray;
-    margin-top: 3%;
+    margin-top: 4%;
     padding-left: 20%;
     padding-right: 20%;
   }
 
   #uploadBox {
     margin: auto;
+  }
+
+  #buttons {
+    margin-top: 5%;
+    margin-bottom: -5%;
+  }
+  #postUploadInfos {
+    margin-top: 20%;
   }
 </style>
