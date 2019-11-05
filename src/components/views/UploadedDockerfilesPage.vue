@@ -2,13 +2,18 @@
   <base-page>
       <template slot="body">
         <div id="app">
-          <v-app id="app">
+          <v-app id="inspire">
             <v-data-table
               :headers="headers"
               :items="uploadedDockerfiles"
-              :items-per-page="10"
+              :items-per-page="5"
               class="elevation-1"
-            ></v-data-table>
+            ><template v-slot:items="props">
+              <td class="text-xs-left">{{ props.item.name }}</td>
+              <td class="text-xs-left">{{ props.item.uploadDate }}</td>
+              <td class="text-xs-left">{{ props.item.size }}</td>
+            </template>
+            </v-data-table>
           </v-app>
         </div>
       </template>
