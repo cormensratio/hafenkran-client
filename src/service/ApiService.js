@@ -1,15 +1,16 @@
 import axios from 'axios';
-import { isNil } from 'lodash';
+import { forEach } from 'lodash';
 
 export const configurations = {
   headers: {
-    'Access-Control-Allow-Origin': '*',
   },
 };
 
 export default class ApiService {
-  static doGet(url, params) {
-    return axios.get(url, params).then((response) => {
+  static doGet(url) {
+    const requestConfig = configurations;
+    requestConfig.headers.Authentication = localStorage.getItem('user');
+    return axios.get(url, requestConfig).then((response) => {
       console.log('Received response from: ', url);
       return response;
     })
@@ -18,11 +19,10 @@ export default class ApiService {
       });
   }
 
-  static doPost(url, params, config) {
-    let requestConfig = config;
-    if (isNil(config)) {
-      requestConfig = configurations;
-    }
+  static doPost(url, params, headers) {
+    const requestConfig = configurations;
+    requestConfig.headers.Authentication = localStorage.getItem('user');
+    //forEach(headers, h => requestConfig.headers.push(h));
 
     return axios.post(url, params, requestConfig).then((response) => {
       console.log('Received response from: ', url);
