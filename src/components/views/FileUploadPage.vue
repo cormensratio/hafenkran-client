@@ -4,24 +4,24 @@
       <div class="container" id="box">
         <div class="input-group mb-3">
           <div class="input-group-prepend" id="uploadBox">
-            <label><strong id="uploadtext">Upload your Dockerfile here:</strong><br>
+            <label><p class="h1" id="uploadtext">Upload your Dockerfile here:</p><br>
               <input type="file" ref="file" id="file"
                      @change="getFile"/>
-              <div id="buttons">
-                <v-btn v-on:click="submitFile()">Submit</v-btn>
-                <v-btn v-on:click="test">klick</v-btn>
-              </div>
             </label>
           </div>
         </div>
         <div id="postUploadInfos">
-          <p v-if="timestamp!=null
-          && correctFileType">Successfully uploaded at: {{timestamp}}</p>
-          <label v-if="fileName !== null && correctFileType">You can rename your file here!
-            <input id="name" ref="name" type="text" class="form-control"
-                   @change="updateFileName"
-                   :value="fileName"/></label>
+          <div class="alert alert-success" v-if="timestamp!=null
+          && correctFileType" >Successfully uploaded at: {{timestamp}}</div>
+          <div class="alert alert-danger" role="alert"
+               v-else-if="timestamp!=null">Incorrect filetype</div>
+          <div class="alert alert-primary" role="alert"
+               v-if="fileName !== null && correctFileType">You can rename your file here!
+            <input v-model="fileName" type="text" class="form-control"/></div>
         </div>
+        <div id="buttons">
+          <v-btn v-on:click="submitFile()">Submit</v-btn>
+          <v-btn v-on:click="test()">Klick</v-btn></div>
       </div>
     </template>
   </base-page>
@@ -46,19 +46,12 @@ export default {
   },
   methods: {
     test() {
-      console.log(this.datapack);
+      console.log(this.file);
       console.log(this.fileName);
-      console.log(this.file.type);
-      // eslint-disable-next-line no-bitwise
-      if (this.file.type === 'application/zip' | this.file.type === 'application/x-zip-compressed') {
-        console.log('OK');
-      } else {
-        console.log('NOPE');
-      }
+      console.log(this.timestamp);
     },
-    updateFileName() {
-      this.fileName = this.$refs.name.value;
-      this.datapack[2] = this.fileName;
+    createFileName() {
+      this.fileName = this.$refs.file.files[0].name;
     },
     createTimeStamp() {
       const today = new Date();
@@ -68,19 +61,18 @@ export default {
     },
     getFile() {
       this.file = this.$refs.file.files[0];
+      this.createFileName();
       this.createTimeStamp();
       if (this.file != null) {
         if (this.file.type === 'application/x-zip-compressed') {
           // fill datapack with data
-          this.fileName = this.file.name;
           this.correctFileType = true;
-          console.log(this.file);
-          console.log(this.file.name);
         } else {
           console.log('file type not correct');
           this.correctFileType = false;
         }
       }
+      console.log(this.correctFileType);
     },
     submitFile() {
       const formData = new FormData();
@@ -108,16 +100,10 @@ export default {
     padding-left: 20%;
     padding-right: 20%;
   }
-
   #uploadBox {
     margin: auto;
   }
-
   #buttons {
-    margin-top: 5%;
-    margin-bottom: -5%;
-  }
-  #postUploadInfos {
-    margin-top: 20%;
+    margin-bottom: 1%;
   }
 </style>

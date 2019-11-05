@@ -2,7 +2,7 @@
   <base-page>
     <template slot="body">
       <div id="upload">
-        <v-btn href="/fileupload">Upload your File</v-btn>
+        <v-btn href="/fileuploadpage">Upload your File</v-btn>
       </div>
     </template>
   </base-page>
