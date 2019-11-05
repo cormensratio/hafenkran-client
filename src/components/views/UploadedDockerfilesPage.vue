@@ -5,12 +5,12 @@
           <v-app id="inspire">
             <v-data-table
               :headers="headers"
-              :items="experiments"
+              :items="experimentsMock"
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
-              <td class="text-xs-left">{{ props.item.name }}</td>
-              <td class="text-xs-left">{{ props.item.uploadDate }}</td>
+              <td class="text-xs-left">{{ props.item.experimentName }}</td>
+              <td class="text-xs-left">{{ props.item.createdAt }}</td>
               <td class="text-xs-left">{{ props.item.size }}</td>
             </template>
             </v-data-table>
@@ -30,6 +30,7 @@ export default {
 
   computed: {
     ...mapGetters(['experiments']),
+    ...mapGetters(['experimentsMock']),
   },
   data() {
     return {
@@ -40,8 +41,8 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Uploaded', value: 'uploadDate' },
-        { text: 'Size', value: 'size' },
+        { text: 'Uploaded', value: 'uploadDate', sortable: true },
+        { text: 'Size', value: 'size', sortable: true },
       ],
       uploadedDockerfiles: [
         {
