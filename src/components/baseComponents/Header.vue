@@ -15,16 +15,16 @@ export default {
 <style scoped>
   .hafen-header {
     position: relative;
-    height: 120px;
-    width: 120px;
-    padding-bottom: 5px;
+    height: 130px;
+    width: 130px;
     margin: auto;
-    padding-top: 5px;
   }
   .logo {
     height: 100%;
     width: 100%;
-    transition: transform .1s;
+    margin: auto;
+    animation-name: shrink;
+    animation-duration: 1s;
   }
   .logo:hover{
     animation-name: scaling;
@@ -34,13 +34,13 @@ export default {
   }
   .logo:not(hover) {
     animation-name: leave;
-    animation-duration: 0.2s;
+    animation-duration: 1s;
     animation-fill-mode: forwards;
     -webkit-animation-fill-mode: forwards;
   }
   @keyframes scaling {
     50% {
-      transform: scale(2, 2);
+      transform: scale(1.75, 1.75);
     }
     100% {
       transform: scale(1.5, 1.5);
