@@ -56,12 +56,16 @@ export default {
       const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
       this.timestamp = `${date} ${time}`;
     },
+    // set client variables to the file, its name, and when i got uploaded
     getFile() {
       this.file = this.$refs.file.files[0];
       this.createFileName();
       this.createTimeStamp();
       if (this.file != null) {
-        if (this.file.type === 'application/x-zip-compressed') {
+        // had to use a single '|' in order for it to work,
+        // otherwise it allowed any filetype strangely
+        // eslint-disable-next-line no-bitwise
+        if (this.file.type === 'application/x-zip-compressed' | 'application/zip') {
           this.correctFileType = true;
         } else {
           this.correctFileType = false;
