@@ -5,7 +5,7 @@
           <v-app id="inspire">
             <v-data-table
               :headers="headers"
-              :items="uploadedDockerfiles"
+              :items="experiments"
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
@@ -21,11 +21,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
   name: 'UploadedDockerfilesPage',
   components: { BasePage },
+
+  computed: {
+    ...mapGetters(['experiments']),
+  },
   data() {
     return {
       headers: [
