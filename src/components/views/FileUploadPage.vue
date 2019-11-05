@@ -23,7 +23,9 @@
             <input v-model="fileName" type="text" class="form-control"/></div>
         </div>
         <div id="buttons">
-          <v-btn v-on:click="submitFile()">Submit</v-btn>
+          <v-btn v-if="correctFileType"
+                 class="btn btn-success" v-on:click="submitFile()">Submit</v-btn>
+          <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
         </div>
       </div>
     </template>

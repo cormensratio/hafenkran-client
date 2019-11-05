@@ -1,9 +1,6 @@
 <template>
   <base-page>
     <template slot="body">
-      <div id="upload">
-        <v-btn href="/fileuploadpage">Upload your File</v-btn>
-      </div>
     </template>
   </base-page>
 </template>
