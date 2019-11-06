@@ -4,7 +4,7 @@
         <div class="container">
             <v-data-table
               :headers="headers"
-              :items="experimentsMock"
+              :items="experiments"
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
@@ -28,7 +28,6 @@ export default {
 
   computed: {
     ...mapGetters(['experiments']),
-    ...mapGetters(['experimentsMock']),
   },
   data() {
     return {
