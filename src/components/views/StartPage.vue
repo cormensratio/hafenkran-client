@@ -1,7 +1,5 @@
 <template>
-  <base-page>
-    <template slot="body"></template>
-  </base-page>
+  <base-page></base-page>
 </template>
 
 <script>
