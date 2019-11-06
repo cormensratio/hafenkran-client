@@ -43,6 +43,9 @@ export default {
       ],
     };
   },
+  created() {
+    this.$store.dispatch('fetchExperiments');
+  },
 };
 </script>
 
