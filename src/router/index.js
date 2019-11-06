@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import StartPage from '../components/views/StartPage';
 import UploadedDockerfilesPage from '../components/views/UploadedDockerfilesPage';
+import FileUploadPage from '../components/views/FileUploadPage';
 
 Vue.use(Router);
 
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'StartPage',
       component: StartPage,
+    },
+    {
+      path: '/fileuploadpage',
+      name: 'FileUploadPage',
+      component: FileUploadPage,
     },
     {
       path: '/UploadedDockerfilesPage',
