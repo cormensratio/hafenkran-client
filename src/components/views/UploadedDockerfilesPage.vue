@@ -30,6 +30,20 @@ export default {
     ...mapGetters(['experiments']),
     ...mapGetters(['experimentsMock']),
   },
+  data() {
+    return {
+      headers: [
+        {
+          text: 'Dockerfile Name',
+          align: 'left',
+          sortable: true,
+          value: 'name',
+        },
+        { text: 'Uploaded', value: 'uploadDate', sortable: true },
+        { text: 'Size', value: 'size', sortable: true },
+      ],
+    };
+  },
 };
 </script>
 
