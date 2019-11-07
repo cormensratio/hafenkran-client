@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {

@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     getFileName() {
-      this.fileName = this.$refs.file.files[0].name;
+      return this.$refs.file.files[0].name;
     },
     getFile() {
       this.file = this.$refs.file.files[0];
