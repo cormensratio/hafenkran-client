@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import StartPage from '../components/views/StartPage';
-import UploadedDockerfilesPage from '../components/views/UploadedDockerfilesPage';
-import FileUploadPage from '../components/views/FileUploadPage';
+import ExperimentListPage from '../components/views/ExperimentListPage';
+import CreateExperimentPage from '../components/views/CreateExperimentPage';
 
 Vue.use(Router);
 
@@ -15,14 +15,14 @@ export default new Router({
       component: StartPage,
     },
     {
-      path: '/fileuploadpage',
-      name: 'FileUploadPage',
-      component: FileUploadPage,
+      path: '/newexperiment',
+      name: 'NewExperimentPage',
+      component: CreateExperimentPage,
     },
     {
-      path: '/UploadedDockerfilesPage',
-      name: 'UploadedDockerfilesPage',
-      component: UploadedDockerfilesPage,
+      path: '/experimentlist',
+      name: 'ExperimentListPage',
+      component: ExperimentListPage,
     },
   ],
 });

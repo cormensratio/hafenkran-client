@@ -7,26 +7,28 @@ export const configurations = {
   },
 };
 
+const serviceUrl = 'http://localhost:8080';
+
 export default class ApiService {
-  static doGet(url, params) {
-    return axios.get(url, params).then((response) => {
+  static async doGet(url, params) {
+    return axios.get(`${serviceUrl}${url}/`, params).then((resp) => {
       console.log('Received response from: ', url);
-      return response;
+      return resp.data;
     })
       .catch((error) => {
         console.log(`Response to ${url} failed: `, error);
       });
   }
 
-  static doPost(url, params, config) {
+  static async doPost(url, params, config) {
     let requestConfig = config;
     if (isNil(config)) {
       requestConfig = configurations;
     }
 
-    return axios.post(url, params, requestConfig).then((response) => {
+    return axios.post(`${serviceUrl}${url}`, params, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
-      return response;
+      return resp.data;
     })
       .catch((error) => {
         console.log(`Response to ${url} failed: `, error);

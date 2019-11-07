@@ -1,6 +1,17 @@
 <template>
   <base-page>
     <template slot="body">
+      <div class="container">
+        <h1 class="m-2">Welcome to Hafenkran</h1>
+        <div class="card">
+          <h3 class="card-title text-muted mt-2"> Please login </h3>
+          <div class="m-auto">
+            <v-btn class="m-3" :href="'/login'"> Login </v-btn>
+            <v-btn class="m-3" :href="'/register'"> Register </v-btn>
+            <v-btn class="m-3" :href="'/newexperiment'"> Test Upload </v-btn>
+          </div>
+        </div>
+      </div>
     </template>
   </base-page>
 </template>
@@ -17,8 +28,5 @@ export default {
 </script>
 
 <style scoped>
-  #upload {
-    position: relative;
-    padding-top: 4%;
-  }
+
 </style>
