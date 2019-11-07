@@ -1,19 +1,35 @@
-import ApiService from './ApiService';
+import axios from 'axios';
 
-const API_URL = 'http://localhost:8081/';
+const serviceUrl = 'http://localhost:8081';
+
+const configurations = {
+  headers: {
+  },
+};
 
 export default class AuthenticationService {
   static login(userName, password) {
-    ApiService.doPost(`${API_URL}/authenticate`, { username: userName, password })
-      .then((response) => {
-        if (response.data.jwtToken) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-        }
+    return axios.post(`${serviceUrl}/authenticate`, { username: userName, password }).then((resp) => {
+      if (resp.data.jwtToken) {
+        localStorage.setItem('user', JSON.stringify(resp.data));
+      }
+      return resp;
+    })
+      .catch((error) => {
+        console.log(error);
       });
   }
 
-  static register(userName, password) {
-    ApiService.doPost(`${API_URL}/signup`, { username: userName, password });
+  static async getMe() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    configurations.headers.Authorization = `Bearer ${user.jwtToken}`;
+    return axios.get(`${serviceUrl}/users/me`).then((resp) => {
+      console.log(resp);
+      return resp.data;
+    })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   static logout() {

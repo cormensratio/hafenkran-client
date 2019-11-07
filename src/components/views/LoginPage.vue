@@ -10,7 +10,9 @@
           </div>
           <v-btn @click="login">Login</v-btn>
         </div>
-        <v-btn @click="test">test me</v-btn>
+        <div>
+          <v-btn :href="'/protected'"> Go to protected resource </v-btn>
+        </div>
       </div>
     </template>
   </base-page>
@@ -19,7 +21,6 @@
 <script>
 import BasePage from '../baseComponents/BasePage';
 import AuthenticationService from '../../service/AuthenticationService';
-import ApiService from '../../service/ApiService';
 
 export default {
   name: 'LoginPage',
@@ -33,10 +34,6 @@ export default {
   methods: {
     login() {
       AuthenticationService.login(this.userName, this.password);
-    },
-    test() {
-      const test = ApiService.doGet("http://localhost:8081/users/me");
-      console.log("ME: ", test);
     },
   },
 };
