@@ -3,7 +3,7 @@
     <template slot="body">
       <div class="container">
         <div class="input-group mb-3">
-          <div class="input-group-prepend" id="uploadBox">
+          <div class="input-group-prepend m-auto">
             <label><p class="h1">Upload your Dockerfile here:</p><br>
               <input type="file" ref="file" id="file" @change="getFile"/>
             </label>
@@ -59,7 +59,7 @@ export default {
       }
     },
     submitFile() {
-      UploadService.uploadFile(this.file, this.fileName, this.timestamp);
+      UploadService.uploadFile(this.file, this.fileName);
       this.$router.push('/experimentlist');
     },
   },
@@ -73,9 +73,5 @@ export default {
     margin-top: 4%;
     padding-left: 20%;
     padding-right: 20%;
-  }
-
-  #uploadBox {
-    margin: auto;
   }
 </style>

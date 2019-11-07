@@ -18,13 +18,12 @@ export default class UploadService {
     return `${date} ${time}`;
   }
 
-  static uploadFile(file, filename, timestamp) {
+  static uploadFile(file, filename) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('name', filename);
-    formData.append('timestamp', timestamp);
 
-    ApiService.doPost('/experiments/uploadfile', formData,
+    ApiService.doPost('/experiments/uploadFile', formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },
       },
