@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
@@ -43,8 +43,11 @@ export default {
       ],
     };
   },
+  methods: {
+    ...mapActions(['fetchExperiments']),
+  },
   created() {
-    this.$store.dispatch('fetchExperiments');
+    this.fetchExperiments();
   },
 };
 </script>

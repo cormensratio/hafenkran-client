@@ -1,7 +1,7 @@
 <template>
   <base-page>
     <template slot="body">
-      <div class="container" id="box">
+      <div class="container">
         <div class="input-group mb-3">
           <div class="input-group-prepend" id="uploadBox">
             <label><p class="h1">Upload your Dockerfile here:</p><br>
@@ -32,9 +32,8 @@
 </template>
 
 <script>
-
-import ApiService from '../../service/ApiService';
 import BasePage from '../baseComponents/BasePage';
+import UploadService from '../../service/UploadService';
 
 export default {
   name: 'CreateExperimentPage',
@@ -48,43 +47,20 @@ export default {
     };
   },
   methods: {
-    createFileName() {
+    getFileName() {
       this.fileName = this.$refs.file.files[0].name;
     },
-    createTimeStamp() {
-      const today = new Date();
-      const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-      const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-      this.timestamp = `${date} ${time}`;
-    },
-    // set client variables to the file, its name, and when i got uploaded
     getFile() {
       this.file = this.$refs.file.files[0];
-      this.createFileName();
-      this.createTimeStamp();
-      if (this.file != null) {
-        // had to use a single '|' in order for it to work,
-        // otherwise it allowed any filetype strangely
-        // eslint-disable-next-line no-bitwise
-        if (this.file.type === 'application/x-zip-compressed' | 'application/zip') {
-          this.correctFileType = true;
-        } else {
-          this.correctFileType = false;
-        }
+      if (this.file !== null) {
+        this.fileName = this.getFileName();
+        this.correctFileType = UploadService.checkFileType(this.fileName);
+        this.timestamp = UploadService.getTimeStamp();
       }
     },
     submitFile() {
-      const formData = new FormData();
-      formData.append('data', {
-        file: this.file,
-        filename: this.filename,
-      });
-      ApiService.doPost('/experiment/uploadfile', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
-      );
+      UploadService.uploadFile(this.file, this.fileName, this.timestamp);
+      this.$router.push('/experimentlist');
     },
   },
 };
