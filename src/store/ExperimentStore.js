@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 const ExperimentStore = {
   state: {
-    experiments: [{ experimentName: 'TestDockerfile', createdAt: '01.01.20', size: '500' }],
+    experiments: [{ name: 'TestDockerfile', createdAt: '01.01.20', size: '500' }],
   },
   getters: {
     experiments: state => state.experiments,
