@@ -2,6 +2,7 @@
   <base-page>
       <template slot="body">
         <div class="container">
+          <div>
             <v-data-table
               :headers="headers"
               :items="experiments"
@@ -13,6 +14,10 @@
               <td class="text-xs-left">{{ props.item.size }}</td>
             </template>
             </v-data-table>
+          </div>
+          <div>
+            <v-btn :href="'/newexperiment'"> Upload File </v-btn>
+          </div>
         </div>
       </template>
   </base-page>
