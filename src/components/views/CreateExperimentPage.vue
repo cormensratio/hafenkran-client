@@ -4,13 +4,12 @@
       <div class="container" id="box">
         <div class="input-group mb-3">
           <div class="input-group-prepend" id="uploadBox">
-            <label><p class="h1" id="uploadtext">Upload your Dockerfile here:</p><br>
-              <input type="file" ref="file" id="file"
-                     @change="getFile"/>
+            <label><p class="h1">Upload your Dockerfile here:</p><br>
+              <input type="file" ref="file" id="file" @change="getFile"/>
             </label>
           </div>
         </div>
-        <div id="postUploadInfos">
+        <div class="mb-2">
           <div class="alert alert-success" v-if="timestamp!=null
           && correctFileType">Timestamp: {{timestamp}} <br>
             Your file is ready to be uploaded!
@@ -22,7 +21,7 @@
                v-if="fileName !== null && correctFileType">You can rename your file here!
             <input v-model="fileName" type="text" class="form-control"/></div>
         </div>
-        <div id="buttons">
+        <div>
           <v-btn v-if="correctFileType"
                  class="btn btn-success" v-on:click="submitFile()">Submit</v-btn>
           <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
@@ -38,7 +37,7 @@ import ApiService from '../../service/ApiService';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
-  name: 'FileUpload',
+  name: 'CreateExperimentPage',
   components: { BasePage },
   data() {
     return {
@@ -102,9 +101,5 @@ export default {
 
   #uploadBox {
     margin: auto;
-  }
-
-  #buttons {
-    margin-bottom: 1%;
   }
 </style>

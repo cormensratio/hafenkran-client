@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <base-page>
       <template slot="body">
         <div class="container">
@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
-  name: 'UploadedDockerfilesPage',
+  name: 'ExperimentListPage',
   components: { BasePage },
 
   computed: {
