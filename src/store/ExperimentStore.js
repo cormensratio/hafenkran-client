@@ -19,7 +19,7 @@ const ExperimentStore = {
   },
   actions: {
     async fetchExperiments({ commit }) {
-      const newExperiments = ApiService.doGet('/experiments');
+      const newExperiments = await ApiService.doGet('/experiments');
 
       if (!isNil(newExperiments)) {
         commit('updateExperiments', newExperiments);
