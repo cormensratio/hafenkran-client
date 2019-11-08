@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const serviceUrl = 'http://localhost:8081';
+const serviceUrl = 'http://localhost:8080';
 
 const configurations = {
   headers: {
@@ -31,7 +31,7 @@ export default class AuthenticationService {
   static async getMe() {
     const user = JSON.parse(localStorage.getItem('user'));
     configurations.headers.Authorization = `Bearer ${user.jwtToken}`;
-    return axios.get(`${serviceUrl}/users/me`).then((resp) => {
+    return axios.get(`${serviceUrl}/users/me`, configurations).then((resp) => {
       console.log(resp);
       return resp.data;
     })

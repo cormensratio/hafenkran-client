@@ -22,7 +22,7 @@ export default {
       this.$router.push('/login');
     },
     getUserName() {
-
+      AuthenticationService.getMe();
     },
   },
 };
