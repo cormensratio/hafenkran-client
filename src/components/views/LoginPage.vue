@@ -3,12 +3,12 @@
     <template slot="body">
       <div class="container">
         <div class="card">
-          <div class="card-title">Login to Hafenkran</div>
+          <h1 class="card-title text-muted mt-1">Login to Hafenkran</h1>
           <div class="m-5">
             <v-text-field label="Username" v-model="userName"></v-text-field>
             <v-text-field label="Password" v-model="password" :type="'password'"></v-text-field>
           </div>
-          <v-btn @click="login">Login</v-btn>
+          <v-btn class="login-button" @click="login">Login</v-btn>
         </div>
         <div>
           <v-btn :href="'/protected'"> Go to protected resource </v-btn>
@@ -40,5 +40,10 @@ export default {
 </script>
 
 <style scoped>
-
+.login-button {
+  width: 4%;
+  margin-bottom: 1%;
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>

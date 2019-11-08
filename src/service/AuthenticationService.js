@@ -8,16 +8,24 @@ const configurations = {
 };
 
 export default class AuthenticationService {
-  static login(userName, password) {
-    return axios.post(`${serviceUrl}/authenticate`, { username: userName, password }).then((resp) => {
+  static async login(userName, password) {
+    const loginSuccess = await axios.post(`${serviceUrl}/authenticate`, { username: userName, password }).then((resp) => {
       if (resp.data.jwtToken) {
         localStorage.setItem('user', JSON.stringify(resp.data));
+        return true;
       }
-      return resp;
+      return false;
     })
       .catch((error) => {
         console.log(error);
+        return false;
       });
+
+    if (loginSuccess) {
+      alert('Login Successful!');
+    } else {
+      alert('Login failed');
+    }
   }
 
   static async getMe() {

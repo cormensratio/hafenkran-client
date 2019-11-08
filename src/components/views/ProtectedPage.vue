@@ -21,6 +21,9 @@ export default {
       AuthenticationService.logout();
       this.$router.push('/login');
     },
+    getUserName() {
+
+    },
   },
 };
 </script>
