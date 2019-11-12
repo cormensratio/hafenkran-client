@@ -1,7 +1,7 @@
 <template>
  <div>
    <div class="hafen-header">
-     <a href="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></a>
+     <router-link to="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></router-link>
    </div>
  </div>
 </template>
