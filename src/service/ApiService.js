@@ -1,17 +1,20 @@
 import axios from 'axios';
+import { isNil, forOwn } from 'lodash';
+import store from '../store/store';
 
 export const configurations = {
   headers: {
   },
 };
 
-const serviceUrl = 'http://localhost:8081';
+const serviceUrl = 'http://192.168.16.188:8080';
 
 export default class ApiService {
-  static async doGet(url) {
+  static async doGet(url, additionalHeaders) {
     const requestConfig = configurations;
-    requestConfig.headers.Authentication = localStorage.getItem('user');
-    return axios.get(`${serviceUrl}${url}/`).then((resp) => {
+    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+
+    return axios.get(`${serviceUrl}${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
       return resp.data;
     })
@@ -20,11 +23,9 @@ export default class ApiService {
       });
   }
 
-  static async doPost(url, params) {
+  static async doPost(url, params, additionalHeaders) {
     const requestConfig = configurations;
-    requestConfig.headers.Authentication = localStorage.getItem('user');
-    // forEach(headers, h => requestConfig.headers.push(h));
-
+    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
 
     return axios.post(`${serviceUrl}${url}`, params, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
@@ -33,5 +34,21 @@ export default class ApiService {
       .catch((error) => {
         console.log(`Response to ${url} failed: `, error);
       });
+  }
+
+  static computeRequestHeaders(additionalHeaders) {
+    const loggedIn = store.getters.isAuthenticated;
+    const headers = {};
+    if (loggedIn) {
+      headers.Authorization = `Bearer ${store.getters.jwtToken}`;
+    }
+
+    if (!isNil(additionalHeaders)) {
+      forOwn(additionalHeaders, (value, key) => {
+        headers[key] = value;
+      });
+    }
+
+    return headers;
   }
 }
