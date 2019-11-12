@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
+import LoginPage from '../components/views/LoginPage';
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/experimentlist',
       name: 'ExperimentListPage',
       component: ExperimentListPage,
+    },
+    {
+      path: '/login',
+      name: 'LoginPage',
+      component: LoginPage,
     },
   ],
 });
