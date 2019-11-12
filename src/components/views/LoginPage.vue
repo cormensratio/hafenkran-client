@@ -59,7 +59,7 @@ export default {
 <style scoped>
   .button:hover {
     padding-right: 7%;
-    padding-left: 7%
+    padding-left: 7%;
   }
   #loginbox {
     margin-top: 5%;
