@@ -4,7 +4,7 @@ import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
-import ProtectedPage from '../components/views/ProtectedPage';
+import store from '../store/store';
 
 Vue.use(Router);
 
@@ -15,6 +15,9 @@ const router = new Router({
       path: '/',
       name: 'StartPage',
       component: StartPage,
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: '/login',
@@ -28,16 +31,14 @@ const router = new Router({
       path: '/newexperiment',
       name: 'NewExperimentPage',
       component: CreateExperimentPage,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/experimentlist',
       name: 'ExperimentListPage',
       component: ExperimentListPage,
-    },
-    {
-      path: '/protected',
-      name: 'Protected',
-      component: ProtectedPage,
       meta: {
         requiresAuth: true,
       },
@@ -46,18 +47,6 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (!to.meta) {
-    next();
-  }
-
-  if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('user');
-
-    if (!token) {
-      alert('You are not authenticated!');
-      next('/login');
-    }
-  }
   next();
 });
 
