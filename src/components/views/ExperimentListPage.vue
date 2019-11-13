@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
   <base-page>
       <template slot="body">
         <div class="container">
@@ -18,7 +18,17 @@
             </template>
               <template v-slot:expand="props">
                 <v-card flat>
-                  <v-card-text>Tada!</v-card-text>
+                  <v-card-actions>
+                    <v-layout row wrap  align-end>
+                      <v-flex xs3 offset-xs9 align-end>
+                    <b-button-group vertical>
+                    <v-btn color="blue">Reset</v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue">Start</v-btn>
+                    </b-button-group>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-actions>
                 </v-card>
               </template>
             </v-data-table>
@@ -36,6 +46,7 @@ import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
+
 export default {
   name: 'ExperimentListPage',
   components: { BasePage },
@@ -45,6 +56,7 @@ export default {
   },
   data() {
     return {
+      message: '',
       expand: true,
       headers: [
         {
