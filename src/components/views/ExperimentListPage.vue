@@ -6,13 +6,21 @@
             <v-data-table
               :headers="headers"
               :items="experiments"
+              :expand="expand"
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
+              <tr @click="props.expanded = !props.expanded">
               <td class="text-xs-left">{{ props.item.name }}</td>
               <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
               <td class="text-xs-left">{{ props.item.size }}</td>
+              </tr>
             </template>
+              <template v-slot:expand="props">
+                <v-card flat>
+                  <v-card-text>Tada!</v-card-text>
+                </v-card>
+              </template>
             </v-data-table>
           </div>
           <div>
@@ -37,6 +45,7 @@ export default {
   },
   data() {
     return {
+      expand: true,
       headers: [
         {
           text: 'Dockerfile Name',
