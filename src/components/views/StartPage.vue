@@ -7,7 +7,6 @@
           <h3 class="card-title text-muted mt-2"> Please login </h3>
           <div class="m-auto">
             <v-btn class="m-3" to="/login"> Login </v-btn>
-            <v-btn class="m-3" @click="changeTheme()"> Register </v-btn>
             <v-btn class="m-3" to="/newexperiment"> Test Upload </v-btn>
           </div>
         </div>
@@ -25,11 +24,6 @@ export default {
   name: 'StartPage',
   components: { BasePage, Header },
 };
-methods: {
-  changeTheme() {
-
-  }
-}
 </script>
 
 <style scoped>
