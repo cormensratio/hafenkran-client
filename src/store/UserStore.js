@@ -32,7 +32,6 @@ const UserStore = {
     async login({ state, commit, dispatch, getters }, { username, password }) {
       if (!getters.isAuthenticated) {
         const response = await ApiService.doPost('/authenticate', { username, password });
-        debugger;
         if (!isNil(response) && response.jwtToken) {
           console.log('Received Token from User-Service');
           commit('updateToken', response.jwtToken);
