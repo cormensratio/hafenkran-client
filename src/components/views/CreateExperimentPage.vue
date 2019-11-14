@@ -25,6 +25,7 @@
           <v-btn v-if="correctFileType"
                  class="btn btn-success" v-on:click="submitFile()">Submit</v-btn>
           <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
+          <v-btn to="/experimentlist">See experiments</v-btn>
         </div>
       </div>
     </template>
