@@ -21,7 +21,7 @@
               </v-card-text>
               <v-card-actions class="justify-center">
                 <v-btn large dark color="blue"
-                       @click="login()" class="button">Login
+                       @click="loginUser()" class="button">Login
                 </v-btn>
                 <v-btn large dark color="blue" to="/"
                        @click="testing()" class="button">Cancel
@@ -36,8 +36,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
-import AuthenticationService from '../../service/AuthenticationService';
 
 export default {
   name: 'LoginPage',
@@ -49,12 +49,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['login']),
+    loginUser() {
+      this.login({ username: this.userName, password: this.password });
+    },
     testing() {
       console.log(this.userName);
       console.log(this.password);
-    },
-    login() {
-      AuthenticationService.login(this.userName, this.password);
     },
   },
 };
