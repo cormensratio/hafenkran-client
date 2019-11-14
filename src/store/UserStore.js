@@ -31,7 +31,7 @@ const UserStore = {
   actions: {
     async login({ state, commit, dispatch, getters }, { username, password }) {
       if (!getters.isAuthenticated) {
-        const response = await ApiService.doPost('/authenticate', { username, password });
+        const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/authenticate`, { username, password });
         if (!isNil(response) && response.jwtToken) {
           console.log('Received Token from User-Service');
           commit('updateToken', response.jwtToken);
@@ -44,7 +44,7 @@ const UserStore = {
       return false;
     },
     async fetchUser({ commit, state }) {
-      const userInfo = await ApiService.doGet('/users/me');
+      const userInfo = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/users/me`);
 
       if (!isNil(userInfo)) {
         commit('updateUser', userInfo);

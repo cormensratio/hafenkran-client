@@ -7,14 +7,12 @@ export const configurations = {
   },
 };
 
-const serviceUrl = 'http://192.168.16.188:8080';
-
 export default class ApiService {
   static async doGet(url, additionalHeaders) {
     const requestConfig = configurations;
     requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
 
-    return axios.get(`${serviceUrl}${url}`, requestConfig).then((resp) => {
+    return axios.get(`${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
       return resp.data;
     })
@@ -27,7 +25,7 @@ export default class ApiService {
     const requestConfig = configurations;
     requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
 
-    return axios.post(`${serviceUrl}${url}`, params, requestConfig).then((resp) => {
+    return axios.post(`${url}`, params, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
       return resp.data;
     })

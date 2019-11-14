@@ -19,7 +19,7 @@ const ExperimentStore = {
   },
   actions: {
     async fetchExperiments({ commit }) {
-      const newExperiments = await ApiService.doGet('/experiments');
+      const newExperiments = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/experiments`);
 
       if (!isNil(newExperiments)) {
         commit('updateExperiments', newExperiments);
