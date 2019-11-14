@@ -6,9 +6,9 @@
         <div class="card">
           <h3 class="card-title text-muted mt-2"> Please login </h3>
           <div class="m-auto">
-            <v-btn class="m-3" :to="'/login'"> Login </v-btn>
-            <v-btn class="m-3" :href="'/register'"> Register </v-btn>
-            <v-btn class="m-3" :to="'/newexperiment'"> Test Upload </v-btn>
+            <v-btn class="m-3" to="'/login'"> Login </v-btn>
+            <v-btn class="m-3" to="'/newexperiment'"> Test Upload </v-btn>
+            <v-btn class="m-3" to="'/experimentlist'"> Go to experimentlist </v-btn>
           </div>
         </div>
       </div>
