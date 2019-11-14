@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isEqual, isNil } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import ApiService from '../service/ApiService';
 
 Vue.use(Vuex);
@@ -29,15 +29,18 @@ const UserStore = {
     },
   },
   actions: {
-    async login({ state, commit, dispatch }, { username, password }) {
-      const response = await ApiService.doPost('/authenticate', { username, password });
-      if (response.jwtToken) {
-        commit('updateToken', response.jwtToken);
-        localStorage.setItem('user', state.jwtToken);
-        dispatch('fetchUser');
-        return true;
+    async login({ state, commit, dispatch, getters }, { username, password }) {
+      if (!getters.isAuthenticated) {
+        const response = await ApiService.doPost('/authenticate', { username, password });
+        if (!isNil(response) && response.jwtToken) {
+          console.log('Received Token from User-Service');
+          commit('updateToken', response.jwtToken);
+          localStorage.setItem('user', state.jwtToken);
+          dispatch('fetchUser');
+          return true;
+        }
       }
-
+      console.log('Failed to login!');
       return false;
     },
     async fetchUser({ commit, state }) {
@@ -51,6 +54,7 @@ const UserStore = {
     logout({ dispatch }) {
       localStorage.removeItem('user');
       dispatch('clearStore');
+      console.log('Logged out');
     },
     clearStore({ commit }) {
       const emptyStore = {
@@ -61,6 +65,7 @@ const UserStore = {
         },
         jwtToken: '',
       };
+
       commit('updateUser', emptyStore.user);
       commit('updateToken', emptyStore.jwtToken);
     },
