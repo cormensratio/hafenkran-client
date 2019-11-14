@@ -24,9 +24,7 @@ export default class UploadService {
     formData.append('name', filename);
 
     ApiService.doPost('/experiments/uploadFile', formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
+      { 'Content-Type': 'multipart/form-data' },
     ).then(response => response);
   }
 }
