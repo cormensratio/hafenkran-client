@@ -8,7 +8,7 @@
           <div class="m-auto">
             <v-btn class="m-3" to="'/login'"> Login </v-btn>
             <v-btn class="m-3" to="'/newexperiment'"> Test Upload </v-btn>
-            <v-btn class="m-3" to="'/experimentlist'"> Go to experimentlist </v-btn>
+            <v-btn class="m-3" to="'/experimentlist'"> Go To Experimentlist </v-btn>
           </div>
         </div>
       </div>
