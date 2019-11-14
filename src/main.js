@@ -4,13 +4,13 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/src/jquery';
 import 'bootstrap/dist/js/bootstrap.min';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'vuetify/dist/vuetify.min.css';
 
 import Vue from 'vue';
 import App from './App';
 import router from './router';
 import store from './store/store';
-
-import('../node_modules/vuetify/dist/vuetify.min.css');
 
 
 Vue.config.productionTip = false;

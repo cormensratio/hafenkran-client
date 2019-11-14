@@ -7,7 +7,6 @@
 <script>
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { isNil } from 'lodash';
 import store from './store/store';
 
