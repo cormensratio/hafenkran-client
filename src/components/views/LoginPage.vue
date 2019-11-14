@@ -12,7 +12,7 @@
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form" v-model="valid" lazy-validation>
+                <v-form ref="form" lazy-validation>
                   <v-text-field v-model="userName"
                                 label="Name" prepend-icon="person"></v-text-field>
                   <v-text-field type="password" v-model="password"
@@ -20,13 +20,19 @@
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
-                <v-btn large dark color="blue"
-                       @click="loginUser()" class="button">Login
-                </v-btn>
-                <v-btn large dark color="blue" to="/"
-                       @click="testing()" class="button">Cancel
-                </v-btn>
+                <div>
+                  <v-btn large dark color="blue"
+                         @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large dark color="blue" to="/"
+                         @click="testing()" class="button">Cancel
+                  </v-btn>
+                </div>
               </v-card-actions>
+              <div class="bg-success" v-if="userLoggedIn">
+                <h2 class="white--text">You are logged in!</h2>
+                <v-btn to="/">Go to Main Menu</v-btn>
+              </div>
             </v-card>
           </v-flex>
         </v-layout>
@@ -46,6 +52,7 @@ export default {
     return {
       userName: '',
       password: '',
+      userLoggedIn: false,
     };
   },
   methods: {
