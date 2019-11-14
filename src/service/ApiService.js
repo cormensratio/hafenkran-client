@@ -7,7 +7,7 @@ export const configurations = {
   },
 };
 
-const serviceUrl = 'http://192.168.16.188:8080';
+const serviceUrl = 'http://localhost:8082';
 
 export default class ApiService {
   static async doGet(url, additionalHeaders) {
