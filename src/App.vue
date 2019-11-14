@@ -8,6 +8,8 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import { isNil } from 'lodash';
+import store from './store/store';
 
 Vue.use(Vuetify, {
   iconfont: 'md', // 'md' || 'mdi' || 'fa' || 'fa4'
@@ -15,6 +17,13 @@ Vue.use(Vuetify, {
 
 export default {
   name: 'App',
+  created() {
+    const token = localStorage.getItem('user');
+    if (!isNil(token)) {
+      store.commit('updateToken', token);
+      store.dispatch('fetchUser');
+    }
+  },
 };
 </script>
 
