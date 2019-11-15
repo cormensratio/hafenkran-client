@@ -1,5 +1,6 @@
-import ApiService from '../../../src/service/ApiService';
+// import ApiService from '../../../src/service/ApiService';
 
+/*
 const mockResponse = {
   response: {
     status: 200,
@@ -20,4 +21,4 @@ describe('doGet', () => {
     const responseData = ApiService.doGet('/test');
     expect(responseData).toEqual(mockResponse.data);
   });
-});
+}); */
