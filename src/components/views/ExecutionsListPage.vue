@@ -26,7 +26,9 @@
               <td class="text-xs-left">
                 {{ getTimeStamp(props.item.terminatedAt) ? null : 'Not terminated yet'}}
               </td>
-              <td class="text-xs-left">{{ props.item.status }}</td>
+              <td class="text-xs-left">
+                <status-cell :status="props.item.status"></status-cell>
+              </td>
             </template>
           </v-data-table>
         </v-card>
@@ -39,17 +41,18 @@
 import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
+import StatusCell from '../baseComponents/StatusCell';
 
 
 export default {
   name: 'ExecutionsListPage',
-  components: { BasePage },
+  components: { StatusCell, BasePage },
   mixins: [timeStampMixin],
   data() {
     return {
       search: '',
       headers: [
-        { text: 'Experiment', sortable: true, value: 'experimentName' },
+        { text: 'Experiment', sortable: true, value: 'id' },
         { text: 'Started at', sortable: true, value: 'startedAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'status', sortable: true, value: 'status' },
