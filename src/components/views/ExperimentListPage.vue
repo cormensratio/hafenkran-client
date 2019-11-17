@@ -16,7 +16,7 @@
             </v-data-table>
           </div>
           <div>
-            <v-btn :href="'/newexperiment'"> Upload File </v-btn>
+            <v-btn :to="'/newexperiment'"> Upload File </v-btn>
           </div>
         </div>
       </template>
