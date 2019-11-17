@@ -27,7 +27,7 @@ const ExecutionStore = {
   actions: {
     async fetchExecutionsByExperimentId({ commit }, experimentId) {
       if (!isNil(experimentId)) {
-        const executions = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/experiments/executions/6ebf4e82-6720-43f7-b1f3-6e8eb008605a`);
+        const executions = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/experiments/${experimentId}/executions`);
 
         if (!isNil(executions)) {
           commit('updateExecutions', executions);
