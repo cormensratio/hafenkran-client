@@ -4,6 +4,10 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
+            <div class="bg-success" v-if="isAuthenticated">
+              <h2 class="white--text">You are logged in!</h2>
+              <v-btn to="/">Go to Main Menu</v-btn>
+            </div>
             <v-card class="elevation-24 shaped">
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
@@ -29,10 +33,6 @@
                   </v-btn>
                 </div>
               </v-card-actions>
-              <div class="bg-success" v-if="userLoggedIn">
-                <h2 class="white--text">You are logged in!</h2>
-                <v-btn to="/">Go to Main Menu</v-btn>
-              </div>
             </v-card>
           </v-flex>
         </v-layout>
@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
+import UserStore from '../../store/UserStore';
 
 export default {
   name: 'LoginPage',
@@ -52,17 +52,12 @@ export default {
     return {
       userName: '',
       password: '',
-      userLoggedIn: false,
+      isAuthenticated: UserStore.getters.isAuthenticated(),
     };
   },
   methods: {
-    ...mapActions(['login']),
     loginUser() {
-      this.login({ username: this.userName, password: this.password });
-    },
-    testing() {
-      console.log(this.userName);
-      console.log(this.password);
+      UserStore.login(this.userName, this.password);
     },
   },
 };
