@@ -4,7 +4,6 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
-            <h1 v-if="isAuthenticated">You are logged in!</h1>
             <v-card class="elevation-24 shaped">
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
@@ -13,7 +12,7 @@
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form" v-model="valid" lazy-validation>
+                <v-form ref="form" lazy-validation>
                   <v-text-field v-model="userName"
                                 label="Name" prepend-icon="person"></v-text-field>
                   <v-text-field type="password" v-model="password"
@@ -21,13 +20,19 @@
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
-                <v-btn large dark color="blue"
-                       @click="login()" class="button">Login
-                </v-btn>
-                <v-btn large dark color="blue" to="/"
-                       class="button">Cancel
-                </v-btn>
+                <div>
+                  <v-btn large dark color="blue"
+                         @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large dark color="blue" to="/"
+                         @click="testing()" class="button">Cancel
+                  </v-btn>
+                </div>
               </v-card-actions>
+              <div class="bg-success" v-if="userLoggedIn">
+                <h2 class="white--text">You are logged in!</h2>
+                <v-btn to="/">Go to Main Menu</v-btn>
+              </div>
             </v-card>
           </v-flex>
         </v-layout>
@@ -37,8 +42,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
-import UserStore from '../../store/UserStore';
 
 export default {
   name: 'LoginPage',
@@ -47,12 +52,17 @@ export default {
     return {
       userName: '',
       password: '',
-      isAuthenticated: UserStore.getters.isAuthenticated(),
+      userLoggedIn: false,
     };
   },
   methods: {
-    login() {
-      UserStore.login(this.userName, this.password);
+    ...mapActions(['login']),
+    loginUser() {
+      this.login({ username: this.userName, password: this.password });
+    },
+    testing() {
+      console.log(this.userName);
+      console.log(this.password);
     },
   },
 };
