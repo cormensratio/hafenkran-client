@@ -47,7 +47,7 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Uploaded', value: 'uploadDate', sortable: true },
+        { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
     };
