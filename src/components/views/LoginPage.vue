@@ -4,6 +4,7 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
+            <h1 v-if="isAuthenticated">You are logged in!</h1>
             <v-card class="elevation-24 shaped">
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
@@ -24,7 +25,7 @@
                        @click="login()" class="button">Login
                 </v-btn>
                 <v-btn large dark color="blue" to="/"
-                       @click="testing()" class="button">Cancel
+                       class="button">Cancel
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -37,7 +38,7 @@
 
 <script>
 import BasePage from '../baseComponents/BasePage';
-import AuthenticationService from '../../service/AuthenticationService';
+import UserStore from '../../store/UserStore';
 
 export default {
   name: 'LoginPage',
@@ -46,15 +47,12 @@ export default {
     return {
       userName: '',
       password: '',
+      isAuthenticated: UserStore.getters.isAuthenticated(),
     };
   },
   methods: {
-    testing() {
-      console.log(this.userName);
-      console.log(this.password);
-    },
     login() {
-      AuthenticationService.login(this.userName, this.password);
+      UserStore.login(this.userName, this.password);
     },
   },
 };
