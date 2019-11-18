@@ -4,7 +4,7 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
-            <div class="bg-success" v-if="isAuthenticated">
+            <div class="bg-success" v-if="loggedIn">
               <h2 class="white--text">You are logged in!</h2>
               <v-btn to="/">Go to Main Menu</v-btn>
             </div>
@@ -42,8 +42,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
-import UserStore from '../../store/UserStore';
 
 export default {
   name: 'LoginPage',
@@ -52,12 +52,13 @@ export default {
     return {
       userName: '',
       password: '',
-      isAuthenticated: UserStore.getters.isAuthenticated(),
+      loggedIn: false,
     };
   },
   methods: {
+    ...mapActions(['login']),
     loginUser() {
-      UserStore.login(this.userName, this.password);
+      this.login({ username: this.userName, password: this.password });
     },
   },
 };
