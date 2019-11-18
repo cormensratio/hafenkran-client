@@ -51,6 +51,7 @@
           <div>
             <v-btn :href="'/newexperiment'"> Upload File </v-btn>
             <p>{{ executionDetails }}</p>
+            <v-btn :to="'/newexperiment'"> Upload File </v-btn>
           </div>
         </div>
       </template>
