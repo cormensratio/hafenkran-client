@@ -63,10 +63,10 @@ export default {
     ...mapGetters(['executions']),
   },
   methods: {
-    ...mapActions(['fetchExecutionsByExperimentId']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'getExperimentNameFromId']),
   },
   created() {
-    // this.fetchExecutionsByExperimentId();
+    this.fetchAllExecutionsOfUser();
   },
 };
 </script>

@@ -10,6 +10,7 @@ const ExecutionStore = {
     executions: [
       {
         id: '1',
+        experimentId: '1',
         startedAt: new Date(),
         terminatedAt: new Date(),
         status: 'running',
@@ -32,6 +33,13 @@ const ExecutionStore = {
         if (!isNil(executions)) {
           commit('updateExecutions', executions);
         }
+      }
+    },
+    async fetchAllExecutionsOfUser({ commit }) {
+      const executions = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/executions`);
+
+      if (!isNil(executions)) {
+        commit('updateExecutions', executions);
       }
     },
   },
