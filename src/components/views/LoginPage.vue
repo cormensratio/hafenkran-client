@@ -29,12 +29,14 @@
                          @click="loginUser()" class="button">Login
                   </v-btn>
                   <v-btn large dark color="blue" to="/"
-                         @click="testing()" class="button">Cancel
+                         class="button">Cancel
                   </v-btn>
+                  <v-btn @click="test()">test</v-btn>
                 </div>
               </v-card-actions>
               <v-sheet v-if="failedLogin"
-                       elevation="5" dark class="bg-danger">Login failed</v-sheet>
+                       elevation="5" dark class="bg-danger">Login failed
+              </v-sheet>
             </v-card>
           </v-flex>
         </v-layout>
@@ -46,7 +48,6 @@
 <script>
 import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
-import UserStore from '../../store/UserStore';
 
 export default {
   name: 'LoginPage',
@@ -62,13 +63,17 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginUser() {
-      this.login({ username: this.userName, password: this.password });
-      if (UserStore.state.user.id === '') {
-        this.failedLogin = true;
-        this.loggedIn = false;
-      } else {
-        this.failedLogin = false;
-        this.loggedIn = true;
+      if (!this.loggedIn) {
+        this.login({ username: this.userName, password: this.password })
+          .then((response) => {
+            if (response) {
+              this.failedLogin = false;
+              this.loggedIn = true;
+            } else {
+              this.failedLogin = true;
+              this.loggedIn = false;
+            }
+          });
       }
     },
   },
