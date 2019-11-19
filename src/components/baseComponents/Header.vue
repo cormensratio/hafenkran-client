@@ -1,14 +1,20 @@
 <template>
   <div class="page">
     <div class="float-left">
-      <v-btn @click="navigationToggled()">
-        Options
+      <v-btn class="mx-2" fab dark color="blue" @click="navigationToggled">
+        <v-icon >view_list</v-icon>
       </v-btn>
     </div>
     <div v-if="isAuthenticated" class="float-right">
-      <v-avatar color="blue" dark round>
+      <v-btn color="blue" round dark @click="logout()">
+        Logout
+      </v-btn>
+      <v-avatar class="mx-2" color="blue" dark round>
         <span class="white--text headline">{{ user.username.charAt(0) }}</span>
       </v-avatar>
+    </div>
+    <div v-else class="float-right">
+      <v-btn class="m-3" :to="'/login'"> Login </v-btn>
     </div>
     <div class="hafen-header">
       <router-link to="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></router-link>
@@ -17,22 +23,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Header',
-  data() {
-    return {
-      expanded: false,
-    };
-  },
   computed: {
     ...mapGetters(['isAuthenticated', 'user']),
   },
   methods: {
+    ...mapActions(['logout']),
     navigationToggled() {
-      this.expanded = !this.expanded;
-      this.$emit('navigationToggle', this.expanded);
+      this.$emit('navigationToggle');
     },
   },
 };

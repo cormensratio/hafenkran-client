@@ -1,6 +1,6 @@
 <template>
   <div class="all">
-    <Header @navigationToggle="toggleNavbar($event)"></Header>
+    <Header @navigationToggle="toggleNavbar()"></Header>
     <v-navigation-drawer absolute temporary v-model="showNavbar">
       <v-list class="pa-1">
         <v-list-tile avatar>
@@ -16,7 +16,9 @@
         <v-divider></v-divider>
         <v-list-tile
           v-for="item in items"
+          v-if="isAuthenticated"
           :key="item.title"
+          :to="item.path"
         >
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -43,17 +45,19 @@ export default {
     return {
       showNavbar: false,
       items: [
-        { title: 'See Experiments', icon: 'dashboard' },
-        { title: 'LogOut', icon: 'question_answer' },
+        { title: 'See Experiments', icon: 'storage', path: '/experimentlist' },
+        { title: 'See Executions', icon: 'storage', path: '/executionlist' },
+        { title: 'Upload Experiment', icon: 'add', path: '/newexperiment' },
+        { title: 'Back to Homepage', icon: 'home', path: '/' },
       ],
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
-    toggleNavbar(expanded) {
-      this.showNavbar = expanded;
+    toggleNavbar() {
+      this.showNavbar = !this.showNavbar;
     },
   },
 };
