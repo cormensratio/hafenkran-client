@@ -82,8 +82,4 @@ export default {
   .button:hover {
     color: silver;
   }
-
-  #loginbox {
-    margin-top: 5%;
-  }
 </style>
