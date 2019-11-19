@@ -22,9 +22,7 @@ export default {
 
     if (process.env.USE_TEST_TOKEN) {
       localStorage.removeItem('user');
-      debugger;
-      const Test = process.env.TEST_TOKEN;
-      localStorage.setItem('user', Test);
+      localStorage.setItem('user', process.env.TEST_TOKEN);
     }
 
     const token = localStorage.getItem('user');
