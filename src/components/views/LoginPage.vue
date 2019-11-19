@@ -1,25 +1,50 @@
 <template>
   <base-page>
     <template slot="body">
-      <div class="container">
-        <div class="card">
-          <h1 class="card-title text-muted mt-1">Login to Hafenkran</h1>
-          <div class="m-5">
-            <v-text-field label="Username" v-model="userName"></v-text-field>
-            <v-text-field label="Password" v-model="password" :type="'password'"></v-text-field>
-          </div>
-          <v-btn class="login-button" @click="loginUser()">Login</v-btn>
-        </div>
-        <div>
-          <v-btn :href="'/protected'"> Go to protected resource </v-btn>
-        </div>
-      </div>
+      <v-container fluid id="loginbox">
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md6>
+            <v-card class="elevation-24 shaped">
+              <v-spacer></v-spacer>
+              <v-toolbar dark color="blue">
+                <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
+                  You are already logged in {{ user.username }}!
+                </v-toolbar-title>
+                <v-toolbar-title v-else color="white" class="justify-center">
+                  Login to Hafenkran:
+                </v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form ref="form" lazy-validation>
+                  <v-text-field v-model="userName"
+                                label="Name" prepend-icon="person"></v-text-field>
+                  <v-text-field type="password" v-model="password"
+                                label="Password" prepend-icon="lock"></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <div>
+                  <v-btn large dark color="blue"
+                         @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large dark color="blue" to="/"
+                         class="button">Cancel
+                  </v-btn>
+                </div>
+              </v-card-actions>
+              <v-sheet v-if="failedLogin"
+                       elevation="5" dark class="bg-danger">Login failed
+              </v-sheet>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </template>
   </base-page>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
@@ -29,22 +54,36 @@ export default {
     return {
       userName: '',
       password: '',
+      failedLogin: false,
     };
+  },
+  computed: {
+    ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
     ...mapActions(['login']),
     loginUser() {
-      this.login({ username: this.userName, password: this.password });
+      if (!this.isAuthenticated) {
+        this.login({ username: this.userName, password: this.password })
+          .then((response) => {
+            if (response) {
+              this.failedLogin = false;
+              this.$router.push('/');
+            } else {
+              this.failedLogin = true;
+            }
+          });
+      }
     },
   },
 };
 </script>
-
 <style scoped>
-.login-button {
-  width: 4%;
-  margin-bottom: 1%;
-  margin-left: auto;
-  margin-right: auto;
-}
+  .button:hover {
+    color: silver;
+  }
+
+  #loginbox {
+    margin-top: 5%;
+  }
 </style>
