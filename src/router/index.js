@@ -5,6 +5,7 @@ import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
 import store from '../store/store';
+import ExecutionsListPage from '../components/views/ExecutionsListPage';
 
 Vue.use(Router);
 
@@ -43,11 +44,20 @@ const router = new Router({
         requiresAuth: true,
       },
     },
+    {
+      path: '/executionlist',
+      name: 'ExecutionsListPage',
+      component: ExecutionsListPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  if (process.env.AUTHENTICATION_REQUIRED) {
+  const test = process.env.AUTHENTICATION_REQUIRED;
+  if (test) {
     if (to.meta.requiresAuth) {
       if (!store.getters.isAuthenticated) {
         next('/login');

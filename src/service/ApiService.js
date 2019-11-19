@@ -2,15 +2,13 @@ import axios from 'axios';
 import { isNil, forOwn } from 'lodash';
 import store from '../store/store';
 
-export const configurations = {
-  headers: {
-  },
-};
-
 export default class ApiService {
-  static async doGet(url, additionalHeaders) {
-    const requestConfig = configurations;
-    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+  static async doGet(url, config) {
+    let requestConfig = { headers: {} };
+    if (!isNil(config)) {
+      requestConfig = config;
+    }
+    requestConfig.headers = this.computeRequestHeaders(config);
 
     return axios.get(`${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
@@ -22,7 +20,7 @@ export default class ApiService {
   }
 
   static async doPost(url, params, additionalHeaders) {
-    const requestConfig = configurations;
+    const requestConfig = {};
     requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
 
     return axios.post(`${url}`, params, requestConfig).then((resp) => {
@@ -34,15 +32,15 @@ export default class ApiService {
       });
   }
 
-  static computeRequestHeaders(additionalHeaders) {
+  static computeRequestHeaders(config) {
     const loggedIn = store.getters.isAuthenticated;
     const headers = {};
     if (loggedIn) {
       headers.Authorization = `Bearer ${store.getters.jwtToken}`;
     }
 
-    if (!isNil(additionalHeaders)) {
-      forOwn(additionalHeaders, (value, key) => {
+    if (!isNil(config) && !isNil(config.headers)) {
+      forOwn(config, (value, key) => {
         headers[key] = value;
       });
     }

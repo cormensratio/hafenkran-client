@@ -18,10 +18,21 @@ Vue.use(Vuetify, {
 export default {
   name: 'App',
   created() {
+    console.log('Initiating Hafenkran client application...');
+
+    if (process.env.USE_TEST_TOKEN) {
+      localStorage.removeItem('user');
+      localStorage.setItem('user', process.env.TEST_TOKEN);
+    }
+
     const token = localStorage.getItem('user');
     if (!isNil(token)) {
       store.commit('updateToken', token);
-      store.dispatch('fetchUser');
+      const success = store.dispatch('fetchUser');
+
+      if (success) {
+        store.dispatch('fetchExperiments');
+      }
     }
   },
 };
