@@ -3,25 +3,24 @@
     <v-container fluid>
       <v-btn color="blue" v-on:click="resetDetails()">Reset</v-btn>
       <v-spacer></v-spacer>
-      <v-btn color="blue">Start</v-btn>
-      <div>{{this.props}}</div>
+      <v-btn color="blue" v-on:click="startExperiment()">Start</v-btn>
       <v-combobox
-        v-model.number="selectedRam"
+        v-model="executionDetails.ram"
         :items="ramOptions"
         label="RAM"
         attach=""
         type='Number'
       ></v-combobox>
       <v-combobox
-        v-model.number="selectedCpu"
+        v-model="executionDetails.cpu"
         :items="cpuOptions"
         label="CPU Cores"
         attach=""
         type='Number'
       ></v-combobox>
       <v-combobox
-        v-model.number="selectedTime"
-        :items="timeOptions"
+        v-model="executionDetails.bookedTime"
+        :items="bookedTimeOptions"
         label="Time in Seconds"
         attach=""
         type='Number'
@@ -31,45 +30,40 @@
 </template>
 
 <script>
+import ExperimentStore from '../../store/ExperimentStore';
+
 export default {
   name: 'DropdownMenuVcard',
   data() {
     return {
-      selectedRam: 2,
       ramOptions: [2, 4, 6, 8,
       ],
-      selectedCpu: 4,
       cpuOptions: [2, 4, 6, 8,
       ],
-      selectedTime: 300,
-      timeOptions: [300, 360, 720, 920],
+      bookedTimeOptions: [300, 360, 720, 920,
+      ],
       executionDetails:
       {
         experimentId: '',
-        name: '',
         ram: 2,
         cpu: 4,
-        time: 300,
+        bookedTime: 300,
       },
     };
   },
+  props: { expId: String },
   methods: {
     resetDetails() {
-      this.selectedRam = 2;
-      this.selectedCpu = 4;
-      this.selectedTime = 300;
+      this.executionDetails.ram = 2;
+      this.executionDetails.cpu = 4;
+      this.executionDetails.bookedTime = 300;
+    },
+    startExperiment() {
+      ExperimentStore.actions.runExecution(this.executionDetails);
     },
   },
-  watch: {
-    selectedRam() {
-      this.executionDetails.ram = this.selectedRam;
-    },
-    selectedCpu() {
-      this.executionDetails.cpu = this.selectedCpu;
-    },
-    selectedTime() {
-      this.executionDetails.time = this.selectedTime;
-    },
+  created() {
+    this.executionDetails.experimentId = this.expId;
   },
 };
 
