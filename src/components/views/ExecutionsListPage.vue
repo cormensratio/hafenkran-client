@@ -19,7 +19,7 @@
             :search="search"
           >
             <template v-slot:items="props">
-              <td class="text-xs-left">{{ props.item.id }}</td>
+              <td class="text-xs-left">{{ props.item.executionName }}</td>
               <td class="text-xs-left">
                 {{ getTimeStamp(props.item.startedAt) ? null : 'Not started yet' }}
               </td>
@@ -28,6 +28,10 @@
               </td>
               <td class="text-xs-left">
                 <status-cell :status="props.item.status"></status-cell>
+              </td>
+              <td class="text-xs-left">
+                <v-btn>Details</v-btn>
+                <v-btn :disabled="props.item.status !== 'RUNNING'">Terminate</v-btn>
               </td>
             </template>
           </v-data-table>
@@ -52,10 +56,11 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'Experiment', sortable: true, value: 'id' },
+        { text: 'Experiment', sortable: true, value: 'executionName' },
         { text: 'Started at', sortable: true, value: 'startedAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
-        { text: 'status', sortable: true, value: 'status' },
+        { text: 'Status', sortable: true, value: 'status' },
+        { text: 'Actions', sortable: false },
       ],
     };
   },

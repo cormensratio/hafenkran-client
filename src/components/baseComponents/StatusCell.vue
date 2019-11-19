@@ -1,6 +1,6 @@
 <template>
   <div class="text-xs-left">
-    <v-chip :color="chipColor" >{{ status }}</v-chip>
+    <v-chip :color="chipColor" >{{ status ? '' : 'No Status' }}</v-chip>
   </div>
 </template>
 

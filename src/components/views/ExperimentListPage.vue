@@ -9,7 +9,7 @@
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
-              <tr @click="showExecutions(props.item)">
+              <tr>
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                 <td class="text-xs-left">{{ props.item.size }}</td>
