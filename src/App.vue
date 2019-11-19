@@ -8,14 +8,12 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import { ButtonGroupPlugin } from 'bootstrap-vue';
 import { isNil } from 'lodash';
 import store from './store/store';
 
 Vue.use(Vuetify, {
   iconfont: 'md', // 'md' || 'mdi' || 'fa' || 'fa4'
 });
-Vue.use(ButtonGroupPlugin);
 
 export default {
   name: 'App',
