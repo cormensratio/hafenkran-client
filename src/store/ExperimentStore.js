@@ -31,7 +31,6 @@ const ExperimentStore = {
     async runExecution(executionDetails) {
       const executionId = executionDetails.experimentId;
       await ApiService.doPost(`${serviceUrl}/experiments/${executionId}/execute`, executionDetails);
-      debugger;
     },
   },
 };
