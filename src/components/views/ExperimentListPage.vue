@@ -17,7 +17,7 @@
               </tr>
             </template>
               <template v-slot:expand="props">
-                <DropdownMenuVcard></DropdownMenuVcard>
+                <DropdownMenuVcard :expId="props.item.id"></DropdownMenuVcard>
               </template>
             </v-data-table>
           </div>
