@@ -4,15 +4,14 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
-            <div class="bg-success" v-if="loggedIn">
-              <h2 class="white--text">You are logged in!</h2>
-              <v-btn to="/">Go to Main Menu</v-btn>
-            </div>
             <v-card class="elevation-24 shaped">
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
-                <v-toolbar-title color="white"
-                                 class="justify-center">Login to Hafenkran
+                <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
+                  You are already logged in {{ user.username }}!
+                </v-toolbar-title>
+                <v-toolbar-title v-else color="white" class="justify-center">
+                  Login to Hafenkran:
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
@@ -31,7 +30,6 @@
                   <v-btn large dark color="blue" to="/"
                          class="button">Cancel
                   </v-btn>
-                  <v-btn @click="test()">test</v-btn>
                 </div>
               </v-card-actions>
               <v-sheet v-if="failedLogin"
@@ -46,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
@@ -56,22 +54,23 @@ export default {
     return {
       userName: '',
       password: '',
-      loggedIn: false,
       failedLogin: false,
     };
+  },
+  computed: {
+    ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
     ...mapActions(['login']),
     loginUser() {
-      if (!this.loggedIn) {
+      if (!this.isAuthenticated) {
         this.login({ username: this.userName, password: this.password })
           .then((response) => {
             if (response) {
               this.failedLogin = false;
-              this.loggedIn = true;
+              this.$router.push('/');
             } else {
               this.failedLogin = true;
-              this.loggedIn = false;
             }
           });
       }

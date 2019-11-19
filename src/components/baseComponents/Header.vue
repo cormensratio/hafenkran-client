@@ -40,7 +40,7 @@ export default {
   }
   @keyframes scaling {
     50% {
-      transform: scale(1.75, 1.75);
+      transform: scale(1.6, 1.6);
     }
     100% {
       transform: scale(1.5, 1.5);
