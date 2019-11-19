@@ -1,24 +1,30 @@
-// import ApiService from '../../../src/service/ApiService';
-
-/*
-const mockResponse = {
-  response: {
-    status: 200,
-    data: {
-      userId: 1,
-      experiment: 'test',
-    },
-  },
-};
+import axios from 'axios';
+import ApiService from '../../../src/service/ApiService';
 
 
-jest.mock('axios', () => ({
-  get: () => mockResponse,
-}));
+jest.mock('axios');
 
-describe('doGet', () => {
-  it('makes a request and returns the response data', () => {
-    const responseData = ApiService.doGet('/test');
-    expect(responseData).toEqual(mockResponse.data);
+const users = [{
+  userId: 1,
+  name: 'Rick',
+  experiment: 'test',
+}];
+const response = { data: users };
+
+describe('ApiService', () => {
+  it('makes a GET request and returns the response data', () => {
+    axios.get.mockResolvedValue(response);
+
+    ApiService.doGet().then((data) => {
+      expect(data).toEqual(response.data);
+    });
   });
-}); */
+
+  it('makes a POST request and returns the response data', () => {
+    axios.post.mockResolvedValue(response);
+
+    ApiService.doPost().then((data) => {
+      expect(data).toEqual(response.data);
+    });
+  });
+});
