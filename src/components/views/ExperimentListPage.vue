@@ -59,7 +59,7 @@ export default {
 
       if (!isNil(experimentId)) {
         await this.fetchExecutionsByExperimentId(experimentId);
-        this.$router.push('/executionsList');
+        this.$router.push('/executionlist');
       }
     },
   },

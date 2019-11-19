@@ -45,7 +45,7 @@ const router = new Router({
       },
     },
     {
-      path: '/executionsList',
+      path: '/executionlist',
       name: 'ExecutionsListPage',
       component: ExecutionsListPage,
       meta: {

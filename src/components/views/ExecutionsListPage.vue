@@ -21,17 +21,18 @@
             <template v-slot:items="props">
               <td class="text-xs-left">{{ props.item.executionName }}</td>
               <td class="text-xs-left">
-                {{ getTimeStamp(props.item.startedAt) ? null : 'Not started yet' }}
+                {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
               </td>
               <td class="text-xs-left">
-                {{ getTimeStamp(props.item.terminatedAt) ? null : 'Not terminated yet'}}
+                {{ getTimeStamp(props.item.terminatedAt) || 'Not terminated yet'}}
               </td>
               <td class="text-xs-left">
                 <status-cell :status="props.item.status"></status-cell>
               </td>
               <td class="text-xs-left">
                 <v-btn>Details</v-btn>
-                <v-btn :disabled="props.item.status !== 'RUNNING'">Terminate</v-btn>
+                <v-btn :disabled="props.item.status !== 'RUNNING'"
+                       @click="terminateExecution">Terminate</v-btn>
               </td>
             </template>
           </v-data-table>
@@ -57,7 +58,7 @@ export default {
       search: '',
       headers: [
         { text: 'Experiment', sortable: true, value: 'executionName' },
-        { text: 'Started at', sortable: true, value: 'startedAt' },
+        { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
         { text: 'Actions', sortable: false },
@@ -68,7 +69,7 @@ export default {
     ...mapGetters(['executions']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'getExperimentNameFromId']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'getExperimentNameFromId', 'terminateExecution']),
   },
   created() {
     this.fetchAllExecutionsOfUser();

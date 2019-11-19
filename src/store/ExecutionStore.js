@@ -12,7 +12,7 @@ const ExecutionStore = {
         id: '1',
         experimentId: '1',
         executionName: 'Test Execution',
-        startedAt: new Date(),
+        createdAt: new Date(),
         terminatedAt: new Date(),
         status: '',
         ram: '',
@@ -46,6 +46,9 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
+    // async terminateExecution() {
+
+    // },
   },
 };
 
