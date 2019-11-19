@@ -19,6 +19,14 @@ export default {
   name: 'App',
   created() {
     console.log('Initiating Hafenkran client application...');
+
+    if (process.env.USE_TEST_TOKEN) {
+      localStorage.removeItem('user');
+      debugger;
+      const Test = process.env.TEST_TOKEN;
+      localStorage.setItem('user', Test);
+    }
+
     const token = localStorage.getItem('user');
     if (!isNil(token)) {
       store.commit('updateToken', token);
