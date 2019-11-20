@@ -32,7 +32,7 @@
               <td class="text-xs-left">
                 <v-btn>Details</v-btn>
                 <v-btn :disabled="props.item.status !== 'RUNNING'"
-                       @click="terminateExecution">Terminate</v-btn>
+                       @click="terminateExecution(props.item.executionName)">Terminate</v-btn>
               </td>
             </template>
           </v-data-table>

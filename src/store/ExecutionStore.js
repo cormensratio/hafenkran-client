@@ -14,7 +14,7 @@ const ExecutionStore = {
         executionName: 'Test Execution',
         createdAt: new Date(),
         terminatedAt: new Date(),
-        status: '',
+        status: 'RUNNING',
         ram: '',
         cpu: '',
         bookedTime: '',
@@ -46,9 +46,17 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
-    // async terminateExecution() {
-
-    // },
+    async terminateExecution(experimentName) {
+      const executionId = this.fetchExecutionsByExperimentId(experimentName);
+      console.log(executionId);
+      ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
+        .then((response) => {
+          if (!isNil(response)) {
+            return true;
+          }
+          return false;
+        });
+    },
   },
 };
 
