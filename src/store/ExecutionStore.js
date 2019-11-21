@@ -46,9 +46,18 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
-    // async terminateExecution() {
-
-    // },
+    async terminateExecution({ dispatch }, executionId) {
+      if (!isNil(executionId)) {
+        ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
+          .then((response) => {
+            if (!isNil(response)) {
+              dispatch('fetchAllExecutionsOfUser');
+              return true;
+            }
+            return false;
+          });
+      }
+    },
   },
 };
 
