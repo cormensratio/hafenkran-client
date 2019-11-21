@@ -6,7 +6,7 @@
       </v-btn>
     </div>
     <div v-if="isAuthenticated" class="float-right">
-      <v-btn color="blue" round dark @click="logout()">
+      <v-btn color="blue" round dark @click="logoutUser()">
         Logout
       </v-btn>
       <v-avatar class="mx-2" color="blue" dark round>
@@ -34,6 +34,11 @@ export default {
     ...mapActions(['logout']),
     navigationToggled() {
       this.$emit('navigationToggle');
+    },
+    logoutUser() {
+      this.logout().then(() => {
+        this.$router.push('/');
+      });
     },
   },
 };

@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import ExperimentStore from '../../store/ExperimentStore';
 import { isNil } from 'lodash';
+import ExperimentStore from '../../store/ExperimentStore';
 
 export default {
   name: 'DropdownMenuVcard',
