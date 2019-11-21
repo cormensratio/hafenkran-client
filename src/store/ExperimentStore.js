@@ -12,7 +12,7 @@ const ExperimentStore = {
         name: 'TestDockerfile',
         createdAt: '01.01.20',
         size: '500',
-        userId: 1,
+        ownerId: 1,
       },
     ],
   },

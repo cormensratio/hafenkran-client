@@ -5,10 +5,10 @@
       <v-list class="pa-1">
         <v-list-tile avatar>
           <v-list-tile-avatar color="blue" dark round>
-            <span class="white--text headline">{{ user.username.charAt(0) }}</span>
+            <span class="white--text headline">{{ user.name.charAt(0) }}</span>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title> {{ user.username }} </v-list-tile-title>
+            <v-list-tile-title> {{ user.name }} </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

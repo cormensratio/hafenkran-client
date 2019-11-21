@@ -5,13 +5,15 @@ import ApiService from '../service/ApiService';
 
 Vue.use(Vuex);
 
+export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
+
 const ExecutionStore = {
   state: {
     executions: [
       {
         id: '1',
         experimentId: '1',
-        executionName: 'Test Execution',
+        name: 'Test Execution',
         createdAt: new Date(),
         terminatedAt: new Date(),
         status: '',
@@ -32,7 +34,7 @@ const ExecutionStore = {
   actions: {
     async fetchExecutionsByExperimentId({ commit }, experimentId) {
       if (!isNil(experimentId)) {
-        const executions = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/experiments/${experimentId}/executions`);
+        const executions = await ApiService.doGet(`${serviceUrl}/experiments/${experimentId}/executions`);
 
         if (!isNil(executions)) {
           commit('updateExecutions', executions);
@@ -40,7 +42,7 @@ const ExecutionStore = {
       }
     },
     async fetchAllExecutionsOfUser({ commit }) {
-      const executions = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/executions`);
+      const executions = await ApiService.doGet(`${serviceUrl}/executions`);
 
       if (!isNil(executions)) {
         commit('updateExecutions', executions);
@@ -48,7 +50,7 @@ const ExecutionStore = {
     },
     async terminateExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
-        ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
+        ApiService.doPost(`${serviceUrl}/executionCancel`, executionId)
           .then((response) => {
             if (!isNil(response)) {
               dispatch('fetchAllExecutionsOfUser');
