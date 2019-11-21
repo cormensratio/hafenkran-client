@@ -87,6 +87,7 @@ export default {
       this.executionDetails.bookedTime = this.bookedTimeOptions[0];
     },
     startExperiment() {
+      debugger;
       if (!isNil(this.executionDetails.experimentId)) {
         this.runExecution(this.executionDetails);
         this.$router.push('/executionlist');
@@ -96,7 +97,8 @@ export default {
       this.$emit('close');
     },
   },
-  updated() {
+  created() {
+    debugger;
     if (!isNil(this.experiment)) {
       this.executionDetails.experimentId = this.experiment.id;
     }

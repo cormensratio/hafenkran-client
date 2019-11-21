@@ -19,7 +19,7 @@
             :search="search"
           >
             <template v-slot:items="props">
-              <td class="text-xs-left">{{ props.item.executionName }}</td>
+              <td class="text-xs-left">{{ props.item.name }}</td>
               <td class="text-xs-left">
                 {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
               </td>
@@ -57,7 +57,7 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'Experiment', sortable: true, value: 'executionName' },
+        { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
