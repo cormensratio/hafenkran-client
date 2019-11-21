@@ -42,9 +42,19 @@ const ExperimentStore = {
       }
       return 'No name Found';
     },
-    async runExecution(executionDetails) {
-      const executionId = executionDetails.experimentId;
-      await ApiService.doPost(`${serviceUrl}/experiments/${executionId}/execute`, executionDetails);
+    async runExecution(state, executionDetails) {
+      debugger;
+      if (!isNil(executionDetails)) {
+        const executionId = executionDetails.experimentId;
+        await ApiService.doPost(`${serviceUrl}/experiments/${executionId}/execute`, executionDetails)
+          .then((response) => {
+            if (!isNil(response)) {
+              return true;
+            }
+            return false;
+          });
+      }
+      return false;
     },
   },
 };

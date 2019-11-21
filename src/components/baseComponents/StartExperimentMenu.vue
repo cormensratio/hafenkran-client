@@ -54,7 +54,7 @@
 </template>
 <script>
 import { isNil } from 'lodash';
-import ExperimentStore from '../../store/ExperimentStore';
+import { mapActions } from 'vuex';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 
 
@@ -80,14 +80,15 @@ export default {
   },
   props: { experiment: {} },
   methods: {
+    ...mapActions(['runExecution']),
     resetDetails() {
-      this.executionDetails.ram = 2;
-      this.executionDetails.cpu = 4;
-      this.executionDetails.bookedTime = 300;
+      this.executionDetails.ram = this.ramOptions[0];
+      this.executionDetails.cpu = this.cpuOptions[1];
+      this.executionDetails.bookedTime = this.bookedTimeOptions[0];
     },
     startExperiment() {
       if (!isNil(this.executionDetails.experimentId)) {
-        ExperimentStore.actions.runExecution(this.executionDetails);
+        this.runExecution(this.executionDetails);
         this.$router.push('/executionlist');
       }
     },
@@ -95,8 +96,10 @@ export default {
       this.$emit('close');
     },
   },
-  created() {
-    this.executionDetails.experimentId = this.expId;
+  updated() {
+    if (!isNil(this.experiment)) {
+      this.executionDetails.experimentId = this.experiment.id;
+    }
   },
 };
 
