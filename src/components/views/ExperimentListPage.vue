@@ -1,31 +1,48 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <base-page>
-      <template slot="body">
-        <div class="container">
-          <div>
-            <v-data-table
-              :headers="headers"
-              :items="experiments"
-              :expand="expand"
-              :items-per-page="5"
-              class="elevation-1"
-            ><template v-slot:items="props">
-              <tr @click="props.expanded = !props.expanded">
-              <td class="text-xs-left">{{ props.item.name }}</td>
-              <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-              <td class="text-xs-left">{{ props.item.size }}</td>
-              </tr>
-            </template>
-              <template v-slot:expand="props">
-                <DropdownMenuVcard :expId="props.item.id"></DropdownMenuVcard>
+    <template slot="body">
+      <v-container>
+        <v-layout column>
+          <v-flex>
+            <v-card>
+              <v-toolbar color="blue">
+                <span class="title">Experiments</span>
+                <v-spacer></v-spacer>
+                <v-text-field append-icon="search"
+                              label="Search"
+                              single-line
+                              v-model="search"
+                >
+                </v-text-field>
+              </v-toolbar>
+              <v-data-table
+                :headers="headers"
+                :items="experiments"
+                :search="search"
+                :items-per-page="5"
+                class="elevation-1"
+              ><template v-slot:items="props">
+                <tr @click="toggleDetails(props.item)">
+                  <td class="text-xs-left">{{ props.item.name }}</td>
+                  <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
+                  <td class="text-xs-left">{{ props.item.size }}</td>
+                </tr>
               </template>
-            </v-data-table>
-          </div>
-          <div>
-            <v-btn :to="'/newexperiment'"> Upload File </v-btn>
-          </div>
-        </div>
-      </template>
+              </v-data-table>
+            </v-card>
+          </v-flex>
+          <v-flex v-if="showDetails">
+            <div class="mt-4">
+              <StartExperimentMenu @close="closeDetails"
+                                   :experiment="selectedExperiment"
+              >
+              </StartExperimentMenu>
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <v-btn :to="'/newexperiment'">Upload File</v-btn>
+    </template>
   </base-page>
 </template>
 
@@ -34,12 +51,12 @@ import { mapActions, mapGetters } from 'vuex';
 import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
-import DropdownMenuVcard from '../baseComponents/DropdownMenuVcard';
+import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { BasePage, DropdownMenuVcard },
+  components: { BasePage, StartExperimentMenu },
   mixins: [timeStampMixin],
 
   computed: {
@@ -47,7 +64,9 @@ export default {
   },
   data() {
     return {
-      expand: true,
+      search: '',
+      showDetails: false,
+      selectedExperiment: {},
       headers: [
         {
           text: 'Dockerfile Name',
@@ -69,6 +88,13 @@ export default {
         await this.fetchExecutionsByExperimentId(experimentId);
         this.$router.push('/executionlist');
       }
+    },
+    closeDetails() {
+      this.showDetails = false;
+    },
+    toggleDetails(experiment) {
+      this.showDetails = true;
+      this.selectedExperiment = experiment;
     },
   },
   created() {
