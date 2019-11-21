@@ -1,16 +1,23 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil } from 'lodash';
+import { isNil, find } from 'lodash';
 import ApiService from '../service/ApiService';
 
-const serviceUrl = process.env.CLUSTER_SERVICE_URL;
+export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 
 
 Vue.use(Vuex);
 
 const ExperimentStore = {
   state: {
-    experiments: [{ userId: 'c8aef4f2-92f8-47eb-bbe9-bd457f91f0e6', name: 'TestDockerfile', createdAt: '01.01.20', size: '500' }],
+    experiments: [
+      { id: 1,
+        name: 'TestDockerfile',
+        createdAt: '01.01.20',
+        size: '500',
+        userId: 1,
+      },
+    ],
   },
   getters: {
     experiments: state => state.experiments,
@@ -22,11 +29,18 @@ const ExperimentStore = {
   },
   actions: {
     async fetchExperiments({ commit }) {
-      const newExperiments = await ApiService.doGet(`${process.env.CLUSTER_SERVICE_URL}/experiments`);
+      const newExperiments = await ApiService.doGet(`${serviceUrl}/experiments`);
 
       if (!isNil(newExperiments)) {
         commit('updateExperiments', newExperiments);
       }
+    },
+    async getExperimentNameFromId({ state }, id) {
+      const experiment = find(state.experiments, ['experimentId', id]);
+      if (!isNil(experiment)) {
+        return experiment.name;
+      }
+      return 'No name Found';
     },
     async runExecution(executionDetails) {
       const executionId = executionDetails.experimentId;

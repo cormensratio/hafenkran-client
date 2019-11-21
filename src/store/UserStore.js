@@ -43,13 +43,16 @@ const UserStore = {
       console.log('Failed to login!');
       return false;
     },
-    async fetchUser({ commit, state }) {
+    async fetchUser({ commit }) {
       const userInfo = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/users/me`);
 
       if (!isNil(userInfo)) {
         commit('updateUser', userInfo);
-        console.log(state.user);
+        console.log('Successfully fetched user information');
+        return true;
       }
+
+      return false;
     },
     logout({ dispatch }) {
       localStorage.removeItem('user');

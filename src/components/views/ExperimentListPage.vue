@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <base-page>
       <template slot="body">
         <div class="container">
@@ -30,22 +30,23 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
+import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
+import { timeStampMixin } from '../../mixins/TimeStamp';
 import DropdownMenuVcard from '../baseComponents/DropdownMenuVcard';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { DropdownMenuVcard, BasePage },
+  components: { BasePage, DropdownMenuVcard },
+  mixins: [timeStampMixin],
 
   computed: {
     ...mapGetters(['experiments']),
   },
   data() {
     return {
-      message: '',
       expand: true,
       headers: [
         {
@@ -54,15 +55,20 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Uploaded', value: 'uploadDate', sortable: true },
+        { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments']),
-    getTimeStamp(utcTime) {
-      return moment(utcTime).format('dddd, MMMM Do YYYY, h:mm:ss a');
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    async showExecutions(experiment) {
+      const experimentId = experiment.id;
+
+      if (!isNil(experimentId)) {
+        await this.fetchExecutionsByExperimentId(experimentId);
+        this.$router.push('/executionlist');
+      }
     },
   },
   created() {
