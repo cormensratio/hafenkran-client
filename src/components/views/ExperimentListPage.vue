@@ -5,7 +5,7 @@
         <v-layout column>
           <v-flex>
             <v-card>
-              <v-toolbar color="blue">
+              <v-toolbar dark color="blue">
                 <span class="title">Experiments</span>
                 <v-spacer></v-spacer>
                 <v-text-field append-icon="search"
@@ -25,7 +25,7 @@
                 <tr @click="toggleDetails(props.item)">
                   <td class="text-xs-left">{{ props.item.name }}</td>
                   <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                  <td class="text-xs-left">{{ props.item.size }}</td>
+                  <td class="text-xs-left">{{ props.item.size }} Byte</td>
                 </tr>
               </template>
               </v-data-table>

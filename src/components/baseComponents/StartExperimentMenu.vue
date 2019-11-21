@@ -1,22 +1,19 @@
 <template>
   <v-card class="p-3">
-    <v-container class="details-container">
+    <v-card-text class="details-container">
       <v-layout column>
-        <v-flex>
-          <v-btn class="float-right" @click="closeDetails">
-            <v-icon> close </v-icon>
-          </v-btn>
-          <v-card-title class="title executions-title">
-            Execute experiment: {{ experiment.name }}
-          </v-card-title>
-        </v-flex>
         <v-flex class="text-left">
-          <div> Uploaded: {{ getTimeStamp(experiment.createdAt) }}</div>
-          <div class="mt-2">Size: {{ experiment.size }}</div>
+          <v-btn class="float-right" @click="closeDetails">
+            <v-icon> close</v-icon>
+          </v-btn>
+          <div class="mt-2 h3">Experiment: {{ experiment.name }}</div>
+          <div class="mt-2">Uploaded: {{ getTimeStamp(experiment.createdAt) }}</div>
+          <div class="mt-2">Size: {{ experiment.size }} Byte</div>
         </v-flex>
       </v-layout>
-    </v-container>
-    <v-container>
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-text>
       <v-layout row>
         <v-flex>
           <v-combobox
@@ -44,9 +41,15 @@
           ></v-combobox>
         </v-flex>
       </v-layout>
-    </v-container>
-    <v-btn color="blue" class="ml-auto" v-on:click="resetDetails()" >Reset options</v-btn>
-    <v-btn color="blue" class="ml-auto" v-on:click="startExperiment()">Start execution</v-btn>
+    </v-card-text>
+    <v-card-actions class="col-12 justify-center">
+        <v-btn dark color="blue" class="col-3" v-on:click="resetDetails()">
+        Reset options
+        </v-btn>
+        <v-btn dark color="blue" class="col-3" v-on:click="startExperiment()">
+          Start execution
+        </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 <script>
@@ -67,12 +70,12 @@ export default {
       bookedTimeOptions: [300, 360, 720, 920,
       ],
       executionDetails:
-      {
-        experimentId: '',
-        ram: 2,
-        cpu: 4,
-        bookedTime: 300,
-      },
+          {
+            experimentId: '',
+            ram: 2,
+            cpu: 4,
+            bookedTime: 300,
+          },
     };
   },
   props: { experiment: {} },
@@ -100,8 +103,8 @@ export default {
 </script>
 
 <style scoped>
-.executions-title {
-  justify-content: center;
-  margin-top: -30px;
-}
+  .executions-title {
+    justify-content: center;
+    margin-top: -30px;
+  }
 </style>
