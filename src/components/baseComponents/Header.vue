@@ -10,7 +10,7 @@
         Logout
       </v-btn>
       <v-avatar class="mx-2" color="blue" dark round>
-        <span class="white--text headline">{{ user.username.charAt(0) }}</span>
+        <span class="white--text headline">{{ user.name.charAt(0) }}</span>
       </v-avatar>
     </div>
     <div v-else class="float-right">

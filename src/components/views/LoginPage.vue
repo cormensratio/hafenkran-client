@@ -8,7 +8,7 @@
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
-                  You are already logged in {{ user.username }}!
+                  You are already logged in {{ user.name }}!
                 </v-toolbar-title>
                 <v-toolbar-title v-else color="white" class="justify-center">
                   Login to Hafenkran:
@@ -64,7 +64,7 @@ export default {
     ...mapActions(['login']),
     loginUser() {
       if (!this.isAuthenticated) {
-        this.login({ username: this.userName, password: this.password })
+        this.login({ name: this.userName, password: this.password })
           .then((response) => {
             if (response) {
               this.failedLogin = false;
