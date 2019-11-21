@@ -9,7 +9,7 @@ const UserStore = {
   state: {
     user: {
       id: '',
-      username: '',
+      name: '',
       isAdmin: '',
       email: '',
     },
@@ -29,9 +29,9 @@ const UserStore = {
     },
   },
   actions: {
-    async login({ state, commit, dispatch, getters }, { username, password }) {
+    async login({ state, commit, dispatch, getters }, { name, password }) {
       if (!getters.isAuthenticated) {
-        const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/authenticate`, { username, password });
+        const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/authenticate`, { name, password });
         if (!isNil(response) && response.jwtToken) {
           console.log('Received Token from User-Service');
           commit('updateToken', response.jwtToken);
@@ -43,13 +43,16 @@ const UserStore = {
       console.log('Failed to login!');
       return false;
     },
-    async fetchUser({ commit, state }) {
+    async fetchUser({ commit }) {
       const userInfo = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/users/me`);
 
       if (!isNil(userInfo)) {
         commit('updateUser', userInfo);
-        console.log(state.user);
+        console.log('Successfully fetched user information');
+        return true;
       }
+
+      return false;
     },
     logout({ dispatch }) {
       localStorage.removeItem('user');
@@ -60,7 +63,7 @@ const UserStore = {
       const emptyStore = {
         user: {
           id: '',
-          username: '',
+          name: '',
           isAdmin: '',
         },
         jwtToken: '',

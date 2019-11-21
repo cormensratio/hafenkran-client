@@ -2,7 +2,7 @@
   <base-page>
     <template slot="body">
       <div class="container">
-        <h1 id="hello" v-if="isAuthenticated" class="m-2">Welcome {{ user.username }}</h1>
+        <h1 id="hello" v-if="isAuthenticated" class="m-2">Welcome {{ user.name }}</h1>
         <h1 v-else class="m-2">Welcome to Hafenkran</h1>
         <div v-if="!isAuthenticated" class="card">
           <h1 class="card-title mt-2"> Please login </h1>

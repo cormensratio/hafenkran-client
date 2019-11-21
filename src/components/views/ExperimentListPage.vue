@@ -9,9 +9,11 @@
               :items-per-page="5"
               class="elevation-1"
             ><template v-slot:items="props">
-              <td class="text-xs-left">{{ props.item.name }}</td>
-              <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-              <td class="text-xs-left">{{ props.item.size }}</td>
+              <tr>
+                <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
+                <td class="text-xs-left">{{ props.item.size }}</td>
+              </tr>
             </template>
             </v-data-table>
           </div>
@@ -24,14 +26,15 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
+import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
+import { timeStampMixin } from '../../mixins/TimeStamp';
 
 export default {
   name: 'ExperimentListPage',
   components: { BasePage },
-
+  mixins: [timeStampMixin],
   computed: {
     ...mapGetters(['experiments']),
   },
@@ -44,15 +47,20 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Uploaded', value: 'uploadDate', sortable: true },
+        { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments']),
-    getTimeStamp(utcTime) {
-      return moment(utcTime).format('dddd, MMMM Do YYYY, h:mm:ss a');
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    async showExecutions(experiment) {
+      const experimentId = experiment.id;
+
+      if (!isNil(experimentId)) {
+        await this.fetchExecutionsByExperimentId(experimentId);
+        this.$router.push('/executionlist');
+      }
     },
   },
   created() {
