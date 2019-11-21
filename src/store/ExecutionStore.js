@@ -46,12 +46,11 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
-    async terminateExecution(experimentName) {
-      const executionId = this.fetchExecutionsByExperimentId(experimentName);
-      console.log(executionId);
+    async terminateExecution({ dispatch }, executionId) {
       ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
         .then((response) => {
           if (!isNil(response)) {
+            dispatch('fetchAllExecutionsOfUser');
             return true;
           }
           return false;
