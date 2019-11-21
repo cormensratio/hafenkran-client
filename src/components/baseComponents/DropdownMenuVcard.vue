@@ -6,14 +6,14 @@
             v-model="executionDetails.ram"
             :items="ramOptions"
             label="RAM"
-            attach=""
+            attach
             type='Number'
           ></v-combobox>
       <v-combobox
       v-model="executionDetails.cpu"
       :items="cpuOptions"
       label="CPU Cores"
-      attach=""
+      attach
       type='Number'
       ></v-combobox>
         <v-btn color="blue" v-on:click="resetDetails()" >Reset</v-btn>
@@ -24,7 +24,7 @@
       v-model="executionDetails.bookedTime"
       :items="bookedTimeOptions"
       label="Time in Seconds"
-      attach=""
+      attach
       type='Number'
       ></v-combobox>
         <v-btn color="blue" v-on:click="startExperiment()">Start</v-btn>
@@ -35,6 +35,7 @@
 
 <script>
 import ExperimentStore from '../../store/ExperimentStore';
+import { isNil } from 'lodash';
 
 export default {
   name: 'DropdownMenuVcard',
@@ -63,7 +64,10 @@ export default {
       this.executionDetails.bookedTime = 300;
     },
     startExperiment() {
-      ExperimentStore.actions.runExecution(this.executionDetails);
+      if (!isNil(this.executionDetails.experimentId)) {
+        ExperimentStore.actions.runExecution(this.executionDetails);
+        this.$router.push('/executionlist');
+      }
     },
   },
   created() {
