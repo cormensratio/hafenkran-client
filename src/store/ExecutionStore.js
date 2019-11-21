@@ -14,7 +14,7 @@ const ExecutionStore = {
         executionName: 'Test Execution',
         createdAt: new Date(),
         terminatedAt: new Date(),
-        status: 'RUNNING',
+        status: '',
         ram: '',
         cpu: '',
         bookedTime: '',
@@ -47,14 +47,16 @@ const ExecutionStore = {
       }
     },
     async terminateExecution({ dispatch }, executionId) {
-      ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
-        .then((response) => {
-          if (!isNil(response)) {
-            dispatch('fetchAllExecutionsOfUser');
-            return true;
-          }
-          return false;
-        });
+      if (!isNil(executionId)) {
+        ApiService.doPost(`${process.env.CLUSTER_SERVICE_URL}/executionCancel`, executionId)
+          .then((response) => {
+            if (!isNil(response)) {
+              dispatch('fetchAllExecutionsOfUser');
+              return true;
+            }
+            return false;
+          });
+      }
     },
   },
 };
