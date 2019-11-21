@@ -32,7 +32,7 @@
               <td class="text-xs-left">
                 <v-btn>Details</v-btn>
                 <v-btn :disabled="props.item.status !== 'RUNNING'"
-                       @click="terminateExecution">Terminate</v-btn>
+                       @click="terminateExecution(props.item.id)">Terminate</v-btn>
               </td>
             </template>
           </v-data-table>
@@ -69,7 +69,7 @@ export default {
     ...mapGetters(['executions']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'getExperimentNameFromId', 'terminateExecution']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution']),
   },
   created() {
     this.fetchAllExecutionsOfUser();
