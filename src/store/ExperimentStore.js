@@ -43,7 +43,6 @@ const ExperimentStore = {
       return 'No name Found';
     },
     async runExecution(state, executionDetails) {
-      debugger;
       if (!isNil(executionDetails)) {
         const executionId = executionDetails.experimentId;
         await ApiService.doPost(`${serviceUrl}/experiments/${executionId}/execute`, executionDetails)
