@@ -106,8 +106,4 @@ export default {
 </script>
 
 <style scoped>
-  .executions-title {
-    justify-content: center;
-    margin-top: -30px;
-  }
 </style>
