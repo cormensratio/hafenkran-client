@@ -13,7 +13,7 @@ const UserStore = {
       isAdmin: '',
       email: '',
     },
-    jwtToken: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDIiLCJleHAiOjE1ODIwMzQzNDgsInVzZXIiOnsiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDIiLCJ1c2VybmFtZSI6IlJpY2siLCJlbWFpbCI6IiIsImlzQWRtaW4iOmZhbHNlfSwiaWF0IjoxNTc0MjU4MzQ4fQ.vg9L1U7mDpXAcqVArU059FYVbvPCWXSLGCo5VlPH7qFU-Arc1L4AF8hrAcjGCPtPbwgZJhT6p-EL58H2E3-2-A',
+    jwtToken: '',
   },
   getters: {
     user: state => state.user,
