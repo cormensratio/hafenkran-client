@@ -1,30 +1,34 @@
 <template>
   <v-card>
     <v-container fluid>
-      <v-btn color="blue" v-on:click="resetDetails()">Reset</v-btn>
-      <v-spacer></v-spacer>
-      <v-btn color="blue" v-on:click="startExperiment()">Start</v-btn>
+      <v-layout col>
+          <v-combobox
+            v-model="executionDetails.ram"
+            :items="ramOptions"
+            label="RAM"
+            attach=""
+            type='Number'
+          ></v-combobox>
       <v-combobox
-        v-model="executionDetails.ram"
-        :items="ramOptions"
-        label="RAM"
-        attach=""
-        type='Number'
+      v-model="executionDetails.cpu"
+      :items="cpuOptions"
+      label="CPU Cores"
+      attach=""
+      type='Number'
       ></v-combobox>
+        <v-btn color="blue" v-on:click="resetDetails()" >Reset</v-btn>
+      </v-layout>
+      <v-layout col>
+        <v-spacer></v-spacer>
       <v-combobox
-        v-model="executionDetails.cpu"
-        :items="cpuOptions"
-        label="CPU Cores"
-        attach=""
-        type='Number'
+      v-model="executionDetails.bookedTime"
+      :items="bookedTimeOptions"
+      label="Time in Seconds"
+      attach=""
+      type='Number'
       ></v-combobox>
-      <v-combobox
-        v-model="executionDetails.bookedTime"
-        :items="bookedTimeOptions"
-        label="Time in Seconds"
-        attach=""
-        type='Number'
-      ></v-combobox>
+        <v-btn color="blue" v-on:click="startExperiment()">Start</v-btn>
+      </v-layout>
     </v-container>
   </v-card>
 </template>
