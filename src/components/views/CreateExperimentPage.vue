@@ -61,7 +61,6 @@ export default {
     },
     async submitFile() {
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
-      debugger;
       if (uploadSucceeded) {
         this.$router.push('/experimentlist');
       }
