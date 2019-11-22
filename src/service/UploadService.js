@@ -20,17 +20,20 @@ export default class UploadService {
   }
 
   static async uploadFile(file, filename) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('name', filename);
+    if (!isNil(file) && !isNil(filename)) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('name', filename);
 
-    const responseData = await ApiService.doPost(`${serviceUrl}/experiments/uploadFile`, formData,
-      { 'Content-Type': 'multipart/form-data' },
-    );
+      const responseData = await ApiService.doPost(`${serviceUrl}/experiments/uploadFile`, formData,
+        { 'Content-Type': 'multipart/form-data' },
+      );
 
-    if (responseData) {
-      return true;
+      if (responseData) {
+        return true;
+      }
     }
-    return true;
+
+    return false;
   }
 }
