@@ -23,3 +23,14 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
+
+##Environment Settings
+
+For the dev environment you can set following variables in /config/dev.env.js
+
+- CLUSTER_SERVICE_URL: Url to Hafenkran Cluster Service
+- USER_SERVICE_URL: Url to Hafenkran User Service
+- AUTHENTICATION_REQUIRED: Toggle if authentication is required to access protected pages
+- USE_TEST_TOKEN: Toggle if test token should be used
+- TEST_TOKEN: Jwt token for test purposes
+

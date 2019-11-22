@@ -2,6 +2,7 @@ import { last, filter, isNil } from 'lodash';
 import ApiService from './ApiService';
 
 const fileFilter = ['zip'];
+const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 
 export default class UploadService {
   static checkFileType(fileName) {
@@ -23,10 +24,8 @@ export default class UploadService {
     formData.append('file', file);
     formData.append('name', filename);
 
-    ApiService.doPost('/experiments/uploadFile', formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
+    ApiService.doPost(`${serviceUrl}/experiments/uploadFile`, formData,
+      { 'Content-Type': 'multipart/form-data' },
     ).then(response => response);
   }
 }

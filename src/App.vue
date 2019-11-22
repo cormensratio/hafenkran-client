@@ -7,7 +7,8 @@
 <script>
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import { isNil } from 'lodash';
+import store from './store/store';
 
 Vue.use(Vuetify, {
   iconfont: 'md', // 'md' || 'mdi' || 'fa' || 'fa4'
@@ -15,6 +16,24 @@ Vue.use(Vuetify, {
 
 export default {
   name: 'App',
+  created() {
+    console.log('Initiating Hafenkran client application...');
+
+    if (process.env.USE_TEST_TOKEN) {
+      localStorage.removeItem('user');
+      localStorage.setItem('user', process.env.TEST_TOKEN);
+    }
+
+    const token = localStorage.getItem('user');
+    if (!isNil(token)) {
+      store.commit('updateToken', token);
+      const success = store.dispatch('fetchUser');
+
+      if (success) {
+        store.dispatch('fetchExperiments');
+      }
+    }
+  },
 };
 </script>
 
@@ -25,6 +44,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
