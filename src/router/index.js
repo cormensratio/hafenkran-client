@@ -56,8 +56,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const test = process.env.AUTHENTICATION_REQUIRED;
-  if (test) {
+  if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
       if (!store.getters.isAuthenticated) {
         next('/login');
