@@ -50,7 +50,7 @@ const ExecutionStore = {
     },
     async terminateExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
-        ApiService.doPost(`${serviceUrl}/executionCancel`, executionId)
+        ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`)
           .then((response) => {
             if (!isNil(response)) {
               dispatch('fetchAllExecutionsOfUser');

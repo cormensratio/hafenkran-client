@@ -95,11 +95,17 @@ export default {
     closeDetails() {
       this.$emit('close');
     },
+    updateExperimentId() {
+      if (!isNil(this.experiment)) {
+        this.executionDetails.experimentId = this.experiment.id;
+      }
+    },
   },
   updated() {
-    if (!isNil(this.experiment)) {
-      this.executionDetails.experimentId = this.experiment.id;
-    }
+    this.updateExperimentId();
+  },
+  created() {
+    this.updateExperimentId();
   },
 };
 
