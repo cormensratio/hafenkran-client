@@ -45,13 +45,12 @@ const ExperimentStore = {
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
         const executionId = executionDetails.experimentId;
-        await ApiService.doPost(`${serviceUrl}/experiments/${executionId}/execute`, executionDetails)
-          .then((response) => {
-            if (!isNil(response)) {
-              return true;
-            }
-            return false;
-          });
+        const response = await ApiService.doPost(
+          `${serviceUrl}/experiments/${executionId}/execute`, executionDetails);
+
+        if (!isNil(response)) {
+          return true;
+        }
       }
       return false;
     },
