@@ -33,7 +33,6 @@ export default class UploadService {
         return true;
       }
     }
-
     return false;
   }
 }
