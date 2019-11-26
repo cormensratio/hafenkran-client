@@ -6,6 +6,7 @@ import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
 import store from '../store/store';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
+import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 
 Vue.use(Router);
 
@@ -48,6 +49,15 @@ const router = new Router({
       path: '/executionlist',
       name: 'ExecutionsListPage',
       component: ExecutionsListPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/execution/:executionId',
+      name: 'ExecutionDetails',
+      component: ExecutionDetailsPage,
+      props: true,
       meta: {
         requiresAuth: true,
       },

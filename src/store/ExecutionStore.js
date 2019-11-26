@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil } from 'lodash';
+import { isNil, find } from 'lodash';
 import ApiService from '../service/ApiService';
 
 Vue.use(Vuex);
@@ -59,6 +59,12 @@ const ExecutionStore = {
             return false;
           });
       }
+    },
+    getExecutionById({ state }, id) {
+      if (!isNil(id)) {
+        return find(state.executions, execution => execution.id === id);
+      }
+      return null;
     },
   },
 };
