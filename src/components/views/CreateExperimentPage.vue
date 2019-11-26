@@ -59,9 +59,11 @@ export default {
         this.timestamp = UploadService.getTimeStamp();
       }
     },
-    submitFile() {
-      UploadService.uploadFile(this.file, this.fileName);
-      this.$router.push('/experimentlist');
+    async submitFile() {
+      const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
+      if (uploadSucceeded) {
+        this.$router.push('/experimentlist');
+      }
     },
   },
 };
