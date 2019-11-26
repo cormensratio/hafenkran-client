@@ -16,7 +16,7 @@ const ExecutionStore = {
         name: 'Test Execution',
         createdAt: new Date(),
         terminatedAt: new Date(),
-        status: '',
+        status: 'RUNNING',
         ram: '',
         cpu: '',
         bookedTime: '',
