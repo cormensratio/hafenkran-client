@@ -30,7 +30,7 @@
                 <status-cell :status="props.item.status"></status-cell>
               </td>
               <td class="text-xs-left">
-                <v-btn>Details</v-btn>
+                <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="props.item.status !== 'RUNNING'"
                        @click="terminateExecution(props.item.id)">Terminate</v-btn>
               </td>
@@ -70,6 +70,9 @@ export default {
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution']),
+    navigateToDetails(id) {
+      this.$router.push(`/execution/${id}`);
+    },
   },
   created() {
     this.fetchAllExecutionsOfUser();
