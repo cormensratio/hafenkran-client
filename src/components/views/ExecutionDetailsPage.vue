@@ -1,11 +1,23 @@
 <template>
   <base-page>
     <template slot="body">
-      <div>
+      <div class="top">
 
       </div>
       <div>
-
+        <div class="col-12 d-inline">
+          <a v-on:click="activetab=1"><v-btn dark class="col-5 blue">Outcome</v-btn></a>
+          <a v-on:click="activetab=2"><v-btn dark class="col-5 blue">Statistics</v-btn></a>
+        </div>
+        <v-divider></v-divider>
+        <div class="content">
+          <div v-if="activetab === 1" class="tab-content">
+            <h1>Execution results</h1>
+          </div>
+          <div v-if="activetab === 2" class="tab-content">
+            <h1>Plotted results</h1>
+          </div>
+        </div>
       </div>
     </template>
   </base-page>
@@ -23,6 +35,7 @@ export default {
   data() {
     return {
       execution: {},
+      activetab: 1,
     };
   },
   props: {
@@ -42,5 +55,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .top {
+    margin-top: 5%;
+  }
 </style>
