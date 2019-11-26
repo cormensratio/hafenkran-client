@@ -33,6 +33,7 @@
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="props.item.status !== 'RUNNING'"
                        @click="terminateExecution(props.item.id)">Terminate</v-btn>
+                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
               </td>
             </template>
           </v-data-table>
@@ -69,7 +70,7 @@ export default {
     ...mapGetters(['executions']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
