@@ -3,6 +3,7 @@
     <template slot="body">
       <div>
 
+        <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
       </div>
       <div>
 
@@ -29,7 +30,7 @@ export default {
     executionId: String,
   },
   methods: {
-    ...mapActions(['getExecutionById']),
+    ...mapActions(['deleteExecution', 'getExecutionById']),
   },
   created() {
     this.getExecutionById(this.executionId).then((execution) => {
