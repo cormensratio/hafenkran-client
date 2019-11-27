@@ -16,9 +16,10 @@
                </v-card>
             </v-flex>
             <v-flex>
-              <v-card flat align="left">
-              <v-btn icon>
-                <v-icon>cancel</v-icon>
+              <v-card class="top_icons" flat align="left">
+              <v-btn icon :disabled="execution.status !== 'RUNNING'"
+              @click="terminateExecution(execution.id)">
+                <v-icon class="top_icons">cancel</v-icon>
               </v-btn>
               </v-card>
             </v-flex>
@@ -27,9 +28,9 @@
                  <v-card-text align="right">Download logs</v-card-text>
                </v-card>
             </v-flex>
-            <v-flex>
-               <v-card flat align="left">
-                 <v-btn icon>
+            <v-flex class="top_icons">
+               <v-card class="top_icons" flat align="left">
+                 <v-btn @click="calculateRuntime" icon>
                    <v-icon>cloud_download</v-icon>
                  </v-btn>
                </v-card>
@@ -69,15 +70,30 @@ export default {
   data() {
     return {
       execution: {},
-      runtime: 'Sauba zlang',
+      runtime: Number,
     };
   },
   props: {
     executionId: String,
   },
   methods: {
-    ...mapActions(['getExecutionById']),
-
+    ...mapActions(['getExecutionById', 'terminateExecution']),
+    calculateRuntime() {
+      this.execution.terminatedAt = new Date();
+      this.runtime = this.msToTime(this.execution.terminatedAt
+        - this.execution.startedAt);
+    },
+    pad(num) {
+      return (`0${num}`).slice(-2);
+    },
+    msToTime(ms) {
+      let secs = Math.floor(ms / 1000);
+      let minutes = Math.floor(secs / 60);
+      secs %= 60;
+      const hours = Math.floor(minutes / 60);
+      minutes %= 60;
+      return `${this.pad(hours)}h:${this.pad(minutes)}min:${this.pad(secs)}s`;
+    },
   },
   created() {
     this.getExecutionById(this.executionId).then((execution) => {
@@ -86,9 +102,15 @@ export default {
       }
     });
   },
+  beforeUpdate() {
+    this.calculateRuntime();
+  },
 };
 </script>
 
 <style scoped>
-
+.top_icons{
+  top: 4px;
+  right: 15px;
+}
 </style>
