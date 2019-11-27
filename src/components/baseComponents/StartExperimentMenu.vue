@@ -86,10 +86,12 @@ export default {
       this.executionDetails.cpu = this.cpuOptions[1];
       this.executionDetails.bookedTime = this.bookedTimeOptions[0];
     },
-    startExperiment() {
+    async startExperiment() {
       if (!isNil(this.executionDetails.experimentId)) {
-        this.runExecution(this.executionDetails);
-        this.$router.push('/executionlist');
+        const startedExecution = await this.runExecution(this.executionDetails);
+        if (!isNil(startedExecution)) {
+          this.$router.push('/executionlist');
+        }
       }
     },
     closeDetails() {
