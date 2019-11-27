@@ -15,6 +15,7 @@ const ExecutionStore = {
         experimentId: '1',
         name: 'Test Execution',
         createdAt: new Date(),
+        startedAt: new Date(),
         terminatedAt: new Date(),
         status: '',
         ram: '',
