@@ -6,7 +6,7 @@
         <v-layout row>
             <v-flex>
               <v-card flat>
-                <v-card-text  align="left" icons-and-text>{{execution.name}}</v-card-text>
+                <v-card-text  align="left">{{execution.name}}</v-card-text>
                 <v-card-text align="left">{{execution.status}}</v-card-text>
               </v-card>
             </v-flex>
@@ -16,8 +16,10 @@
                </v-card>
             </v-flex>
             <v-flex>
-              <v-card flat align="left" class="icon">
-              <v-icon large>cancel</v-icon>
+              <v-card flat align="left">
+              <v-btn icon>
+                <v-icon>cancel</v-icon>
+              </v-btn>
               </v-card>
             </v-flex>
             <v-flex>
@@ -26,8 +28,10 @@
                </v-card>
             </v-flex>
             <v-flex>
-               <v-card flat align="left" class="icon">
-                 <v-icon large>cloud_download</v-icon>
+               <v-card flat align="left">
+                 <v-btn icon>
+                   <v-icon>cloud_download</v-icon>
+                 </v-btn>
                </v-card>
             </v-flex>
         </v-layout>
@@ -86,9 +90,5 @@ export default {
 </script>
 
 <style scoped>
-.icon{
-  top: 8px;
-  right: 10px;
 
-}
 </style>
