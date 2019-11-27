@@ -6,19 +6,30 @@
         <v-layout row>
             <v-flex>
               <v-card flat>
-                <v-card-text align="left">{{execution.name}}</v-card-text>
+                <v-card-text  align="left" icons-and-text>{{execution.name}}</v-card-text>
+                <v-card-text align="left">{{execution.status}}</v-card-text>
               </v-card>
             </v-flex>
-             <v-flex>
+            <v-flex>
                <v-card flat col>
                  <v-card-text align="right">Cancel execution</v-card-text>
                </v-card>
-             </v-flex>
-             <v-flex>
+            </v-flex>
+            <v-flex>
+              <v-card flat align="left" class="icon">
+              <v-icon large>cancel</v-icon>
+              </v-card>
+            </v-flex>
+            <v-flex>
                <v-card flat>
                  <v-card-text align="right">Download logs</v-card-text>
                </v-card>
-             </v-flex>
+            </v-flex>
+            <v-flex>
+               <v-card flat align="left" class="icon">
+                 <v-icon large>cloud_download</v-icon>
+               </v-card>
+            </v-flex>
         </v-layout>
         <v-layout>
           <v-flex>
@@ -54,7 +65,7 @@ export default {
   data() {
     return {
       execution: {},
-      runtime: '',
+      runtime: 'Sauba zlang',
     };
   },
   props: {
@@ -75,5 +86,9 @@ export default {
 </script>
 
 <style scoped>
+.icon{
+  top: 8px;
+  right: 10px;
 
+}
 </style>
