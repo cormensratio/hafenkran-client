@@ -27,7 +27,6 @@ describe('ExecutionStore', () => {
     await ExecutionStore.actions.fetchAllExecutionsOfUser({ commit });
 
     // assert
-
     // check that Api is called only one time
     expect(ApiService.doGet).toHaveBeenCalledTimes(1);
 
