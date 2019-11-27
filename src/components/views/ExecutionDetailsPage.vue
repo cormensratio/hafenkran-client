@@ -2,16 +2,23 @@
   <base-page>
     <template slot="body">
       <div class="container">
-        <v-layout>
-          <v-card flat>
+        <v-container fluid>
+        <v-layout row>
             <v-flex>
               <v-card flat>
-              <v-card-text align="left">{{execution.name}}</v-card-text>
-              <v-card-text>Cancel execution</v-card-text>
-              <v-card-text>Download logs</v-card-text>
+                <v-card-text align="left">{{execution.name}}</v-card-text>
               </v-card>
             </v-flex>
-          </v-card>
+             <v-flex>
+               <v-card flat col>
+                 <v-card-text align="right">Cancel execution</v-card-text>
+               </v-card>
+             </v-flex>
+             <v-flex>
+               <v-card flat>
+                 <v-card-text align="right">Download logs</v-card-text>
+               </v-card>
+             </v-flex>
         </v-layout>
         <v-layout>
           <v-flex>
@@ -24,6 +31,7 @@
             </v-card>
           </v-flex>
         </v-layout>
+        </v-container>
       </div>
       <div>
 
