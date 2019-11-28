@@ -4,10 +4,10 @@
       <div class="top">
 
       </div>
-      <v-container>
+      <v-container class="bottom">
         <v-flex>
           <v-card class="results elevation-10">
-            <v-tabs color="blue" dark centered icons-and-text>
+            <v-tabs color="blue" dark centered icons-and-text grow>
               <v-tabs-slider></v-tabs-slider>
               <v-tab href="#tab-1" v-on:click="activetab=1">Outcome
                 <v-icon>description</v-icon>
@@ -67,7 +67,6 @@ export default {
         this.execution = execution;
       }
     });
-    this.getExecutionResultsbyId(this.executionId);
   },
 };
 </script>
