@@ -11,12 +11,12 @@
               </v-card>
             </v-flex>
             <v-flex>
-               <v-card flat col>
-                 <v-card-text align="right">Cancel execution</v-card-text>
+               <v-card align="right" flat col>
+                 <v-card-text >Cancel execution</v-card-text>
                </v-card>
             </v-flex>
             <v-flex>
-              <v-card class="top_icons" flat align="left">
+              <v-card class="top_icons" flat align="right">
               <v-btn icon :disabled="execution.status !== 'RUNNING'"
               @click="terminateExecution(execution.id)">
                 <v-icon class="top_icons">cancel</v-icon>
@@ -24,12 +24,12 @@
               </v-card>
             </v-flex>
             <v-flex>
-               <v-card flat>
-                 <v-card-text align="right">Download logs</v-card-text>
+               <v-card flat align="right">
+                 <v-card-text>Download logs</v-card-text>
                </v-card>
             </v-flex>
-            <v-flex class="top_icons">
-               <v-card class="top_icons" flat align="left">
+            <v-flex>
+               <v-card class="top_icons" flat align="right">
                  <v-btn @click="calculateRuntime" icon>
                    <v-icon>cloud_download</v-icon>
                  </v-btn>
@@ -40,7 +40,7 @@
           <v-flex>
             <v-card>
               <v-card-text class="text-left">
-              <span>Start Date: {{ getTimeStamp(execution.createdAt) }}</span>
+              <span>Start Date: {{ getTimeStamp(execution.startedAt) }}</span>
               <v-spacer></v-spacer>
               <span>Runtime: {{runtime}}</span>
               </v-card-text>
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       execution: {},
-      runtime: Number,
+      runtime: '',
     };
   },
   props: {
@@ -79,9 +79,25 @@ export default {
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution']),
     calculateRuntime() {
-      this.execution.terminatedAt = new Date();
-      this.runtime = this.msToTime(this.execution.terminatedAt
-        - this.execution.startedAt);
+      switch (this.execution.status) {
+        case 'RUNNING':
+          this.runtime = this.msToTime(new Date() - this.execution.startedAt);
+          break;
+        case 'TERMINATED':
+        case 'FAILED':
+        case 'ABORTED':
+        case 'CANCELED':
+          this.runtime = this.msToTime(this.execution.terminatedAt
+            - this.execution.startedAt);
+          break;
+        case 'WAITING':
+          this.runtime = 'This execution has not started yet!';
+          break;
+        case '':
+        default:
+          this.runtime = 'There has been an Error!';
+          break;
+      }
     },
     pad(num) {
       return (`0${num}`).slice(-2);
