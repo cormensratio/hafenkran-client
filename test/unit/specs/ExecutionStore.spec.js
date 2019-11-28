@@ -13,6 +13,28 @@ const mockExecutions = [
     cpu: '',
     bookedTime: '',
   },
+  {
+    id: '2',
+    experimentId: '1',
+    name: 'Test Execution',
+    createdAt: new Date(),
+    terminatedAt: new Date(),
+    status: '',
+    ram: '',
+    cpu: '',
+    bookedTime: '',
+  },
+  {
+    id: '3',
+    experimentId: '2',
+    name: 'Test Execution',
+    createdAt: new Date(),
+    terminatedAt: new Date(),
+    status: '',
+    ram: '',
+    cpu: '',
+    bookedTime: '',
+  },
 ];
 
 const mockServiceUrl = process.env.CLUSTER_SERVICE_URL;
@@ -100,6 +122,34 @@ describe('ExecutionStore', () => {
       // assert
       expect(returnValue).toBe(null);
       expect(dispatch).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('gets executions by id', () => {
+    test('successfully', async () => {
+      // arrange
+      const executionId = 1;
+      const state = { executions: mockExecutions };
+      let returnValue = undefined;
+
+      // act
+      const test = await ExecutionStore.actions.getExecutionById({ state }, executionId);
+      // assert
+      expect(returnValue).toBe(mockExecutions[0]);
+    });
+
+    test('with a not existing id', () => {
+      // arrange
+      const executionId = 4;
+      const state = { executions: mockExecutions };
+      let returnValue = undefined;
+
+      // act
+      ExecutionStore.actions.getExecutionById({ state }, executionId).then((e) => {
+        returnValue = e;
+      });
+
+      let test = returnValue;
     });
   });
 });
