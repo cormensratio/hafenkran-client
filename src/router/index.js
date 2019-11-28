@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { isNil } from 'lodash';
 import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
@@ -68,7 +69,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
-      if (!store.getters.isAuthenticated) {
+      if (!store.getters.isAuthenticated || !isNil(localStorage.getItem('user'))) {
         next('/login');
       }
     }
