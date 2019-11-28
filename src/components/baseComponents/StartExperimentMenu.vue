@@ -88,8 +88,10 @@ export default {
     },
     startExperiment() {
       if (!isNil(this.executionDetails.experimentId)) {
-        this.runExecution(this.executionDetails);
-        this.$router.push('/executionlist');
+        const startedExecution = this.runExecution(this.executionDetails);
+        if (!isNil(startedExecution)) {
+          this.$router.push('/executionlist');
+        }
       }
     },
     closeDetails() {

@@ -49,10 +49,10 @@ const ExperimentStore = {
           `${serviceUrl}/experiments/${executionId}/execute`, executionDetails);
 
         if (!isNil(response)) {
-          return true;
+          return response;
         }
       }
-      return false;
+      return null;
     },
   },
 };
