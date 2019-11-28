@@ -2,12 +2,12 @@
   <base-page>
     <template slot="body">
       <div class="container">
-        <v-container fluid>
+        <v-container fluid class="top">
         <v-layout row>
             <v-flex>
               <v-card flat>
                 <v-card-text  align="left">{{execution.name}}</v-card-text>
-                <v-card-text align="left">{{execution.status}}</v-card-text>
+                <status-cell :status="status"></status-cell>
               </v-card>
             </v-flex>
             <v-flex>
@@ -18,7 +18,7 @@
             <v-flex>
               <v-card class="top_icons" flat align="right">
               <v-btn icon :disabled="execution.status !== 'RUNNING'"
-              @click="terminateExecution(execution.id)">
+                     @click="terminateExecution(execution.id)">
                 <v-icon class="top_icons">cancel</v-icon>
               </v-btn>
               </v-card>
@@ -102,6 +102,7 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
+      status: '',
     };
   },
   props: {
@@ -147,6 +148,7 @@ export default {
     this.getExecutionById(this.executionId).then((execution) => {
       if (!isNil(execution)) {
         this.execution = execution;
+        this.status = execution.status;
       }
     });
   },
