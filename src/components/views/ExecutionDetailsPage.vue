@@ -1,9 +1,6 @@
 <template>
   <base-page>
     <template slot="body">
-      <div class="top">
-
-      </div>
       <v-container class="bottom">
         <v-flex>
           <v-card class="results elevation-10">
@@ -72,7 +69,4 @@ export default {
 </script>
 
 <style scoped>
-  .top {
-    margin-top: 5%;
-  }
 </style>
