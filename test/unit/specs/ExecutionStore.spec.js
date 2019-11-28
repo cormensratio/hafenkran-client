@@ -88,6 +88,43 @@ describe('ExecutionStore', () => {
     });
   });
 
+  describe('fetches executions by experiment id', () => {
+    beforeEach(() => {
+      commit = jest.fn();
+    });
+
+    test('successfully', async () => {
+      // arrange
+      const mockResponse = [mockExecutions[0], mockExecutions[1]];
+      const experimentId = 1;
+      ApiService.doGet = jest.fn(() => mockResponse);
+
+      // act
+      await ExecutionStore.actions.fetchExecutionsByExperimentId({ commit }, experimentId);
+
+      // assert
+      expect(ApiService.doGet).toHaveBeenCalledTimes(1);
+      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments/${1}/executions`);
+      expect(commit).toHaveBeenCalledTimes(1);
+      expect(commit.mock.calls[0][0]).toBe('updateExecutions');
+      expect(commit.mock.calls[0][1]).toBe(mockResponse);
+    });
+
+    test('with error', async () => {
+      // arrange
+      const experimentId = 1;
+      ApiService.doGet = jest.fn(() => null);
+
+      // act
+      await ExecutionStore.actions.fetchExecutionsByExperimentId({ commit }, experimentId);
+
+      // assert
+      expect(ApiService.doGet).toHaveBeenCalledTimes(1);
+      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments/${1}/executions`);
+      expect(commit).toHaveBeenCalledTimes(0);
+    });
+  });
+
   describe('terminates an execution', () => {
     beforeEach(() => {
       dispatch = jest.fn();
@@ -122,34 +159,6 @@ describe('ExecutionStore', () => {
       // assert
       expect(returnValue).toBe(null);
       expect(dispatch).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  describe('gets executions by id', () => {
-    test('successfully', async () => {
-      // arrange
-      const executionId = 1;
-      const state = { executions: mockExecutions };
-      let returnValue = undefined;
-
-      // act
-      const test = await ExecutionStore.actions.getExecutionById({ state }, executionId);
-      // assert
-      expect(returnValue).toBe(mockExecutions[0]);
-    });
-
-    test('with a not existing id', () => {
-      // arrange
-      const executionId = 4;
-      const state = { executions: mockExecutions };
-      let returnValue = undefined;
-
-      // act
-      ExecutionStore.actions.getExecutionById({ state }, executionId).then((e) => {
-        returnValue = e;
-      });
-
-      let test = returnValue;
     });
   });
 });
