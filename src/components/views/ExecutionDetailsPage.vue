@@ -87,6 +87,7 @@
 <script>
 import { isNil } from 'lodash';
 import { mapActions } from 'vuex';
+import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -109,16 +110,17 @@ export default {
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution']),
     calculateRuntime() {
+      const terminated = moment(this.execution.terminatedAt);
+      const now = moment(new Date());
       switch (this.execution.status) {
         case 'RUNNING':
-          this.runtime = this.msToTime(new Date() - this.execution.startedAt);
+          this.runtime = this.msToTime(now.diff(terminated));
           break;
         case 'TERMINATED':
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
-          this.runtime = this.msToTime(this.execution.terminatedAt
-            - this.execution.startedAt);
+          this.runtime = this.msToTime(moment(this.execution.startedAt).diff(terminated));
           break;
         case 'WAITING':
           this.runtime = 'This execution has not started yet!';
