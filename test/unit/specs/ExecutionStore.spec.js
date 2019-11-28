@@ -15,36 +15,65 @@ const mockExecutions = [
   },
 ];
 
+const mockServiceUrl = process.env.CLUSTER_SERVICE_URL;
+
 jest.mock('../../../src/service/ApiService', () => jest.fn());
 
+// vuex mocks
+let dispatch;
+let commit;
+
 describe('ExecutionStore', () => {
-  it('fetches all executions of a user', async () => {
-    // arrange
-    ApiService.doGet = jest.fn(() => mockExecutions);
-    const commit = jest.fn();
+  describe('fetches all executions of a user', () => {
+    beforeEach(() => {
+      commit = jest.fn();
+    });
 
-    // act
-    await ExecutionStore.actions.fetchAllExecutionsOfUser({ commit });
+    test('successfully', async () => {
+      // arrange
+      ApiService.doGet = jest.fn(() => mockExecutions);
 
-    // assert
-    // check that Api is called only one time
-    expect(ApiService.doGet).toHaveBeenCalledTimes(1);
+      // act
+      await ExecutionStore.actions.fetchAllExecutionsOfUser({ commit });
 
-    // check that commit was called exactly one time
-    expect(commit.mock.calls.length).toBe(1);
+      // assert
+      // check that Api is called only one time
+      expect(ApiService.doGet).toHaveBeenCalledTimes(1);
 
-    // check if the right mutation is called
-    expect(commit.mock.calls[0][0]).toBe('updateExecutions');
+      // check that Api is called with the correct url
+      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/executions`);
 
-    // check if the right executions are passed to the mutation
-    expect(commit.mock.calls[0][1]).toBe(mockExecutions);
+      // check that commit was called exactly one time
+      expect(commit).toHaveBeenCalledTimes(1);
+
+      // check if the right mutation is called
+      expect(commit.mock.calls[0][0]).toBe('updateExecutions');
+
+      // check if the right executions are passed to the mutation
+      expect(commit.mock.calls[0][1]).toBe(mockExecutions);
+    });
+
+    test('with error', () => {
+      // arrange
+      ApiService.doGet = jest.fn(() => undefined);
+
+      // act
+      ExecutionStore.actions.fetchAllExecutionsOfUser({ commit });
+
+      // assert
+      expect(ApiService.doGet).toHaveBeenCalledTimes(1);
+      expect(commit).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('terminates an execution', () => {
+    beforeEach(() => {
+      dispatch = jest.fn();
+    });
+
     test('successfully', async () => {
       // arrange
       const executionId = 1;
-      const dispatch = jest.fn();
       ApiService.doPost = jest.fn(() => mockExecutions[0]);
 
       // act
@@ -52,8 +81,25 @@ describe('ExecutionStore', () => {
         { dispatch }, executionId);
 
       // assert
-      expect(returnValue).toBe(true);
+      expect(returnValue).toBe(mockExecutions[0]);
+      expect(ApiService.doPost).toHaveBeenCalledTimes(1);
+      expect(ApiService.doPost.mock.calls[0][0]).toBe(`${mockServiceUrl}/executions/${executionId}/cancel`);
       expect(dispatch).toHaveBeenCalledTimes(1);
+      expect(dispatch.mock.calls[0][0]).toBe('fetchAllExecutionsOfUser');
+    });
+
+    test('with error', async () => {
+      // arrange
+      const executionId = 1;
+      ApiService.doPost = jest.fn(() => undefined);
+
+      // act
+      const returnValue = await ExecutionStore.actions.terminateExecution(
+        { dispatch }, executionId);
+
+      // assert
+      expect(returnValue).toBe(null);
+      expect(dispatch).toHaveBeenCalledTimes(0);
     });
   });
 });

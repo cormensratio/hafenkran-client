@@ -53,10 +53,10 @@ const ExecutionStore = {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {
           dispatch('fetchAllExecutionsOfUser');
-          return true;
+          return response;
         }
       }
-      return false;
+      return null;
     },
     getExecutionById({ state }, id) {
       if (!isNil(id)) {
