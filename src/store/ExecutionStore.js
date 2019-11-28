@@ -17,7 +17,7 @@ const ExecutionStore = {
         createdAt: new Date(),
         startedAt: new Date(),
         terminatedAt: new Date(),
-        status: '',
+        status: 'RUNNING',
         ram: '',
         cpu: '',
         bookedTime: '',
