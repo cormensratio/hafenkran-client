@@ -27,11 +27,7 @@ export default {
     const token = localStorage.getItem('user');
     if (!isNil(token)) {
       store.commit('updateToken', token);
-      const success = store.dispatch('fetchUser');
-
-      if (success) {
-        store.dispatch('fetchExperiments');
-      }
+      store.dispatch('fetchUser');
     }
   },
 };

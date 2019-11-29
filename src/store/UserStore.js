@@ -19,6 +19,7 @@ const UserStore = {
     user: state => state.user,
     jwtToken: state => state.jwtToken,
     isAuthenticated: state => !isEqual(state.jwtToken, ''),
+    holdsUserInfo: state => !isEqual(state.user, ''),
   },
   mutations: {
     updateUser(state, user) {

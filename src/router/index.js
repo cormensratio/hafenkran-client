@@ -69,8 +69,12 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
-      if (!store.getters.isAuthenticated || !isNil(localStorage.getItem('user'))) {
-        next('/login');
+      if (!isNil(localStorage.getItem('user')) && !store.getters.holdsUserInfo) {
+        store.dispatch('fetchUser').then(() => {
+          if (!store.getters.isAuthenticated) {
+            next('/login');
+          }
+        });
       }
     }
   }
