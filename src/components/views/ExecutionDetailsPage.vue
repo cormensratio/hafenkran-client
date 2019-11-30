@@ -5,7 +5,8 @@
 
       </div>
       <div>
-
+        <v-btn @click="this.getLogs()">Click</v-btn>
+        <p>{{ logs }}</p>
       </div>
     </template>
   </base-page>
@@ -15,6 +16,7 @@
 import { isNil } from 'lodash';
 import { mapActions } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
+import ExecutionResultService from '../../service/ExecutionDetailService';
 
 
 export default {
@@ -23,6 +25,7 @@ export default {
   data() {
     return {
       execution: {},
+      logs: '',
     };
   },
   props: {
@@ -37,6 +40,9 @@ export default {
         this.execution = execution;
       }
     });
+  },
+  getLogs() {
+    this.logs = ExecutionResultService.getExecutionResultsbyId();
   },
 };
 </script>

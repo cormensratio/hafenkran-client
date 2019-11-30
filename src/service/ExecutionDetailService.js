@@ -2,8 +2,11 @@ import ApiService from './ApiService';
 import { serviceUrl } from '../store/ExecutionStore';
 
 export default class ExecutionResultService {
-  static getExecutionResultsbyId(id) {
-    const result = ApiService.doGet(`${serviceUrl}/executions/${id}`);
-    return result;
+  static async getExecutionResultsbyId(id) {
+    const result = await ApiService.doGet(`${serviceUrl}/executions/${id}/logs`);
+    if (!result.isNil) {
+      return result;
+    }
+    return 'No logs';
   }
 }
