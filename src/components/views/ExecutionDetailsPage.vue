@@ -1,60 +1,38 @@
 <template>
   <base-page>
     <template slot="body">
-      <div class="container">
-        <v-container fluid class="top">
-        <v-layout row>
-            <v-flex>
-              <v-card flat>
-                <v-card-text  align="left">{{execution.name}}</v-card-text>
-                <status-cell :status="status"></status-cell>
-              </v-card>
-            </v-flex>
-            <v-flex>
-               <v-card align="right" flat col>
-                 <v-card-text >Cancel execution</v-card-text>
-               </v-card>
-            </v-flex>
-            <v-flex>
-              <v-card class="top_icons" flat align="right">
-              <v-btn icon :disabled="execution.status !== 'RUNNING'"
-                     @click="terminateExecution(execution.id)">
-                <v-icon class="top_icons">cancel</v-icon>
-              </v-btn>
-              </v-card>
-            </v-flex>
-            <v-flex>
-               <v-card flat align="right">
-                 <v-card-text>Download logs</v-card-text>
-               </v-card>
-            </v-flex>
-            <v-flex>
-               <v-card class="top_icons" flat align="right">
-                 <v-btn @click="calculateRuntime" icon>
-                   <v-icon>cloud_download</v-icon>
-                 </v-btn>
-               </v-card>
-            </v-flex>
-        </v-layout>
+      <v-container class="top">
+        <h2>{{execution.name}}</h2>
         <v-layout>
           <v-flex>
-            <v-card>
-              <v-card-text class="text-left">
-              <span>Start Date: {{ getTimeStamp(execution.startedAt) }}</span>
-              <v-spacer></v-spacer>
-              <span>Runtime: {{runtime}}</span>
-              </v-card-text>
-            </v-card>
+            <v-btn class="red" :disabled="execution.status !== 'RUNNING'"
+                   @click="terminateExecution(execution.id)">
+              Cancel execution
+              <v-icon right dark>cancel</v-icon>
+            </v-btn>
+          </v-flex>
+          <v-flex>
+            <v-btn class="blue" @click="calculateRuntime">
+              Download logs
+              <v-icon right>cloud_download</v-icon>
+            </v-btn>
           </v-flex>
         </v-layout>
-        </v-container>
-      </div>
+        <v-card>
+          <v-card-text class="text-left">
+            <span>Start Date: {{ getTimeStamp(execution.startedAt) }}</span>
+            <v-spacer></v-spacer>
+            <span>Runtime: {{runtime}}</span>
+            <status-cell :status="status"></status-cell>
+          </v-card-text>
+        </v-card>
+      </v-container>
       <v-container class="bottom">
         <v-flex>
           <v-card class="results elevation-10">
             <v-tabs color="blue" dark centered icons-and-text grow>
               <v-tabs-slider></v-tabs-slider>
-              <v-tab href="#tab-1" v-on:click="activetab=1">Outcome
+              <v-tab href="#tab-1" v-on:click="activetab=1">Logs
                 <v-icon>description</v-icon>
               </v-tab>
               <v-tab href="#tab-2" v-on:click="activetab=2">Statistics
@@ -65,15 +43,13 @@
           <div class="content">
             <div v-if="activetab === 1" class="tab-content">
               <v-card flat>
-                <v-card-text>
-                  <p>The computations were successful... just kidding, everything failed!</p>
+                <v-card-text class="logs">
                 </v-card-text>
               </v-card>
             </div>
             <div v-if="activetab === 2" class="tab-content">
               <v-card flat>
-                <v-card-text>
-                  <p>Every single core of our cpus burnt down during the calculations :)</p>
+                <v-card-text class="statistics">
                 </v-card-text>
               </v-card>
             </div>
@@ -121,7 +97,8 @@ export default {
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
-          this.runtime = this.msToTime(moment(this.execution.startedAt).diff(terminated));
+          this.runtime = this.msToTime(moment(this.execution.startedAt)
+            .diff(terminated));
           break;
         case 'WAITING':
           this.runtime = 'This execution has not started yet!';
@@ -145,12 +122,13 @@ export default {
     },
   },
   created() {
-    this.getExecutionById(this.executionId).then((execution) => {
-      if (!isNil(execution)) {
-        this.execution = execution;
-        this.status = execution.status;
-      }
-    });
+    this.getExecutionById(this.executionId)
+      .then((execution) => {
+        if (!isNil(execution)) {
+          this.execution = execution;
+          this.status = execution.status;
+        }
+      });
   },
   beforeUpdate() {
     this.calculateRuntime();
