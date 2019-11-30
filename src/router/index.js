@@ -5,7 +5,6 @@ import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
-import store from '../store/store';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 
@@ -69,12 +68,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
-      if (!isNil(localStorage.getItem('user')) && !store.getters.holdsUserInfo) {
-        store.dispatch('fetchUser').then(() => {
-          if (!store.getters.isAuthenticated) {
-            next('/login');
-          }
-        });
+      if (isNil(localStorage.getItem('user'))) {
+        next('/login');
       }
     }
   }
