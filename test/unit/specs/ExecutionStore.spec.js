@@ -7,6 +7,7 @@ const mockExecutions = [
     experimentId: '1',
     name: 'Test Execution',
     createdAt: new Date(),
+    startedAt: new Date(),
     terminatedAt: new Date(),
     status: '',
     ram: '',
@@ -18,6 +19,7 @@ const mockExecutions = [
     experimentId: '1',
     name: 'Test Execution',
     createdAt: new Date(),
+    startedAt: new Date(),
     terminatedAt: new Date(),
     status: '',
     ram: '',
@@ -29,6 +31,7 @@ const mockExecutions = [
     experimentId: '2',
     name: 'Test Execution',
     createdAt: new Date(),
+    startedAt: new Date(),
     terminatedAt: new Date(),
     status: '',
     ram: '',
@@ -113,7 +116,7 @@ describe('ExecutionStore', () => {
     test('with error', async () => {
       // arrange
       const experimentId = 1;
-      ApiService.doGet = jest.fn(() => null);
+      ApiService.doGet = jest.fn(() => undefined);
 
       // act
       await ExecutionStore.actions.fetchExecutionsByExperimentId({ commit }, experimentId);
