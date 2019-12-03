@@ -80,7 +80,7 @@ describe('ExecutionStore', () => {
 
     test('with error', () => {
       // arrange
-      ApiService.doGet = jest.fn(() => undefined);
+      ApiService.doGet = jest.fn(() => null);
 
       // act
       ExecutionStore.actions.fetchAllExecutionsOfUser({ commit });
@@ -116,7 +116,7 @@ describe('ExecutionStore', () => {
     test('with error', async () => {
       // arrange
       const experimentId = 1;
-      ApiService.doGet = jest.fn(() => undefined);
+      ApiService.doGet = jest.fn(() => null);
 
       // act
       await ExecutionStore.actions.fetchExecutionsByExperimentId({ commit }, experimentId);
@@ -153,7 +153,7 @@ describe('ExecutionStore', () => {
     test('with error', async () => {
       // arrange
       const executionId = 1;
-      ApiService.doPost = jest.fn(() => undefined);
+      ApiService.doPost = jest.fn(() => null);
 
       // act
       const returnValue = await ExecutionStore.actions.terminateExecution(
