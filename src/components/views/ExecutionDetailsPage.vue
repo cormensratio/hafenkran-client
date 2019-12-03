@@ -3,28 +3,24 @@
     <template slot="body">
       <v-container class="top">
         <h2>{{execution.name}}</h2>
-        <v-layout>
-          <v-flex>
-            <v-btn class="red" :disabled="execution.status !== 'RUNNING'"
-                   @click="terminateExecution(execution.id)">
-              Cancel execution
-              <v-icon right dark>cancel</v-icon>
-            </v-btn>
-          </v-flex>
-          <v-flex>
-            <v-btn class="blue" @click="calculateRuntime">
-              Download logs
-              <v-icon right>cloud_download</v-icon>
-            </v-btn>
-          </v-flex>
-        </v-layout>
         <v-card>
           <v-card-text class="text-left">
             <span>Start Date: {{ getTimeStamp(execution.startedAt) }}</span>
             <v-spacer></v-spacer>
             <span>Runtime: {{runtime}}</span>
-            <status-cell :status="status"></status-cell>
+            <status-cell :status="execution.status"></status-cell>
           </v-card-text>
+          <div class="buttons">
+            <v-btn class="blue" @click="calculateRuntime">
+              Download logs
+              <v-icon right>cloud_download</v-icon>
+            </v-btn>
+            <v-btn class="red" :disabled="execution.status !== 'RUNNING'"
+                   @click="terminateExecution(execution.id)">
+              Cancel execution
+              <v-icon right dark>cancel</v-icon>
+            </v-btn>
+          </div>
         </v-card>
       </v-container>
       <v-container class="bottom">
@@ -78,7 +74,6 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
-      status: '',
     };
   },
   props: {
@@ -126,7 +121,6 @@ export default {
       .then((execution) => {
         if (!isNil(execution)) {
           this.execution = execution;
-          this.status = execution.status;
         }
       });
   },
@@ -137,5 +131,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .buttons {
+    padding-bottom: 20px;
+  }
 </style>
