@@ -36,7 +36,7 @@ export default class ApiService {
     const loggedIn = !isNil(localStorage.getItem('user'));
     const headers = {};
     if (loggedIn) {
-      // TODO enable refetching of token if it expired
+      // TODO enable refetching of token if it expires soon
       // check if token is still valid, if not, fetch new one
       // await AuthService.checkTokenValidity();
       headers.Authorization = `Bearer ${jwtToken.token}`;

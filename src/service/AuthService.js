@@ -10,8 +10,8 @@ export const jwtToken = {
 export default class AuthService {
   static extractTokenInfo(token) {
     if (!isNil(token) && !isEqual(token, '')) {
-      const tokenInfo = JSON.parse(atob(token.split('.')[1]));
-      if (!isNil(tokenInfo) && !AuthService.isTokenExpired(tokenInfo.exp)) {
+      const tokenInfo = this.getTokenPayload(token);
+      if (!isNil(tokenInfo) && !this.isTokenExpired(tokenInfo.exp)) {
         jwtToken.token = token;
         jwtToken.expires = tokenInfo.exp;
         localStorage.setItem('user', token);
@@ -25,6 +25,16 @@ export default class AuthService {
 
   static isTokenExpired(expiryTimeStamp) {
     return (Date.now() >= expiryTimeStamp * 1000);
+  }
+
+  static getTokenPayload(token) {
+    let output;
+    try {
+      output = JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      throw new Error(e);
+    }
+    return output;
   }
 
   static async checkTokenValidity() {
