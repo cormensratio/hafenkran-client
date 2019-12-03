@@ -18,7 +18,8 @@
                   <v-text-field type="email"
                                 v-model="user.email"
                                 label="Current email address"
-                                prepend-icon="email"/>
+                                prepend-icon="email">
+                  </v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -64,7 +65,6 @@ export default {
       editPassword: false,
       userName: '',
       password: '',
-      failedLogin: false,
     };
   },
   computed: {
