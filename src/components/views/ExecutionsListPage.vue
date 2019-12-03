@@ -31,7 +31,7 @@
               </td>
               <td class="text-xs-left">
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
-                <v-btn :disabled="props.item.status !== 'RUNNING'"
+                <v-btn :disabled="cancelButtonDisabled(props.item.status)"
                        @click="terminateExecution(props.item.id)">Terminate</v-btn>
               </td>
             </template>
@@ -44,6 +44,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -72,6 +73,17 @@ export default {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
+    },
+    cancelButtonDisabled(status) {
+      let disabled = true;
+      if (!isNil(status)) {
+        if (!isEqual(status, 'RUNNING')) {
+          disabled = false;
+        } else if (!isEqual(status, 'WAITING')) {
+          disabled = false;
+        }
+      }
+      return disabled;
     },
   },
   created() {

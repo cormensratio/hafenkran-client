@@ -2,23 +2,31 @@
   <base-page>
     <template slot="body">
       <v-container class="top">
-        <h2>{{execution.name}}</h2>
-        <v-card>
-          <v-card-text class="text-left">
-            <span>Start Date: {{ getTimeStamp(execution.startedAt) }}</span>
-            <v-spacer></v-spacer>
-            <span>Runtime: {{runtime}}</span>
-            <status-cell :status="execution.status"></status-cell>
+        <v-card class="flex">
+          <v-card-title>
+            <div class="execution-title">
+              <span class="title-text">{{execution.name}}</span>
+            </div>
+          </v-card-title>
+          <v-card-text class="text-left details">
+            <span class="mb-3">
+              Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
+            </span>
+            <span class="mb-3">Runtime: {{runtime}}</span>
+            <div class="status">
+              <span>Current status:</span>
+              <status-cell :status="execution.status" class="cell"></status-cell>
+            </div>
           </v-card-text>
           <div class="buttons">
-            <v-btn class="blue" @click="calculateRuntime">
-              Download logs
-              <v-icon right>cloud_download</v-icon>
-            </v-btn>
-            <v-btn class="red" :disabled="execution.status !== 'RUNNING'"
+            <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
               Cancel execution
               <v-icon right dark>cancel</v-icon>
+            </v-btn>
+            <v-btn class="blue" @click="calculateRuntime">
+              Download logs
+              <v-icon right>cloud_download</v-icon>
             </v-btn>
           </div>
         </v-card>
@@ -28,10 +36,10 @@
           <v-card class="results elevation-10">
             <v-tabs color="blue" dark centered icons-and-text grow>
               <v-tabs-slider></v-tabs-slider>
-              <v-tab href="#tab-1" v-on:click="activetab=1">Logs
+              <v-tab href="#tab-1" @click="activetab=1">Logs
                 <v-icon>description</v-icon>
               </v-tab>
-              <v-tab href="#tab-2" v-on:click="activetab=2">Statistics
+              <v-tab href="#tab-2" @click="activetab=2">Statistics
                 <v-icon>timeline</v-icon>
               </v-tab>
             </v-tabs>
@@ -57,7 +65,7 @@
 </template>
 
 <script>
-import { isNil } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
@@ -78,6 +86,20 @@ export default {
   },
   props: {
     executionId: String,
+  },
+  computed: {
+    cancelButtonDisabled() {
+      const status = this.execution.status;
+      let disabled = true;
+      if (!isNil(status)) {
+        if (!isEqual(status, 'RUNNING')) {
+          disabled = false;
+        } else if (!isEqual(status, 'WAITING')) {
+          disabled = false;
+        }
+      }
+      return disabled;
+    },
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution']),
@@ -132,6 +154,36 @@ export default {
 
 <style scoped>
   .buttons {
-    padding-bottom: 20px;
+    display: flex;
+    margin-top: 1%;
+    padding-bottom: 1%;
+    justify-content: flex-end;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    font-size: 12pt;
+  }
+
+  .execution-title {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .title-text {
+    font-size: 18pt;
+    text-decoration: underline;
+  }
+
+  .status {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .cell {
+    margin-top: -8px;
+    margin-left: 5px;
   }
 </style>

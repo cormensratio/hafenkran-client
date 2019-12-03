@@ -1,7 +1,7 @@
 import { last, filter, isNil } from 'lodash';
 import ApiService from './ApiService';
 
-const fileFilter = ['zip'];
+const fileFilter = ['tar'];
 const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 
 export default class UploadService {
