@@ -86,7 +86,7 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
-      logs: [{ title: 'first log' }],
+      logs: [{ title: 'Logs are getting updated here:' }],
       showingLogs: true,
     };
   },
@@ -151,13 +151,15 @@ export default {
           this.execution = execution;
         }
       });
+  },
+  mounted() {
     setInterval(() => {
       if (this.showingLogs === true) {
-        ExecutionDetailService.getExecutionResultsbyId(this.executionId)
+        ExecutionDetailService.getExecutionLogsbyId(this.executionId)
           .then((newLog) => {
             console.log(newLog);
             if (!isNil(newLog)) {
-              this.logs.push({ title: newLog + this.logs.length });
+              this.logs.push({ title: `Log Nr. ${this.logs.length}: ${newLog}` });
             }
           });
       }
