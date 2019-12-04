@@ -52,7 +52,7 @@ const ExperimentStore = {
           return response;
         }
       }
-      return undefined;
+      return null;
     },
   },
 };
