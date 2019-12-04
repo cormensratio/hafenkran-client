@@ -19,6 +19,8 @@
             </div>
           </v-card-text>
           <div class="buttons">
+            <v-switch class="logs justify-end" v-model="showingLogs"
+                      messages="load Livelogs"></v-switch>
             <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
               Cancel execution
@@ -48,6 +50,7 @@
             <div v-if="activetab === 1" class="tab-content">
               <v-card flat>
                 <v-card-text class="logs">
+                  <div v-for="log in logs" :key="log.title">{{ log.title }}</div>
                 </v-card-text>
               </v-card>
             </div>
@@ -71,6 +74,7 @@ import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
+import ExecutionDetailService from '../../service/ExecutionDetailService';
 
 
 export default {
@@ -82,6 +86,8 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
+      logs: [{ title: 'first log' }],
+      showingLogs: true,
     };
   },
   props: {
@@ -145,6 +151,17 @@ export default {
           this.execution = execution;
         }
       });
+    setInterval(() => {
+      if (this.showingLogs === true) {
+        ExecutionDetailService.getExecutionResultsbyId(this.executionId)
+          .then((newLog) => {
+            console.log(newLog);
+            if (!isNil(newLog)) {
+              this.logs.push({ title: newLog + this.logs.length });
+            }
+          });
+      }
+    }, 1000);
   },
   beforeUpdate() {
     this.calculateRuntime();
