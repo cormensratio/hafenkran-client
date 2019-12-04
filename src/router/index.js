@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { isNil } from 'lodash';
 import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
+import store from '../store/store';
 
 Vue.use(Router);
 
@@ -68,7 +68,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
-      if (isNil(localStorage.getItem('user'))) {
+      if (!store.getters.isAuthenticated) {
         next('/login');
       }
     }
