@@ -2,7 +2,7 @@ import UploadService from '../../../src/service/UploadService';
 
 describe('UploadService', () => {
   it('should only accept files with the right file type', () => {
-    const mockFileName = 'test.zip';
+    const mockFileName = 'test.tar';
 
     expect(UploadService.checkFileType(mockFileName)).toBe(true);
   });
