@@ -9,6 +9,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import { isNil } from 'lodash';
 import store from './store/store';
+import AuthService from './service/AuthService';
 
 Vue.use(Vuetify, {
   iconfont: 'md', // 'md' || 'mdi' || 'fa' || 'fa4'
@@ -26,12 +27,8 @@ export default {
 
     const token = localStorage.getItem('user');
     if (!isNil(token)) {
-      store.commit('updateToken', token);
-      const success = store.dispatch('fetchUser');
-
-      if (success) {
-        store.dispatch('fetchExperiments');
-      }
+      AuthService.extractTokenInfo(token);
+      store.dispatch('fetchUser');
     }
   },
 };

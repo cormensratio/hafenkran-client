@@ -50,15 +50,13 @@ const ExecutionStore = {
     },
     async terminateExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
-        ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`)
-          .then((response) => {
-            if (!isNil(response)) {
-              dispatch('fetchAllExecutionsOfUser');
-              return true;
-            }
-            return false;
-          });
+        const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
+        if (!isNil(response)) {
+          dispatch('fetchAllExecutionsOfUser');
+          return response;
+        }
       }
+      return null;
     },
     async deleteExecution({ dispatch }, executionId) {
       const response = await ApiService.doDelete(`${serviceUrl}/executions/${executionId}/delete`);
