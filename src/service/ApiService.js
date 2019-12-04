@@ -32,6 +32,19 @@ export default class ApiService {
       });
   }
 
+  static async doDelete(url, params, additionalHeaders) {
+    const requestConfig = {};
+    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+
+    return axios.delete(`${url}`, requestConfig).then((resp) => {
+      console.log('Received response from: ', url);
+      return resp.data;
+    })
+      .catch((error) => {
+        console.log(`Response to ${url} failed: `, error);
+      });
+  }
+
   static computeRequestHeaders(config) {
     const loggedIn = store.getters.isAuthenticated;
     const headers = {};
