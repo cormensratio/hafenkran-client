@@ -4,9 +4,9 @@ import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
-import store from '../store/store';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
+import store from '../store/store';
 
 Vue.use(Router);
 
