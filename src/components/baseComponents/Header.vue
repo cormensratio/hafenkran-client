@@ -9,7 +9,7 @@
       <v-btn color="blue" round dark @click="logoutUser()">
         Logout
       </v-btn>
-      <v-avatar class="mx-2" color="blue" dark round>
+      <v-avatar class="mx-2" color="blue" dark round @click="navigateToSettings()">
         <span class="white--text headline">{{ user.name.charAt(0) }}</span>
       </v-avatar>
     </div>
@@ -39,6 +39,13 @@ export default {
       this.logout().then(() => {
         this.$router.push('/');
       });
+    },
+    navigateToSettings() {
+      if (this.isAuthenticated) {
+        this.$router.push('/settings');
+      } else {
+        this.$router.push('/login');
+      }
     },
   },
 };

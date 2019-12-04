@@ -1,88 +1,118 @@
 <template>
   <base-page>
     <template slot="body">
-      <v-container fluid id="loginbox">
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md6>
-            <v-card class="elevation-24 shaped">
-              <v-spacer/>
-              <v-toolbar dark color="blue">
-                <v-toolbar-title color="white" class="justify-center">
-                  Change your credentials:
-                </v-toolbar-title>
-              </v-toolbar>
-              <v-card-text>
-                <v-form ref="form" lazy-validation>
-                  <v-text-field type="email" v-model="email"
-                                label="Current email address" prepend-icon="email"/>
-                  <v-text-field type="email" v-model="email"
-                                label="New email address" prepend-icon="email"/>
-                  <v-text-field type="password" v-model="password"
-                                label="Current password" prepend-icon="lock">
-
-                  </v-text-field>
-                  <v-text-field type="password" v-model="password"
-                                label="New password" prepend-icon="lock"/>
-                </v-form>
-              </v-card-text>
-              <v-card-actions class="justify-center">
-                <div>
-                  <v-btn large dark color="blue"
-                         @click="changePassword()" class="button">Save
-                  </v-btn>
-                  <v-btn large dark color="blue" to="/"
-                         class="button">Cancel
-                  </v-btn>
+      <template>
+        <v-form>
+          <v-container>
+            <v-layout column>
+              <v-flex class="mt-4">
+                <span class="description">Change password</span>
+                <v-divider/>
+                <div class="input-size">
+                  <v-text-field class="mt-4"
+                                   label="Current password"
+                                   single-line
+                                   outline
+                ></v-text-field>
+                  <v-text-field
+                    v-model="newPassword"
+                    label="New password"
+                    single-line
+                    outline
+                  ></v-text-field>
+                  <v-text-field
+                    label="Confirm new password"
+                    single-line
+                    outline
+                  ></v-text-field>
                 </div>
-              </v-card-actions>
-              <v-sheet v-if="failedLogin"
-                       elevation="5" dark class="bg-danger">Login failed
-              </v-sheet>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
+                <v-btn @click="updatePassword()">Save password</v-btn>
+              </v-flex>
+              <v-flex class="mt-5">
+                <span class="description">Change email address</span>
+                <v-divider/>
+                <div class="input-size">
+                <v-text-field class="mt-4"
+                  label="Current email"
+                  single-line
+                  outline
+                ></v-text-field>
+                <v-text-field
+                  label="New email"
+                  single-line
+                  outline
+                ></v-text-field>
+                  </div>
+                <v-btn @click="updateEmail()">Save email</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
+      </template>
     </template>
   </base-page>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { isEqual, isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
-  name: 'LoginPage',
+  name: 'UserSettingsPage',
   components: { BasePage },
   data() {
     return {
-      userName: '',
+      newEmail: '',
+      confirmNewEmail: '',
+      newPassword: '',
+      confirmNewPassword: '',
       password: '',
-      failedLogin: false,
     };
   },
   computed: {
     ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
-    ...mapActions(['login']),
-    loginUser() {
-      if (!this.isAuthenticated) {
-        this.login({ name: this.userName, password: this.password })
-          .then((response) => {
-            if (response) {
-              this.failedLogin = false;
-              this.$router.push('/');
-            } else {
-              this.failedLogin = true;
-            }
-          });
+    ...mapActions(['updateUser']),
+    arePasswordsEqual() {
+      return isEqual(this.newPassword, this.confirmNewPassword);
+    },
+    areEmailsEqual() {
+      return isEqual(this.newEmail, this.confirmNewEmail);
+    },
+    async updatePassword() {
+      if (this.arePasswordsEqual()) {
+        const updatedUser = this.createUpdatedUser();
+        if (!isNil(updatedUser)) {
+          alert('Updated password.');
+        }
       }
+    },
+    async updateEmail() {
+      if (this.areEmailsEqual()) {
+        const updatedUser = this.createUpdatedUser();
+        if (!isNil(updatedUser)) {
+          alert('Updated email address.');
+        }
+      }
+    },
+    createUpdatedUser() {
+      return {
+        email: this.user.email,
+        password: this.newPassword,
+        isAdmin: this.user.isAdmin,
+      };
     },
   },
 };
 </script>
+
 <style scoped>
-  .button:hover {
-    color: silver;
+  .description{
+    font-size: xx-large;
+  }
+  .input-size{
+    max-width: 500px;
   }
 </style>

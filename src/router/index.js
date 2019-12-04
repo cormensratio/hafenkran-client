@@ -68,7 +68,7 @@ const router = new Router({
       name: 'UserSettings',
       component: UserSettingsPage,
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
       },
     },
   ],
