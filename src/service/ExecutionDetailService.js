@@ -13,9 +13,7 @@ export default class ExecutionDetailService {
   static async postUserInput(userInput, executionId) {
     let responseData;
     if (!isNil(userInput) && !isNil(executionId)) {
-      const formData = new FormData();
-      formData.append('input', userInput);
-      responseData = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/stdin`, formData);
+      responseData = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/stdin`, { input: userInput });
     }
     return !!responseData;
   }
