@@ -60,7 +60,7 @@ const ExecutionStore = {
       return null;
     },
     async deleteExecution({ dispatch }, executionId) {
-      const response = await ApiService.doPost(`${serviceUrl}/executions/delete/${executionId}`);
+      const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
       if (!isNil(response)) {
         dispatch('fetchAllExecutionsOfUser');
         return response;
