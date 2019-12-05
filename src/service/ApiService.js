@@ -32,10 +32,14 @@ export default class ApiService {
       });
   }
 
-  static async doDelete(url, params, additionalHeaders) {
+  static async doDelete(url, data, additionalHeaders) {
     const requestConfig = {};
-    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+    requestConfig.headers = await this.computeRequestHeaders(additionalHeaders);
 
+    if (!isNil(data)) {
+      requestConfig.data = data;
+    }
+    debugger;
     return axios.delete(`${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
       return resp.data;
