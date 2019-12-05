@@ -19,9 +19,7 @@
             </div>
           </v-card-text>
           <div class="buttons">
-            <v-btn class="logs" @click="showingLogs=!showingLogs">Load Logs
-              <v-icon v-if="showingLogs" right dark>pause</v-icon>
-              <v-icon v-else right dark>play_arrow</v-icon>
+            <v-btn class="logs" @click="getLogs">Load Logs
             </v-btn>
             <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
@@ -112,8 +110,7 @@ export default {
       runtime: '',
       activetab: 1,
       logs: '',
-      showingLogs: true,
-      loading: true,
+      loading: false,
     };
   },
   props: {
@@ -133,6 +130,16 @@ export default {
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution']),
+    getLogs() {
+      this.loading = true;
+      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
+        .then((newLog) => {
+          if (!isNil(newLog)) {
+            this.logs = newLog;
+            this.loading = false;
+          }
+        });
+    },
     calculateRuntime() {
       const terminated = moment(this.execution.terminatedAt);
       const now = moment(new Date());
@@ -181,18 +188,6 @@ export default {
           this.execution = execution;
         }
       });
-  },
-  updated() {
-    if (this.showingLogs) {
-      this.loading = true;
-      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
-        .then((newLog) => {
-          if (!isNil(newLog)) {
-            this.logs = newLog;
-            this.loading = false;
-          }
-        });
-    }
   },
   beforeUpdate() {
     this.calculateRuntime();
