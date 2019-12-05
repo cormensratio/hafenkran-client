@@ -142,16 +142,17 @@ export default {
     },
     calculateRuntime() {
       const terminated = moment(this.execution.terminatedAt);
+      const startedAt = moment(this.execution.startedAt);
       const now = moment(new Date());
       switch (this.execution.status) {
         case 'RUNNING':
-          this.runtime = this.msToTime(now.diff(terminated));
+          this.runtime = this.msToTime(moment(now.diff(startedAt)));
           break;
         case 'TERMINATED':
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
-          this.runtime = this.msToTime(moment(this.execution.startedAt)
+          this.runtime = this.msToTime(moment(startedAt)
             .diff(terminated));
           break;
         case 'WAITING':
