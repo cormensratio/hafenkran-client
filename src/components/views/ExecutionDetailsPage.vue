@@ -26,11 +26,11 @@
               Cancel execution
               <v-icon right dark>cancel</v-icon>
             </v-btn>
-            <v-btn class="red" @click="deleteExecution(props.item.id)">
+            <v-btn class="red" @click="deleteExecution(execution.id)">
               Delete
             </v-btn>
-            <v-btn class="blue" @click="calculateRuntime">
-              Download logs
+            <v-btn class="blue" @click="downloadResults()">
+              Download Results
               <v-icon right>cloud_download</v-icon>
             </v-btn>
           </div>
@@ -180,6 +180,9 @@ export default {
         await ExecutionDetailService.postUserInput(this.userInput, this.execution.executionId);
       }
       this.userInput = '';
+    },
+    async downloadResults() {
+      await ExecutionDetailService.downloadResults(this.execution.id, this.execution.name);
     },
   },
   created() {
