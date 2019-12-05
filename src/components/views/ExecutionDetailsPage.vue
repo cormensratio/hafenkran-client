@@ -35,9 +35,9 @@
           </div>
         </v-card>
       </v-container>
-      <v-container class="bottom">
+      <v-container class="bottom" >
         <v-flex>
-          <v-card class="results elevation-10">
+          <v-card class="results elevation-5">
             <v-tabs color="blue" dark centered icons-and-text grow>
               <v-tabs-slider></v-tabs-slider>
               <v-tab href="#tab-1" @click="activetab=1">Logs
@@ -50,16 +50,36 @@
           </v-card>
           <div class="content">
             <div v-if="activetab === 1" class="tab-content">
-              <v-card flat>
-                <v-card-text class="logs">
-                  <div class="text-left" v-for="log in logs" :key="log.title">{{ log.title }}</div>
+              <v-container
+                id="scroll-target"
+                style="max-height: 400px"
+                class="scroll-y black white--text"
+              >
+                <v-layout
+                  column
+                  style="height: 300px"
+                >
+                  <div class="text-left">Logs are getting updated here:</div>
+                  <div class="text-left" id="logText" >{{ logs }}</div>
                   <v-progress-circular
                     indeterminate
                     color="blue"
                     v-if="loading"
                   ></v-progress-circular>
-                </v-card-text>
-              </v-card>
+                </v-layout>
+              </v-container>
+                <v-text-field
+                  class="align-end bg-white"
+                  v-model="Input"
+                  single-line
+                  append-icon="send"
+                  label="Enter a command!"
+                  @click:append="sendMessage()"
+                  clearable
+                  clear-icon="close"
+                  type="text"
+                  outline
+                />
             </div>
             <div v-if="activetab === 2" class="tab-content">
               <v-card flat>
@@ -93,7 +113,7 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
-      logs: [{ title: 'Logs are getting updated here:' }],
+      logs: '',
       showingLogs: true,
       loading: true,
     };
@@ -166,7 +186,7 @@ export default {
           .then((newLog) => {
             console.log(newLog);
             if (!isNil(newLog)) {
-              this.logs.push({ title: `Log Nr. ${this.logs.length}: ${newLog}` });
+              this.logs = newLog;
               this.loading = false;
             }
           });
@@ -212,5 +232,9 @@ export default {
   .cell {
     margin-top: -8px;
     margin-left: 5px;
+  }
+  #logText {
+    padding-bottom: 20px;
+    padding-top: 20px;
   }
 </style>
