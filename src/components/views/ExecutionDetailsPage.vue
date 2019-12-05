@@ -19,9 +19,9 @@
             </div>
           </v-card-text>
           <div class="buttons">
-            <v-btn class="logs" @click="showingLogs=!showingLogs">Logs
-              <v-icon v-if="showingLogs" right dark>stop</v-icon>
-              <v-icon v-else right dark>play</v-icon>
+            <v-btn class="logs" @click="showingLogs=!showingLogs">Load Logs
+              <v-icon v-if="showingLogs" right dark>pause</v-icon>
+              <v-icon v-else right dark>play_arrow</v-icon>
             </v-btn>
             <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
