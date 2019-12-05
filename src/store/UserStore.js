@@ -49,6 +49,8 @@ const UserStore = {
 
       return false;
     },
+    registerUser() {
+    },
     logout({ dispatch }) {
       AuthService.logout();
       dispatch('clearStore');
