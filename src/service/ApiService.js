@@ -21,7 +21,7 @@ export default class ApiService {
 
   static async doPost(url, params, additionalHeaders) {
     const requestConfig = {};
-    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+    requestConfig.headers = await this.computeRequestHeaders(additionalHeaders);
 
     return axios.post(`${url}`, params, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
@@ -55,7 +55,7 @@ export default class ApiService {
       headers.Authorization = `Bearer ${jwtToken.token}`;
     }
 
-    if (!isNil(config) && !isNil(config.headers)) {
+    if (!isNil(config)) {
       forOwn(config, (value, key) => {
         headers[key] = value;
       });
