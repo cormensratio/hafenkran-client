@@ -187,7 +187,6 @@ export default {
       this.loading = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
-          console.log(newLog);
           if (!isNil(newLog)) {
             this.logs = newLog;
             this.loading = false;

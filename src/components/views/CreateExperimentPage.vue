@@ -4,7 +4,7 @@
       <div class="container">
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
-            <label><p class="h1">Upload your Dockerfile here:</p><br>
+            <label><p class="h1">Upload your experiments here:</p><br>
               <input type="file" ref="file" id="file" @change="getFile"/>
             </label>
           </div>
