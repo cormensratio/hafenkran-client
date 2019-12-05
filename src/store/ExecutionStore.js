@@ -59,6 +59,14 @@ const ExecutionStore = {
       }
       return null;
     },
+    async deleteExecution({ dispatch }, executionId) {
+      const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
+      if (!isNil(response)) {
+        dispatch('fetchAllExecutionsOfUser');
+        return response;
+      }
+      return null;
+    },
     getExecutionById({ state }, id) {
       if (!isNil(id)) {
         return find(state.executions, execution => execution.id === id);

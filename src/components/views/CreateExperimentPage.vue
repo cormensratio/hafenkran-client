@@ -61,7 +61,7 @@ export default {
       this.file = this.$refs.file.files[0];
       if (this.file !== null) {
         this.fileName = this.getFileName();
-        this.correctFileType = UploadService.checkFileType(this.fileName);
+        this.correctFileType = UploadService.checkFileType(this.file);
         this.timestamp = UploadService.getTimeStamp();
       }
     },
