@@ -8,7 +8,7 @@ export default class ExecutionDetailService {
     if (result !== undefined) {
       return result;
     }
-    return 'No new logs';
+    return null;
   }
   static async postUserInput(userInput, executionId) {
     let responseData;
