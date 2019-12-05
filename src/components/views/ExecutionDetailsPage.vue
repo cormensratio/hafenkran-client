@@ -24,6 +24,9 @@
               Cancel execution
               <v-icon right dark>cancel</v-icon>
             </v-btn>
+            <v-btn class="red" @click="deleteExecution(props.item.id)">
+              Delete
+            </v-btn>
             <v-btn class="blue" @click="calculateRuntime">
               Download logs
               <v-icon right>cloud_download</v-icon>
@@ -102,7 +105,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution']),
     calculateRuntime() {
       const terminated = moment(this.execution.terminatedAt);
       const now = moment(new Date());
