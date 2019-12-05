@@ -152,8 +152,8 @@ export default {
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
-          this.runtime = this.msToTime(moment(startedAt)
-            .diff(terminated));
+          this.runtime = this.msToTime(moment(terminated)
+            .diff(startedAt));
           break;
         case 'WAITING':
           this.runtime = 'This execution has not started yet!';
