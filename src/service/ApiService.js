@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { isNil, forOwn } from 'lodash';
-import store from '../store/store';
+import { jwtToken } from './AuthService';
 
 export default class ApiService {
   static async doGet(url, config) {
@@ -8,7 +8,7 @@ export default class ApiService {
     if (!isNil(config)) {
       requestConfig = config;
     }
-    requestConfig.headers = this.computeRequestHeaders(config);
+    requestConfig.headers = await this.computeRequestHeaders(config);
 
     return axios.get(`${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
@@ -21,7 +21,7 @@ export default class ApiService {
 
   static async doPost(url, params, additionalHeaders) {
     const requestConfig = {};
-    requestConfig.headers = this.computeRequestHeaders(additionalHeaders);
+    requestConfig.headers = await this.computeRequestHeaders(additionalHeaders);
 
     return axios.post(`${url}`, params, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
@@ -32,14 +32,17 @@ export default class ApiService {
       });
   }
 
-  static computeRequestHeaders(config) {
-    const loggedIn = store.getters.isAuthenticated;
+  static async computeRequestHeaders(config) {
+    const loggedIn = !isNil(localStorage.getItem('user'));
     const headers = {};
     if (loggedIn) {
-      headers.Authorization = `Bearer ${store.getters.jwtToken}`;
+      // TODO enable refetching of token if it expires soon
+      // check if token is still valid, if not, fetch new one
+      // await AuthService.checkTokenValidity();
+      headers.Authorization = `Bearer ${jwtToken.token}`;
     }
 
-    if (!isNil(config) && !isNil(config.headers)) {
+    if (!isNil(config)) {
       forOwn(config, (value, key) => {
         headers[key] = value;
       });
