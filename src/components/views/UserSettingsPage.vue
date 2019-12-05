@@ -11,17 +11,20 @@
                 <div class="input-size">
                   <v-text-field class="mt-4"
                                 label="Current password"
+                                :type="show_password ? 'text' : 'password'"
                                 single-line
                                 outline
                   />
                   <v-text-field
                     v-model="newPassword"
                     label="New password"
+                    :type="show_password ? 'text' : 'password'"
                     single-line
                     outline
                   />
                   <v-text-field
                     label="Confirm new password"
+                    :type="show_password ? 'text' : 'password'"
                     single-line
                     outline
                   />
@@ -32,11 +35,13 @@
                 <v-divider/>
                 <div class="input-size">
                   <v-text-field class="mt-4"
+                                v-model="email"
                                 label="Current email"
                                 single-line
                                 outline
                   />
                   <v-text-field
+                    v-model="newEmail"
                     label="New email"
                     single-line
                     outline
@@ -62,11 +67,12 @@ export default {
   components: { BasePage },
   data() {
     return {
+      email: '',
       newEmail: '',
-      confirmNewEmail: '',
       newPassword: '',
       confirmNewPassword: '',
       password: '',
+      show_password: false,
     };
   },
   computed: {
@@ -78,28 +84,30 @@ export default {
       return isEqual(this.newPassword, this.confirmNewPassword);
     },
     areEmailsEqual() {
-      return isEqual(this.newEmail, this.confirmNewEmail);
+      return isEqual(this.email, this.newEmail);
     },
     async updatePassword() {
       if (this.arePasswordsEqual()) {
-        const updatedUser = this.createUpdatedUser();
+        const updatedUser = this.createUpdatedUser(undefined, this.newPassword);
         if (!isNil(updatedUser)) {
           alert('Updated password.');
         }
       }
     },
     async updateEmail() {
-      if (this.areEmailsEqual()) {
-        const updatedUser = this.createUpdatedUser();
+      if (!this.areEmailsEqual()) {
+        const updatedUser = this.createUpdatedUser(this.newEmail, undefined);
         if (!isNil(updatedUser)) {
-          alert('Updated email address.');
+          alert('Updated e-mail address.');
         }
+      } else {
+        alert('Same e-mail address not allowed');
       }
     },
-    createUpdatedUser() {
+    createUpdatedUser(email, password) {
       return {
-        email: this.user.email,
-        password: this.newPassword,
+        email: email || this.user.email,
+        password: password || '',
         isAdmin: this.user.isAdmin,
       };
     },
