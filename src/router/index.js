@@ -7,6 +7,7 @@ import LoginPage from '../components/views/LoginPage';
 import store from '../store/store';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
+import UserRegistrationPage from '../components/views/UserRegistrationPage';
 
 Vue.use(Router);
 
@@ -60,6 +61,14 @@ const router = new Router({
       props: true,
       meta: {
         requiresAuth: true,
+      },
+    },
+    {
+      path: '/registration',
+      name: 'UserRegistrationPage',
+      component: UserRegistrationPage,
+      meta: {
+        requiresAuth: false,
       },
     },
   ],
