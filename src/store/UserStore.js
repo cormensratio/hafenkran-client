@@ -11,7 +11,6 @@ const UserStore = {
     user: {
       id: '',
       name: '',
-      password: '',
       isAdmin: '',
       email: '',
     },
@@ -59,7 +58,6 @@ const UserStore = {
         user: {
           id: '',
           name: '',
-          password: '',
           isAdmin: '',
         },
       };
