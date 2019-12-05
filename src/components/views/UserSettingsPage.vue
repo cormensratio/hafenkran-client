@@ -4,46 +4,45 @@
       <template>
         <v-form>
           <v-container>
-            <v-layout column>
+            <v-layout column align-center>
               <v-flex class="mt-4">
-                <span class="description">Change password</span>
+                <span class="input-heading">Change your password</span>
                 <v-divider/>
                 <div class="input-size">
                   <v-text-field class="mt-4"
-                                   label="Current password"
-                                   single-line
-                                   outline
-                ></v-text-field>
+                                label="Current password"
+                                single-line
+                                outline
+                  />
                   <v-text-field
                     v-model="newPassword"
                     label="New password"
                     single-line
                     outline
-                  ></v-text-field>
+                  />
                   <v-text-field
                     label="Confirm new password"
                     single-line
                     outline
-                  ></v-text-field>
+                  />
                 </div>
-                <v-btn @click="updatePassword()">Save password</v-btn>
-              </v-flex>
-              <v-flex class="mt-5">
-                <span class="description">Change email address</span>
+                <v-btn class="save-button" ma-2 @click="updatePassword()">Save password</v-btn>
+                <v-spacer class="mt-4"></v-spacer>
+                <span class="input-heading">Change your e-mail address</span>
                 <v-divider/>
                 <div class="input-size">
-                <v-text-field class="mt-4"
-                  label="Current email"
-                  single-line
-                  outline
-                ></v-text-field>
-                <v-text-field
-                  label="New email"
-                  single-line
-                  outline
-                ></v-text-field>
+                  <v-text-field class="mt-4"
+                                label="Current email"
+                                single-line
+                                outline
+                  />
+                  <v-text-field
+                    label="New email"
+                    single-line
+                    outline
+                  />
                   </div>
-                <v-btn @click="updateEmail()">Save email</v-btn>
+                <v-btn class="save-button" @click="updateEmail()">Save email</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -109,10 +108,11 @@ export default {
 </script>
 
 <style scoped>
-  .description{
+  .input-heading{
     font-size: xx-large;
   }
   .input-size{
-    max-width: 500px;
+  }
+  .save-button{
   }
 </style>
