@@ -38,8 +38,7 @@
       <v-container class="bottom" >
         <v-flex>
           <v-card class="results elevation-5">
-            <v-tabs color="blue" dark centered icons-and-text grow>
-              <v-tabs-slider></v-tabs-slider>
+            <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
               <v-tab href="#tab-1" @click="activetab=1">Logs
                 <v-icon>description</v-icon>
               </v-tab>
@@ -82,10 +81,6 @@
                 />
             </div>
             <div v-if="activetab === 2" class="tab-content">
-              <v-card flat>
-                <v-card-text class="statistics">
-                </v-card-text>
-              </v-card>
             </div>
           </div>
         </v-flex>
@@ -102,7 +97,6 @@ import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
-
 
 export default {
   name: 'ExecutionDetailsPage',
@@ -185,20 +179,18 @@ export default {
         }
       });
   },
-  mounted() {
-    setInterval(() => {
-      if (this.showingLogs === true) {
-        this.loading = true;
-        ExecutionDetailService.getExecutionLogsbyId(this.executionId)
-          .then((newLog) => {
-            console.log(newLog);
-            if (!isNil(newLog)) {
-              this.logs = newLog;
-              this.loading = false;
-            }
-          });
-      }
-    }, 1000);
+  updated() {
+    if (this.showingLogs) {
+      this.loading = true;
+      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
+        .then((newLog) => {
+          console.log(newLog);
+          if (!isNil(newLog)) {
+            this.logs = newLog;
+            this.loading = false;
+          }
+        });
+    }
   },
   beforeUpdate() {
     this.calculateRuntime();
