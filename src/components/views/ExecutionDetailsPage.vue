@@ -65,16 +65,16 @@
                     indeterminate
                     color="blue"
                     v-if="loading"
-                  ></v-progress-circular>
+                  />
                 </v-layout>
               </v-container>
                 <v-text-field
                   class="align-end bg-white"
-                  v-model="Input"
+                  v-model="userInput"
                   single-line
                   append-icon="send"
-                  label="Enter a command!"
-                  @click:append="sendMessage()"
+                  label="Enter a command here!"
+                  @click:append="sendStdin()"
                   clearable
                   clear-icon="close"
                   type="text"
@@ -110,6 +110,7 @@ export default {
   components: { StatusCell, BasePage },
   data() {
     return {
+      userInput: '',
       execution: {},
       runtime: '',
       activetab: 1,
@@ -168,6 +169,12 @@ export default {
       const hours = Math.floor(minutes / 60);
       minutes %= 60;
       return `${this.pad(hours)}h:${this.pad(minutes)}min:${this.pad(secs)}s`;
+    },
+    async sendStdin() {
+      if (!isNil(this.userInput) || !this.userInput.equals('')) {
+        await ExecutionDetailService.postUserInput(this.userInput, this.execution.executionId);
+      }
+      this.userInput = '';
     },
   },
   created() {
