@@ -19,8 +19,10 @@
             </div>
           </v-card-text>
           <div class="buttons">
-            <v-switch class="logs justify-end" v-model="showingLogs"
-                      messages="load Livelogs"></v-switch>
+            <v-btn class="logs" @click="showingLogs=!showingLogs">Logs
+              <v-icon v-if="showingLogs" right dark>stop</v-icon>
+              <v-icon v-else right dark>play</v-icon>
+            </v-btn>
             <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
               Cancel execution
@@ -50,7 +52,7 @@
             <div v-if="activetab === 1" class="tab-content">
               <v-card flat>
                 <v-card-text class="logs">
-                  <div v-for="log in logs" :key="log.title">{{ log.title }}</div>
+                  <div class="text-left" v-for="log in logs" :key="log.title">{{ log.title }}</div>
                   <v-progress-circular
                     indeterminate
                     color="blue"
@@ -104,9 +106,7 @@ export default {
       const status = this.execution.status;
       let disabled = true;
       if (!isNil(status)) {
-        if (!isEqual(status, 'RUNNING')) {
-          disabled = false;
-        } else if (!isEqual(status, 'WAITING')) {
+        if (!isEqual(status, 'RUNNING' || 'WAITING')) {
           disabled = false;
         }
       }
