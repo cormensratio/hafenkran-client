@@ -51,6 +51,11 @@
               <v-card flat>
                 <v-card-text class="logs">
                   <div v-for="log in logs" :key="log.title">{{ log.title }}</div>
+                  <v-progress-circular
+                    indeterminate
+                    color="blue"
+                    v-if="loading"
+                  ></v-progress-circular>
                 </v-card-text>
               </v-card>
             </div>
@@ -88,6 +93,7 @@ export default {
       activetab: 1,
       logs: [{ title: 'Logs are getting updated here:' }],
       showingLogs: true,
+      loading: true,
     };
   },
   props: {
@@ -155,11 +161,13 @@ export default {
   mounted() {
     setInterval(() => {
       if (this.showingLogs === true) {
+        this.loading = true;
         ExecutionDetailService.getExecutionLogsbyId(this.executionId)
           .then((newLog) => {
             console.log(newLog);
             if (!isNil(newLog)) {
               this.logs.push({ title: `Log Nr. ${this.logs.length}: ${newLog}` });
+              this.loading = false;
             }
           });
       }
