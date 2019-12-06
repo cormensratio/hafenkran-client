@@ -20,15 +20,17 @@ export default {
   created() {
     console.log('Initiating Hafenkran client application...');
 
+    debugger;
     if (process.env.USE_TEST_TOKEN) {
       localStorage.removeItem('user');
       localStorage.setItem('user', process.env.TEST_TOKEN);
-    }
-
-    const token = localStorage.getItem('user');
-    if (!isNil(token)) {
-      AuthService.extractTokenInfo(token);
-      store.dispatch('fetchUser');
+      store.commit('updateUser', process.env.TEST_USER.user);
+    } else {
+      const token = localStorage.getItem('user');
+      if (!isNil(token)) {
+        AuthService.extractTokenInfo(token);
+        store.dispatch('fetchUser');
+      }
     }
   },
 };
