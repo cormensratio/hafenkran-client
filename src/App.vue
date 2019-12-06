@@ -20,11 +20,15 @@ export default {
   created() {
     console.log('Initiating Hafenkran client application...');
 
-    debugger;
     if (process.env.USE_TEST_TOKEN) {
       localStorage.removeItem('user');
       localStorage.setItem('user', process.env.TEST_TOKEN);
-      store.commit('updateUser', process.env.TEST_USER.user);
+      store.commit('updateUser', {
+        id: '1',
+        name: 'Test-Rick',
+        isAdmin: true,
+        email: 'test.rick@pickle.com',
+      });
     } else {
       const token = localStorage.getItem('user');
       if (!isNil(token)) {
