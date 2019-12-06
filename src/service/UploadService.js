@@ -7,7 +7,7 @@ const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 export default class UploadService {
   static checkFileType(file) {
     const type = file.type;
-    return isEqual(type, fileFilter);
+    return isEqual(type, fileFilter) || isEqual(type, '');
   }
 
   static getTimeStamp() {

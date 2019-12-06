@@ -19,26 +19,27 @@
             </div>
           </v-card-text>
           <div class="buttons">
+            <v-btn class="logs" @click="getLogs">Load Logs
+            </v-btn>
             <v-btn class="red" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
               Cancel execution
               <v-icon right dark>cancel</v-icon>
             </v-btn>
-            <v-btn class="red" @click="deleteExecution(props.item.id)">
+            <v-btn class="red" @click="deleteExecution(execution.id)">
               Delete
             </v-btn>
-            <v-btn class="blue" @click="calculateRuntime">
-              Download logs
+            <v-btn class="blue" @click="downloadResults()">
+              Download Results
               <v-icon right>cloud_download</v-icon>
             </v-btn>
           </div>
         </v-card>
       </v-container>
-      <v-container class="bottom">
+      <v-container class="bottom" >
         <v-flex>
-          <v-card class="results elevation-10">
-            <v-tabs color="blue" dark centered icons-and-text grow>
-              <v-tabs-slider></v-tabs-slider>
+          <v-card class="results elevation-5">
+            <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
               <v-tab href="#tab-1" @click="activetab=1">Logs
                 <v-icon>description</v-icon>
               </v-tab>
@@ -49,16 +50,38 @@
           </v-card>
           <div class="content">
             <div v-if="activetab === 1" class="tab-content">
-              <v-card flat>
-                <v-card-text class="logs">
-                </v-card-text>
-              </v-card>
+              <v-container
+                id="scroll-target"
+                style="max-height: 400px"
+                class="scroll-y black white--text"
+              >
+                <v-layout
+                  column
+                  style="height: 300px"
+                >
+                  <div class="text-left">Logs are getting updated here:</div>
+                  <div class="text-left" id="logText" >{{ logs }}</div>
+                  <v-progress-circular
+                    indeterminate
+                    color="blue"
+                    v-if="loading"
+                  />
+                </v-layout>
+              </v-container>
+                <v-text-field
+                  class="align-end bg-white"
+                  v-model="userInput"
+                  single-line
+                  append-icon="send"
+                  label="Enter a command here!"
+                  @click:append="sendStdin()"
+                  clearable
+                  clear-icon="close"
+                  type="text"
+                  outline
+                />
             </div>
             <div v-if="activetab === 2" class="tab-content">
-              <v-card flat>
-                <v-card-text class="statistics">
-                </v-card-text>
-              </v-card>
             </div>
           </div>
         </v-flex>
@@ -74,7 +97,7 @@ import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
-
+import ExecutionDetailService from '../../service/ExecutionDetailService';
 
 export default {
   name: 'ExecutionDetailsPage',
@@ -82,9 +105,12 @@ export default {
   components: { StatusCell, BasePage },
   data() {
     return {
+      userInput: '',
       execution: {},
       runtime: '',
       activetab: 1,
+      logs: '',
+      loading: false,
     };
   },
   props: {
@@ -95,9 +121,7 @@ export default {
       const status = this.execution.status;
       let disabled = true;
       if (!isNil(status)) {
-        if (!isEqual(status, 'RUNNING')) {
-          disabled = false;
-        } else if (!isEqual(status, 'WAITING')) {
+        if (!isEqual(status, 'RUNNING' || 'WAITING')) {
           disabled = false;
         }
       }
@@ -106,19 +130,30 @@ export default {
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution']),
+    getLogs() {
+      this.loading = true;
+      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
+        .then((newLog) => {
+          if (!isNil(newLog)) {
+            this.logs = newLog;
+            this.loading = false;
+          }
+        });
+    },
     calculateRuntime() {
       const terminated = moment(this.execution.terminatedAt);
+      const startedAt = moment(this.execution.startedAt);
       const now = moment(new Date());
       switch (this.execution.status) {
         case 'RUNNING':
-          this.runtime = this.msToTime(now.diff(terminated));
+          this.runtime = this.msToTime(moment(now.diff(startedAt)));
           break;
         case 'TERMINATED':
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
-          this.runtime = this.msToTime(moment(this.execution.startedAt)
-            .diff(terminated));
+          this.runtime = this.msToTime(moment(terminated)
+            .diff(startedAt));
           break;
         case 'WAITING':
           this.runtime = 'This execution has not started yet!';
@@ -139,6 +174,15 @@ export default {
       const hours = Math.floor(minutes / 60);
       minutes %= 60;
       return `${this.pad(hours)}h:${this.pad(minutes)}min:${this.pad(secs)}s`;
+    },
+    async sendStdin() {
+      if (!isNil(this.userInput) || !this.userInput.equals('')) {
+        await ExecutionDetailService.postUserInput(this.userInput, this.execution.executionId);
+      }
+      this.userInput = '';
+    },
+    async downloadResults() {
+      await ExecutionDetailService.downloadResults(this.execution.id, this.execution.name);
     },
   },
   created() {
@@ -188,5 +232,9 @@ export default {
   .cell {
     margin-top: -8px;
     margin-left: 5px;
+  }
+  #logText {
+    padding-bottom: 20px;
+    padding-top: 20px;
   }
 </style>

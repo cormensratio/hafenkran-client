@@ -4,7 +4,7 @@
       <div class="container">
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
-            <label><p class="h1">Upload your Dockerfile here:</p><br>
+            <label><p class="h1">Upload your experiments here:</p><br>
               <input type="file" ref="file" id="file" @change="getFile"/>
             </label>
           </div>
@@ -26,6 +26,11 @@
                  class="btn btn-success" v-on:click="submitFile()">Submit</v-btn>
           <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
           <v-btn to="/experimentlist">See experiments</v-btn>
+          <v-progress-circular
+            indeterminate
+            color="blue"
+            v-if="loading"
+          ></v-progress-circular>
         </div>
       </div>
     </template>
@@ -45,6 +50,7 @@ export default {
       timestamp: null,
       fileName: null,
       correctFileType: false,
+      loading: false,
     };
   },
   methods: {
@@ -60,10 +66,13 @@ export default {
       }
     },
     async submitFile() {
+      this.loading = true;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
         this.$router.push('/experimentlist');
+        this.loading = false;
       }
+      this.loading = false;
     },
   },
 };
