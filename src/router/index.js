@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { isNil } from 'lodash';
 import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
 import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
-import store from '../store/store';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
+import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 
 Vue.use(Router);
 
@@ -52,13 +53,22 @@ const router = new Router({
         requiresAuth: true,
       },
     },
+    {
+      path: '/execution/:executionId',
+      name: 'ExecutionDetails',
+      component: ExecutionDetailsPage,
+      props: true,
+      meta: {
+        requiresAuth: true,
+      },
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
   if (process.env.AUTHENTICATION_REQUIRED) {
     if (to.meta.requiresAuth) {
-      if (!store.getters.isAuthenticated) {
+      if (isNil(localStorage.getItem('user'))) {
         next('/login');
       }
     }

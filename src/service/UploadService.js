@@ -1,15 +1,13 @@
-import { last, filter, isNil } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import ApiService from './ApiService';
 
-const fileFilter = ['zip'];
+const fileFilter = 'application/x-tar';
 const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 
 export default class UploadService {
-  static checkFileType(fileName) {
-    const type = last(fileName.split('.'));
-    const matches = filter(fileFilter, f => f === type);
-
-    return !isNil(matches) && matches.length === 1;
+  static checkFileType(file) {
+    const type = file.type;
+    return isEqual(type, fileFilter) || isEqual(type, '');
   }
 
   static getTimeStamp() {
@@ -19,13 +17,20 @@ export default class UploadService {
     return `${date} ${time}`;
   }
 
-  static uploadFile(file, filename) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('name', filename);
+  static async uploadFile(file, filename) {
+    if (!isNil(file) && !isNil(filename)) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('name', filename);
 
-    ApiService.doPost(`${serviceUrl}/experiments/uploadFile`, formData,
-      { 'Content-Type': 'multipart/form-data' },
-    ).then(response => response);
+      const responseData = await ApiService.doPost(`${serviceUrl}/experiments/uploadFile`, formData,
+        { 'Content-Type': 'multipart/form-data' },
+      );
+
+      if (responseData) {
+        return true;
+      }
+    }
+    return false;
   }
 }
