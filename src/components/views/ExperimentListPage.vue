@@ -19,7 +19,6 @@
                 :headers="headers"
                 :items="experiments"
                 :search="search"
-                :items-per-page="5"
                 class="elevation-1"
               ><template v-slot:items="props">
                 <tr @click="toggleDetails(props.item)">

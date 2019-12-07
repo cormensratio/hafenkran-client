@@ -23,12 +23,18 @@ export default {
     if (process.env.USE_TEST_TOKEN) {
       localStorage.removeItem('user');
       localStorage.setItem('user', process.env.TEST_TOKEN);
-    }
-
-    const token = localStorage.getItem('user');
-    if (!isNil(token)) {
-      AuthService.extractTokenInfo(token);
-      store.dispatch('fetchUser');
+      store.commit('updateUser', {
+        id: '1',
+        name: 'Test-Rick',
+        isAdmin: true,
+        email: 'test.rick@pickle.com',
+      });
+    } else {
+      const token = localStorage.getItem('user');
+      if (!isNil(token)) {
+        AuthService.extractTokenInfo(token);
+        store.dispatch('fetchUser');
+      }
     }
   },
 };
