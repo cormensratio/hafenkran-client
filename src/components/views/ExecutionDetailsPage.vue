@@ -21,15 +21,15 @@
           <div class="buttons">
             <v-btn class="logs" @click="getLogs">Load Logs
             </v-btn>
-            <v-btn class="red" :disabled="cancelButtonDisabled"
+            <v-btn class="red Cancel" :disabled="cancelButtonDisabled"
                    @click="terminateExecution(execution.id)">
               Cancel execution
               <v-icon right dark>cancel</v-icon>
             </v-btn>
-            <v-btn class="red" @click="deleteExecution(execution.id)">
+            <v-btn class="red Delete" @click="deleteExecution(execution.id)">
               Delete
             </v-btn>
-            <v-btn class="blue" @click="downloadResults()">
+            <v-btn class="blue Download" @click="downloadResults()">
               Download Results
               <v-icon right>cloud_download</v-icon>
             </v-btn>

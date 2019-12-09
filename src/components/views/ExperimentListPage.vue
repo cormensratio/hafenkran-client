@@ -25,7 +25,12 @@
                 <tr @click="toggleDetails(props.item)">
                   <td class="text-xs-left">{{ props.item.name }}</td>
                   <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                  <td class="text-xs-left">{{ props.item.size }} Byte</td>
+                  <td v-if="props.item.size < 1000"
+                      class="text-xs-left">{{ props.item.size }} Byte</td>
+                  <td v-else-if="props.item.size < 1000000"
+                      class="text-xs-left">{{ props.item.size / 1000 }} Kilobyte</td>
+                  <td v-else-if="props.item.size < 1000000000"
+                      class="text-xs-left">{{ props.item.size / 1000000 }} Megabyte</td>
                 </tr>
               </template>
               </v-data-table>
@@ -41,7 +46,14 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-btn :to="'/newexperiment'">Upload File</v-btn>
+      <v-btn @click="fileupload=!fileupload">Upload File</v-btn>
+      <div v-if="fileupload" id="upload">
+        <v-hover v-slot:default="{ hover }">
+          <v-card :elevation="hover ? 12 : 2">
+            <file-upload></file-upload>
+          </v-card>
+        </v-hover>
+      </div>
     </template>
   </base-page>
 </template>
@@ -52,11 +64,12 @@ import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
+import FileUpload from '../baseComponents/FileUpload';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { BasePage, StartExperimentMenu },
+  components: { FileUpload, BasePage, StartExperimentMenu },
   mixins: [timeStampMixin],
 
   computed: {
@@ -66,6 +79,7 @@ export default {
     return {
       search: '',
       showDetails: false,
+      fileupload: false,
       selectedExperiment: {},
       headers: [
         {
@@ -100,9 +114,15 @@ export default {
   created() {
     this.fetchExperiments();
   },
+  updated() {
+    this.fetchExperiments();
+  },
 };
 </script>
 
 <style scoped>
-
+  #upload {
+    margin-right: 15%;
+    margin-left: 15%;
+  }
 </style>
