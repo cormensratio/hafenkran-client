@@ -177,7 +177,7 @@ export default {
     },
     async sendStdin() {
       if (!isNil(this.userInput) || !this.userInput.equals('')) {
-        await ExecutionDetailService.postUserInput(this.userInput, this.execution.executionId);
+        await ExecutionDetailService.postUserInput(this.userInput, this.executionId);
       }
       this.userInput = '';
     },

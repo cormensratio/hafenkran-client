@@ -21,7 +21,7 @@ export default class ExecutionDetailService {
     if (!isNil(executionId)) {
       const base64FileString = await ApiService.doGet(`${serviceUrl}/executions/${executionId}/results`);
       const decoded = atob(base64FileString);
-      if (!isNil(base64FileString)) {
+      if (!isNil(decoded)) {
         const file = new Blob([decoded], { type: 'octet/stream' });
         this.saveFileDialog(file, `${executionName}.tar`);
         return true;
