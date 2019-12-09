@@ -40,7 +40,6 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-btn :to="'/newexperiment'">Upload File</v-btn>
     </template>
   </base-page>
 </template>

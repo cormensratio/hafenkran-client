@@ -4,7 +4,7 @@
       <v-container fluid id="loginbox">
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md6>
-            <v-card class="elevation-24 shaped">
+            <v-card>
               <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
@@ -79,7 +79,5 @@ export default {
 };
 </script>
 <style scoped>
-  .button:hover {
-    color: silver;
-  }
+
 </style>

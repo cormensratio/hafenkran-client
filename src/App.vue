@@ -41,11 +41,21 @@ export default {
 </script>
 
 <style>
-#app {
+#app, body, html {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  // color: #2c3e50;
+  background-color: #e8ebed;
+  // background-image: url("./assets/ocean.jpg");
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+body {
+
 }
 </style>
