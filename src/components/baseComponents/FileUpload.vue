@@ -71,6 +71,7 @@ export default {
         this.loading = false;
       }
       this.loading = false;
+      window.location.reload(true);
     },
   },
 };

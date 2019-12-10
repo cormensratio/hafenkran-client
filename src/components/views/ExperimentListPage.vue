@@ -114,9 +114,6 @@ export default {
   created() {
     this.fetchExperiments();
   },
-  updated() {
-    this.fetchExperiments();
-  },
 };
 </script>
 
