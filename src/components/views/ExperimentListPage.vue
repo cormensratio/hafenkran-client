@@ -28,9 +28,10 @@
                   <td v-if="props.item.size < 1000"
                       class="text-xs-left">{{ props.item.size }} Byte</td>
                   <td v-else-if="props.item.size < 1000000"
-                      class="text-xs-left">{{ props.item.size / 1000 }} Kilobyte</td>
-                  <td v-else-if="props.item.size < 1000000000"
-                      class="text-xs-left">{{ props.item.size / 1000000 }} Megabyte</td>
+                      class="text-xs-left">{{ (props.item.size-(props.item.size%100))/1000 }}
+                    Kilobyte</td>
+                  <td v-else-if="props.item.size < 1000000000" class="text-xs-left">
+                    {{ (props.item.size-(props.item.size%100000))/1000000 }} Megabyte</td>
                 </tr>
               </template>
               </v-data-table>
@@ -121,5 +122,6 @@ export default {
   #upload {
     margin-right: 15%;
     margin-left: 15%;
+    margin-bottom: 5%;
   }
 </style>

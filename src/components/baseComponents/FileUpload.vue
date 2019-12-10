@@ -65,13 +65,16 @@ export default {
     },
     async submitFile() {
       this.loading = true;
-      debugger;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
         this.loading = false;
       }
       this.loading = false;
-      window.location.reload(true);
+      if (this.$router.currentRoute.name === 'ExperimentListPage') {
+        window.location.reload(true);
+      } else {
+        this.$router.push('/experimentlist');
+      }
     },
   },
 };
