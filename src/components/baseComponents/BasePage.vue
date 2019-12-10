@@ -95,7 +95,6 @@ export default {
     margin-right: 30px;
   }
   .hafen-footer {
-    // background-image: url("../../assets/footer.png");
     height: 120px !important;
     background-color: transparent;
 

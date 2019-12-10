@@ -46,9 +46,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  // color: #2c3e50;
   background-color: #e8ebed;
-  // background-image: url("./assets/ocean.jpg");
   overflow: hidden;
   padding: 0;
   margin: 0;
