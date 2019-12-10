@@ -49,5 +49,16 @@ describe('ExperimentStore', () => {
       expect(commit.mock.calls[0][0]).toBe('updateExperiments');
       expect(commit.mock.calls[0][1]).toBe(mockExperiments);
     });
+
+    test('with error', async () => {
+      // arrange
+      ApiService.doGet = jest.fn(() => null);
+      // act
+      await ExperimentStore.actions.fetchExperiments({ commit });
+      // assert
+      expect(ApiService.doGet).toHaveBeenCalledTimes(1);
+      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments`);
+      expect(commit).toHaveBeenCalledTimes(0);
+    });
   });
 });
