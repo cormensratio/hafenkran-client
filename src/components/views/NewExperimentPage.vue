@@ -1,7 +1,11 @@
 <template>
     <base-page>
       <template slot="body">
-        <file-upload></file-upload>
+        <file-upload>
+          <template slot="button">
+            <v-btn :to="'/experimentlist'">Show Experiments</v-btn>
+          </template>
+        </file-upload>
       </template>
     </base-page>
 </template>

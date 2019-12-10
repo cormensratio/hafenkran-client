@@ -1,37 +1,41 @@
 <template slot="body">
   <div class="container">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend m-auto">
-        <label><p class="h1">Upload your experiment here:</p><br>
-          <v-icon id="uploadicon" size="150">file_upload</v-icon>
-          <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
-        </label>
-      </div>
-    </div>
-    <div class="mb-2">
-      <div class="alert alert-success" v-if="timestamp!=null
+    <v-hover v-slot:default="{ hover }">
+      <v-card :elevation="hover ? 12 : 2" id="uploadcard">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend m-auto">
+            <label><p class="h1">Upload your experiment here:</p><br>
+              <v-icon id="uploadicon" size="100">file_upload</v-icon>
+              <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
+            </label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="alert alert-success" v-if="timestamp!=null
           && correctFileType">Timestamp: {{timestamp}} <br>
-        Your file is ready to be uploaded!
-      </div>
-      <div class="alert alert-danger" role="alert"
-           v-else-if="timestamp!=null">Incorrect filetype
-      </div>
-      <div class="alert alert-primary" role="alert"
-           v-if="fileName !== null && correctFileType">You can rename your file here!
-        <input v-model="fileName" type="text" class="form-control"/></div>
-    </div>
-    <div>
-      <v-btn v-if="correctFileType"
-             class="btn btn-success" v-on:click="submitFile()">Submit
-      </v-btn>
-      <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
-      <v-btn to="/experimentlist">See experiments</v-btn>
-      <v-progress-circular
-        indeterminate
-        color="blue"
-        v-if="loading"
-      ></v-progress-circular>
-    </div>
+            Your file is ready to be uploaded!
+          </div>
+          <div class="alert alert-danger" role="alert"
+               v-else-if="timestamp!=null">Incorrect filetype
+          </div>
+          <div class="alert alert-primary" role="alert"
+               v-if="fileName !== null && correctFileType">You can rename your file here!
+            <input v-model="fileName" type="text" class="form-control"/></div>
+        </div>
+        <div>
+          <v-btn v-if="correctFileType"
+                 class="btn btn-success" v-on:click="submitFile()">Submit
+          </v-btn>
+          <v-btn v-else disabled>Submit</v-btn>
+          <slot name="button"></slot>
+          <v-progress-circular
+            indeterminate
+            color="blue"
+            v-if="loading"
+          ></v-progress-circular>
+        </div>
+      </v-card>
+    </v-hover>
   </div>
 </template>
 
@@ -81,8 +85,7 @@ export default {
 </script>
 
 <style scoped>
-  .container {
-    padding-left: 15%;
-    padding-right: 15%;
+  #uploadcard {
+    padding: 3%;
   }
 </style>
