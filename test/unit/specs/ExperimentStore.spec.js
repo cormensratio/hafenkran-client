@@ -26,9 +26,9 @@ const mockExperiments = [
 
 const mockExecutionDetails = {
   experimentId: '1',
-  ram: 6,
-  cpu: 6,
-  bookedTime: 6,
+  ram: '',
+  cpu: '',
+  bookedTime: '',
 };
 
 const mockExecutions = [
@@ -105,6 +105,19 @@ describe('ExperimentStore', () => {
       expect(response).toBe(mockExecutions[0]);
       expect(ApiService.doPost).toHaveBeenCalledTimes(1);
       expect(ApiService.doPost.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments/${mockExecutionDetails.experimentId}/execute`);
+    });
+
+    test('with error', async () => {
+      // arrange
+      ApiService.doPost = jest.fn(() => null);
+
+      // act
+      const response = await ExperimentStore.actions.runExecution(
+        { dispatch }, mockExecutionDetails);
+
+      // assert
+      expect(response).toBe(null);
+      expect(dispatch).toHaveBeenCalledTimes(0);
     });
   });
 });
