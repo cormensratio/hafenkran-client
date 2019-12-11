@@ -238,7 +238,4 @@ export default {
     margin-top: -8px;
     margin-left: 5px;
   }
-  #logText {
-    padding-top: 5px;
-  }
 </style>
