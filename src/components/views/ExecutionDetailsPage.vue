@@ -60,7 +60,8 @@
                   style="height: 300px"
                 >
                   <div class="text-left">Logs are getting updated here:</div>
-                  <div class="text-left" id="logText" >{{ logs }}</div>
+                  <div class="text-left" id="logText"
+                       :key="log.title" v-for="log in logs">{{ log.title }}</div>
                   <v-progress-circular
                     indeterminate
                     color="blue"
@@ -109,7 +110,7 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
-      logs: '',
+      logs: [],
       loading: false,
     };
   },
@@ -135,7 +136,11 @@ export default {
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
           if (!isNil(newLog)) {
-            this.logs = newLog;
+            const logArray = newLog.split(/\r?\n/);
+            for (let i = 0; i < logArray.length; i += 1) {
+              this.logs.push({ title: logArray[i] });
+            }
+            console.log(this.logs);
             this.loading = false;
           }
         });
@@ -234,7 +239,6 @@ export default {
     margin-left: 5px;
   }
   #logText {
-    padding-bottom: 20px;
-    padding-top: 20px;
+    padding-top: 5px;
   }
 </style>
