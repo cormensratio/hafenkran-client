@@ -63,14 +63,11 @@
                   </v-layout>
                 </v-container>
                 <v-text-field
-                  class="align-end bg-white"
+                  class="bg-white"
                   v-model="userInput"
-                  single-line
                   append-icon="send"
                   label="Enter a command here!"
                   @click:append="sendStdin()"
-                  clearable
-                  clear-icon="close"
                   type="text"
                   outline
                 />
