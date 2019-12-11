@@ -15,15 +15,20 @@
     <v-divider class="divider"></v-divider>
     <v-card-text>
       <v-container>
-        <v-combobox class="time-combobox"
-                    v-model="executionDetails.bookedTime"
-                    :items="bookedTimeOptions"
-                    label="Time in Seconds"
-                    attach
-                    outline
-                    type='Number'
-                    min="0"
-        ></v-combobox>
+<!--        <v-combobox class="time-combobox"-->
+<!--                    v-model="executionDetails.bookedTime"-->
+<!--                    :items="bookedTimeOptions"-->
+<!--                    label="Time in Seconds"-->
+<!--                    attach-->
+<!--                    outline-->
+<!--                    type='Number'-->
+<!--                    min="0"-->
+<!--        ></v-combobox>-->
+<!--        <vue-timepicker format="HH:mm:ss"-->
+        <!--                        class="booked-time-selection"></vue-timepicker>-->
+        <span> Book execution time: </span>
+        <vue-timepicker format="HH:mm:ss" input-class="time-input-modifier"
+                        class="booked-time-selection"></vue-timepicker>
         <v-layout row>
           <v-flex class="mr-2">
             <v-text-field label="RAM"
@@ -64,12 +69,15 @@
 <script>
 import { isNil } from 'lodash';
 import { mapActions } from 'vuex';
+import VueTimePicker from 'vue2-timepicker';
+import 'vue2-timepicker/dist/VueTimepicker.css';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
-
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker';
 
 export default {
   name: 'StartExperimentMenu',
+  components: { VueTimepicker },
   mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
@@ -127,8 +135,24 @@ export default {
   .time-combobox {
     margin-bottom: -4%;
   }
+  .booked-time-selection {
+    margin-bottom: 2%;
+    border: 2px solid rgba(0,0,0,.54);
+    border-radius: 4px;
+    min-height: 58px;
+  }
   .divider {
     margin-top: -2%;
     margin-bottom: -2%;
+  }
+</style>
+<style>
+  .time-input-modifier {
+    margin-top: 8%;
+    border-style: none !important;
+
+  }
+  .time-input-modifier:focus {
+    outline: none;
   }
 </style>
