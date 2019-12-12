@@ -3,19 +3,19 @@
     <v-toolbar height="75vh" color="blue" class="hafen-toolbar">
       <v-toolbar-title class="mr-5 pt-2" @click="navigateToStartPage()">
         <img class="hafen-logo" src="../../assets/hafenkran.png">
-        <span>HAFENKRAN</span>
+        <span class="logo-title">HAFENKRAN</span>
       </v-toolbar-title>
       <v-toolbar-items v-if="isAuthenticated">
-        <v-btn flat to="/experimentlist">Experiments</v-btn>
-        <v-btn flat to="/executionlist">Executions</v-btn>
-        <v-btn flat to="/newexperiment">Upload</v-btn>
+        <v-btn flat dark to="/experimentlist">Experiments</v-btn>
+        <v-btn flat dark to="/executionlist">Executions</v-btn>
+        <v-btn flat dark to="/newexperiment">Upload</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-else>
         <v-btn flat to="/">Home</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <div v-if="isAuthenticated">
-        <v-btn flat @click="logoutUser()">
+        <v-btn flat dark @click="logoutUser()">
           Logout
         </v-btn>
         <v-avatar color="white" dark round>
@@ -23,7 +23,7 @@
         </v-avatar>
       </div>
       <div v-else>
-        <v-btn flat class="m-3" to="/login"> Login </v-btn>
+        <v-btn flat dark class="m-3" to="/login"> Login </v-btn>
       </div>
     </v-toolbar>
   </div>
@@ -54,10 +54,12 @@ export default {
 <style scoped>
 
   .hafen-logo {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
   }
-
+  .logo-title {
+    color: white;
+  }
   .hafen-header {
     margin-top: -15px;
   }
