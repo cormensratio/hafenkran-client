@@ -2,89 +2,80 @@
   <base-page>
     <template slot="body">
       <v-container class="top">
-        <v-card class="flex">
-          <v-card-title>
-            <div class="execution-title">
-              <span class="title-text">{{execution.name}}</span>
-            </div>
-          </v-card-title>
-          <v-card-text class="text-left details">
+        <v-layout column>
+          <v-flex>
+            <v-card class="flex">
+              <v-card-title>
+                <div class="execution-title">
+                  <span class="title-text">{{execution.name}}</span>
+                </div>
+              </v-card-title>
+              <v-card-text class="text-left details">
             <span class="mb-3">
               Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
             </span>
-            <span class="mb-3">Runtime: {{runtime}}</span>
-            <div class="status">
-              <span>Current status:</span>
-              <status-cell :status="execution.status" class="cell"></status-cell>
-            </div>
-          </v-card-text>
-          <div class="buttons">
-            <v-btn class="logs" @click="getLogs">Load Logs
-            </v-btn>
-            <v-btn class="red" :disabled="cancelButtonDisabled"
-                   @click="terminateExecution(execution.id)">
-              Cancel execution
-              <v-icon right dark>cancel</v-icon>
-            </v-btn>
-            <v-btn class="red" @click="deleteExecution(execution.id)">
-              Delete
-            </v-btn>
-            <v-btn class="blue" @click="downloadResults()">
-              Download Results
-              <v-icon right>cloud_download</v-icon>
-            </v-btn>
-          </div>
-        </v-card>
-      </v-container>
-      <v-container class="bottom" >
-        <v-flex>
-          <v-card class="results elevation-5">
-            <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
-              <v-tab href="#tab-1" @click="activetab=1">Logs
-                <v-icon>description</v-icon>
-              </v-tab>
-              <v-tab href="#tab-2" @click="activetab=2">Statistics
-                <v-icon>timeline</v-icon>
-              </v-tab>
-            </v-tabs>
-          </v-card>
-          <div class="content">
-            <div v-if="activetab === 1" class="tab-content">
-              <v-container
-                id="scroll-target"
-                style="max-height: 400px"
-                class="scroll-y black white--text"
-              >
-                <v-layout
-                  column
-                  style="height: 300px"
-                >
-                  <div class="text-left">Logs are getting updated here:</div>
-                  <div class="text-left" id="logText" >{{ logs }}</div>
-                  <v-progress-circular
-                    indeterminate
-                    color="blue"
-                    v-if="loading"
-                  />
-                </v-layout>
-              </v-container>
+                <span class="mb-3">Runtime: {{runtime}}</span>
+                <div class="status">
+                  <span>Current status:</span>
+                  <status-cell :status="execution.status" class="cell"></status-cell>
+                </div>
+              </v-card-text>
+              <div class="buttons">
+                <v-btn class="logs" @click="getLogs">Load Logs
+                </v-btn>
+                <v-btn class="red" :disabled="cancelButtonDisabled"
+                       @click="terminateExecution(execution.id)">
+                  Cancel execution
+                  <v-icon right dark>cancel</v-icon>
+                </v-btn>
+                <v-btn color="red" @click="deleteExecution(execution.id)">
+                  Delete
+                </v-btn>
+                <v-btn color="blue" @click="downloadResults()">
+                  Download Results
+                  <v-icon right>cloud_download</v-icon>
+                </v-btn>
+              </div>
+            </v-card>
+          </v-flex>
+          <v-flex class="mt-2">
+            <v-card class="results elevation-5">
+              <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
+                <v-tab @click="activetab=1">Logs
+                  <v-icon>description</v-icon>
+                </v-tab>
+                <v-tab @click="activetab=2">Statistics
+                  <v-icon>timeline</v-icon>
+                </v-tab>
+              </v-tabs>
+            </v-card>
+            <div class="content">
+              <div v-if="activetab === 1">
+                <v-container class="scroll-y black white--text">
+                  <v-layout column>
+                    <div class="text-left">Logs are getting updated here:</div>
+                    <div class="text-left" id="logText">{{ logs }}</div>
+                    <v-progress-circular
+                      indeterminate
+                      color="blue"
+                      v-if="loading"
+                    />
+                  </v-layout>
+                </v-container>
                 <v-text-field
-                  class="align-end bg-white"
                   v-model="userInput"
-                  single-line
                   append-icon="send"
                   label="Enter a command here!"
                   @click:append="sendStdin()"
-                  clearable
-                  clear-icon="close"
                   type="text"
                   outline
                 />
+              </div>
+              <div v-if="activetab === 2">
+              </div>
             </div>
-            <div v-if="activetab === 2" class="tab-content">
-            </div>
-          </div>
-        </v-flex>
+          </v-flex>
+        </v-layout>
       </v-container>
     </template>
   </base-page>
@@ -234,7 +225,7 @@ export default {
     margin-left: 5px;
   }
   #logText {
-    padding-bottom: 20px;
+    min-height: 250px;
     padding-top: 20px;
   }
 </style>
