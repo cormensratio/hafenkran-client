@@ -42,7 +42,7 @@
                     transition="scroll-x-transition" attach="">
                     <template v-slot:activator="{ on }">
                       <v-divider></v-divider>
-                      <v-btn color="green" dark v-on="on">
+                      <v-btn color="blue" dark v-on="on" class="float-left" id="addExperiButton">
                         Add Experiment
                       </v-btn>
                     </template>
@@ -118,4 +118,8 @@ export default {
 </script>
 
 <style scoped>
+  #addExperiButton {
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
 </style>

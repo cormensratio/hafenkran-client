@@ -1,13 +1,19 @@
 <template>
-    <base-page>
-      <template slot="body">
-        <file-upload>
-          <template slot="button">
-            <v-btn :to="'/experimentlist'">Show Experiments</v-btn>
-          </template>
-        </file-upload>
-      </template>
-    </base-page>
+  <base-page>
+    <template slot="body">
+      <v-container>
+        <v-layout>
+          <v-card class="mx-auto" width="750">
+            <file-upload>
+              <template slot="button">
+                <v-btn :to="'/experimentlist'">Show Experiments</v-btn>
+              </template>
+            </file-upload>
+          </v-card>
+        </v-layout>
+      </v-container>
+    </template>
+  </base-page>
 </template>
 
 <script>
