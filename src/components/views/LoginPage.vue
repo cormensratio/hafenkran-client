@@ -22,7 +22,7 @@
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
-                <div>
+                <div class="mb-3">
                   <v-btn large dark color="blue" to="/"
                          class="button">Cancel
                   </v-btn>
