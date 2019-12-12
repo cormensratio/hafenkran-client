@@ -63,7 +63,6 @@
                   </v-layout>
                 </v-container>
                 <v-text-field
-                  class="bg-white"
                   v-model="userInput"
                   append-icon="send"
                   label="Enter a command here!"
