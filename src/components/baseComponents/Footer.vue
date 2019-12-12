@@ -15,22 +15,36 @@
       <v-layout>
         <v-flex class="ref-links">
           <button class="btn-link" @click="showInfo = true">About</button>
-          <button class="ml-2 btn-link">Impressum</button>
+          <button class="ml-2 btn-link" @click="showInfo = true">Imprint</button>
         </v-flex>
       </v-layout>
     </v-container>
     <v-bottom-sheet v-model="showInfo" :persistent="false">
       <v-list class="sheet-content">
-        <div class="text-xs-left contributors">
-          <h3 class="text-muted title">Contributors</h3>
-          <div>Martin Loos</div>
-          <div>Johannes Pannermayr</div>
-          <div>Ralph Grashuber</div>
-          <div>Simon Lichtenecker</div>
-          <div>Kristin Fritsch</div>
-          <div>Matthias Rauch</div>
-          <div>David Schrenk</div>
-        </div>
+        <v-container>
+          <v-layout>
+            <v-flex>
+              <div class="text-xs-left contributors">
+                <h3 class="text-muted title">Contributors</h3>
+                <div>Martin Loos</div>
+                <div>Johannes Pannermayr</div>
+                <div>Ralph Grashuber</div>
+                <div>Simon Lichtnecker</div>
+                <div>Kristin Fritsch</div>
+                <div>Matthias Rauch</div>
+                <div>David Schrenk</div>
+              </div>
+            </v-flex>
+            <v-flex>
+              <div class="text-xs-left">
+                <h3 class="text-muted title">Imprint</h3>
+                <div>hafenkran@ocean.com</div>
+                <div>Port Street 42</div>
+                <div>666 Shiptown</div>
+              </div>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </v-list>
     </v-bottom-sheet>
   </v-footer>
@@ -63,7 +77,6 @@ export default {
     text-align: left;
   }
   .title {
-    font-weight: bold;
     font-size: large;
     margin-bottom: 20px;
   }
