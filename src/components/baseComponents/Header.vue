@@ -10,9 +10,6 @@
         <v-btn flat dark to="/executionlist">Executions</v-btn>
         <v-btn flat dark to="/newexperiment">Upload</v-btn>
       </v-toolbar-items>
-      <v-toolbar-items v-else>
-        <v-btn flat to="/">Home</v-btn>
-      </v-toolbar-items>
       <v-spacer></v-spacer>
       <div v-if="isAuthenticated">
         <v-btn flat dark @click="logoutUser()">
