@@ -3,14 +3,11 @@
     <v-card-text class="details-container">
       <v-layout column>
         <v-flex class="text-left">
-          <div class="mt-2 h3">Experiment: {{ experiment.name }}</div>
-          <div class="mt-2">Uploaded: {{ getTimeStamp(experiment.createdAt) }}</div>
-          <div class="mt-2">Size: {{ experiment.size }} Byte</div>
+          <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
+          <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
+          <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
         </v-flex>
       </v-layout>
-      <template slot="header">
-        <div> Additional Actions</div>
-      </template>
     </v-card-text>
     <v-divider class="divider"></v-divider>
     <v-card-text>
@@ -26,17 +23,46 @@
 <!--        ></v-combobox>-->
 <!--        <vue-timepicker format="HH:mm:ss"-->
         <!--                        class="booked-time-selection"></vue-timepicker>-->
-        <span> Book execution time: </span>
-        <vue-timepicker format="HH:mm:ss" input-class="time-input-modifier"
-                        class="booked-time-selection"></vue-timepicker>
-        <v-layout row>
-          <v-flex class="mr-2">
+<!--        <span> Book execution time: </span>-->
+<!--        <vue-timepicker format="HH:mm:ss" input-class="time-input-modifier"-->
+<!--                        class="booked-time-selection"></vue-timepicker>-->
+        <div class="input-description text-muted">
+          Book a timespan on the cluster
+        </div>
+        <v-layout>
+          <v-flex>
+            <v-text-field label="Hours"
+                          type="number"
+                          outline
+                          :value="0"
+                          class="time-input"
+            >
+            </v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-text-field label="Minutes"
+                          type="number"
+                          outline
+                          :value="0"
+                          class="time-input"
+            >
+            </v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-icon class="mt-3">clear</v-icon>
+          </v-flex>
+        </v-layout>
+        <div class="input-description text-muted">
+          Define resource usage
+        </div>
+        <v-layout>
+          <v-flex>
             <v-text-field label="RAM"
                           v-model="executionDetails.ram"
                           outline type="number"
-                          hint="Define RAM usage"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
+                          class="resource-input"
             >
             </v-text-field>
           </v-flex>
@@ -44,22 +70,22 @@
             <v-text-field label="CPU Cores"
                           v-model="executionDetails.cpu"
                           outline type="number"
-                          hint="Define the number of Cores"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
+                          class="resource-input"
             >
             </v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-icon class="mt-3">clear</v-icon>
           </v-flex>
         </v-layout>
       </v-container>
     </v-card-text>
-    <v-card-actions class="justify-space-between">
-        <v-btn dark color="blue" v-on:click="resetDetails()">
-        Reset options
-        </v-btn>
+    <v-card-actions class="menu-buttons justify-content-end">
       <div>
         <v-btn @click="closeMenu()"> Cancel </v-btn>
-        <v-btn dark color="blue" v-on:click="startExperiment()">
+        <v-btn dark color="blue" @click="startExperiment()">
           Start execution
         </v-btn>
       </div>
@@ -141,9 +167,27 @@ export default {
     border-radius: 4px;
     min-height: 58px;
   }
+  .time-input {
+    width: 120px;
+  }
+  .resource-input {
+    width: 120px;
+  }
+  .input-description {
+    text-align: left;
+    font-size: medium;
+    margin-bottom: 10px;
+  }
   .divider {
-    margin-top: -2%;
-    margin-bottom: -2%;
+    margin-top: -1%;
+    margin-bottom: -3%;
+  }
+  .menu-buttons {
+    margin-top: -8%;
+  }
+  .clear-button {
+    height: 20px;
+    width: 20px;
   }
 </style>
 <style>
