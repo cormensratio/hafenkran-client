@@ -25,7 +25,7 @@ export default {
       localStorage.setItem('user', process.env.TEST_TOKEN);
       store.commit('updateUser', {
         id: '1',
-        name: 'Test-Rick',
+        name: 'Test-Mortimer',
         isAdmin: true,
         email: 'test.rick@pickle.com',
       });
