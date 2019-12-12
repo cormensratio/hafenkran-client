@@ -41,7 +41,11 @@ export default {
 </script>
 
 <style>
-#app, body, html {
+html, body {
+  width: 100%;
+  height: 100%;
+}
+#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -51,9 +55,6 @@ export default {
   padding: 0;
   margin: 0;
   width: 100%;
-  min-height: 100%;
-}
-body {
-
+  height: 100%;
 }
 </style>
