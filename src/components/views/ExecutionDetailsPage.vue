@@ -140,7 +140,6 @@ export default {
             for (let i = 0; i < logArray.length; i += 1) {
               this.logs.push({ title: logArray[i] });
             }
-            console.log(this.logs);
             this.loading = false;
           }
         });
