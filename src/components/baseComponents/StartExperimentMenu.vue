@@ -12,20 +12,6 @@
     <v-divider class="divider"></v-divider>
     <v-card-text>
       <v-container>
-<!--        <v-combobox class="time-combobox"-->
-<!--                    v-model="executionDetails.bookedTime"-->
-<!--                    :items="bookedTimeOptions"-->
-<!--                    label="Time in Seconds"-->
-<!--                    attach-->
-<!--                    outline-->
-<!--                    type='Number'-->
-<!--                    min="0"-->
-<!--        ></v-combobox>-->
-<!--        <vue-timepicker format="HH:mm:ss"-->
-        <!--                        class="booked-time-selection"></vue-timepicker>-->
-<!--        <span> Book execution time: </span>-->
-<!--        <vue-timepicker format="HH:mm:ss" input-class="time-input-modifier"-->
-<!--                        class="booked-time-selection"></vue-timepicker>-->
         <div class="input-description text-muted">
           Book a timespan on the cluster
         </div>
@@ -34,8 +20,8 @@
             <v-text-field label="Hours"
                           type="number"
                           outline
-                          :value="0"
                           class="time-input"
+                          v-model="bookedHours"
             >
             </v-text-field>
           </v-flex>
@@ -43,13 +29,10 @@
             <v-text-field label="Minutes"
                           type="number"
                           outline
-                          :value="0"
                           class="time-input"
+                          v-model="bookedMinutes"
             >
             </v-text-field>
-          </v-flex>
-          <v-flex>
-            <v-icon class="mt-3">clear</v-icon>
           </v-flex>
         </v-layout>
         <div class="input-description text-muted">
@@ -58,7 +41,7 @@
         <v-layout>
           <v-flex>
             <v-text-field label="RAM"
-                          v-model="executionDetails.ram"
+                          v-model="ram"
                           outline type="number"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
@@ -68,16 +51,13 @@
           </v-flex>
           <v-flex>
             <v-text-field label="CPU Cores"
-                          v-model="executionDetails.cpu"
+                          v-model="cpu"
                           outline type="number"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
                           class="resource-input"
             >
             </v-text-field>
-          </v-flex>
-          <v-flex>
-            <v-icon class="mt-3">clear</v-icon>
           </v-flex>
         </v-layout>
       </v-container>
@@ -95,47 +75,40 @@
 <script>
 import { isNil } from 'lodash';
 import { mapActions } from 'vuex';
-import VueTimePicker from 'vue2-timepicker';
-import 'vue2-timepicker/dist/VueTimepicker.css';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
-import VueTimepicker from 'vue2-timepicker/src/vue-timepicker';
 
 export default {
   name: 'StartExperimentMenu',
-  components: { VueTimepicker },
   mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
-      ramOptions: [2, 4, 6, 8,
-      ],
-      cpuOptions: [2, 4, 6, 8,
-      ],
-      bookedTimeOptions: [300, 360, 720, 920,
-      ],
-      executionDetails:
-          {
-            experimentId: '',
-            ram: 2,
-            cpu: 4,
-            bookedTime: 300,
-          },
+      experimentId: '',
+      ram: 2,
+      cpu: 4,
+      bookedHours: 0,
+      bookedMinutes: 0,
     };
   },
   props: { experiment: {} },
+  computed: {
+    bookedTime() {
+      return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
+    },
+  },
   methods: {
     ...mapActions(['runExecution']),
-    resetDetails() {
-      this.executionDetails.ram = this.ramOptions[0];
-      this.executionDetails.cpu = this.cpuOptions[1];
-      this.executionDetails.bookedTime = this.bookedTimeOptions[0];
-    },
     closeMenu() {
       this.$emit('menuClosed');
     },
     async startExperiment() {
-      if (!isNil(this.executionDetails.experimentId)) {
-        const startedExecution = await this.runExecution(this.executionDetails);
+      if (!isNil(this.experimentId)) {
+        const startedExecution = await this.runExecution({
+          experimentId: this.experimentId,
+          ram: this.ram,
+          cpu: this.cpu,
+          bookedTime: this.bookedTime,
+        });
         if (!isNil(startedExecution)) {
           this.$router.push('/executionlist');
         }
@@ -143,7 +116,7 @@ export default {
     },
     updateExperimentId() {
       if (!isNil(this.experiment)) {
-        this.executionDetails.experimentId = this.experiment.id;
+        this.experimentId = this.experiment.id;
       }
     },
   },
@@ -158,15 +131,6 @@ export default {
 </script>
 
 <style scoped>
-  .time-combobox {
-    margin-bottom: -4%;
-  }
-  .booked-time-selection {
-    margin-bottom: 2%;
-    border: 2px solid rgba(0,0,0,.54);
-    border-radius: 4px;
-    min-height: 58px;
-  }
   .time-input {
     width: 120px;
   }
@@ -184,19 +148,5 @@ export default {
   }
   .menu-buttons {
     margin-top: -8%;
-  }
-  .clear-button {
-    height: 20px;
-    width: 20px;
-  }
-</style>
-<style>
-  .time-input-modifier {
-    margin-top: 8%;
-    border-style: none !important;
-
-  }
-  .time-input-modifier:focus {
-    outline: none;
   }
 </style>
