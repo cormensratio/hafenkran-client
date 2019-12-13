@@ -32,12 +32,18 @@
               <td class="text-xs-left">
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="terminateExecution(props.item.id)">Cancel</v-btn>
+                       @click="terminateExecution(props.item.id), showSnackbar=!showSnackbar">
+                  Cancel</v-btn>
                 <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
               </td>
             </template>
           </v-data-table>
         </v-card>
+        <v-btn @click="showSnackbar=!showSnackbar">Click</v-btn>
+        <v-snackbar timeout="3000" v-model="showSnackbar">
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </div>
     </template>
   </base-page>
@@ -58,6 +64,7 @@ export default {
   data() {
     return {
       search: '',
+      showSnackbar: false,
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
@@ -68,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions']),
+    ...mapGetters(['executions', 'snack']),
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),

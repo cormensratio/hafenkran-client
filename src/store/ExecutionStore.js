@@ -50,6 +50,7 @@ const ExecutionStore = {
       }
     },
     async terminateExecution({ dispatch }, executionId) {
+      this.setSnack('Terminated execution successfully');
       if (!isNil(executionId)) {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {
@@ -63,6 +64,7 @@ const ExecutionStore = {
       const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
       if (!isNil(response)) {
         dispatch('fetchAllExecutionsOfUser');
+        this.setSnack('Deleted execution successfully');
         return response;
       }
       return null;
