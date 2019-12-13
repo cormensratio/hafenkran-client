@@ -36,7 +36,7 @@
           </div>
         </v-card>
       </v-container>
-      <v-container class="bottom" >
+      <v-container class="bottom">
         <v-flex>
           <v-card class="results elevation-5">
             <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
@@ -60,8 +60,9 @@
                   style="height: 300px"
                 >
                   <div class="text-left">Logs are getting updated here:</div>
-                  <div class="text-left" id="logText"
-                       :key="log.title" v-for="log in logs">{{ log.title }}</div>
+                  <div class="text-left"
+                       :key="log" v-for="log in logs">{{ log }}
+                  </div>
                   <v-progress-circular
                     indeterminate
                     color="blue"
@@ -69,18 +70,18 @@
                   />
                 </v-layout>
               </v-container>
-                <v-text-field
-                  class="align-end bg-white"
-                  v-model="userInput"
-                  single-line
-                  append-icon="send"
-                  label="Enter a command here!"
-                  @click:append="sendStdin()"
-                  clearable
-                  clear-icon="close"
-                  type="text"
-                  outline
-                />
+              <v-text-field
+                class="align-end bg-white"
+                v-model="userInput"
+                single-line
+                append-icon="send"
+                label="Enter a command here!"
+                @click:append="sendStdin()"
+                clearable
+                clear-icon="close"
+                type="text"
+                outline
+              />
             </div>
             <div v-if="activetab === 2" class="tab-content">
             </div>
@@ -92,7 +93,7 @@
 </template>
 
 <script>
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, forEach } from 'lodash';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
@@ -136,10 +137,9 @@ export default {
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
           if (!isNil(newLog)) {
+            this.logs = [];
             const logArray = newLog.split(/\r?\n/);
-            for (let i = 0; i < logArray.length; i += 1) {
-              this.logs.push({ title: logArray[i] });
-            }
+            forEach(logArray, log => this.logs.push(log));
             this.loading = false;
           }
         });
