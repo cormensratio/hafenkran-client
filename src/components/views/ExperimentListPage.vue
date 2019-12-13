@@ -3,56 +3,46 @@
     <template slot="body">
       <v-container>
         <v-layout column>
-            <v-card>
-              <v-toolbar dark color="blue">
-                <span class="title">Experiments</span>
-                <v-spacer></v-spacer>
-                <v-text-field append-icon="search"
-                              label="Search"
-                              single-line
-                              v-model="search"
-                >
-                </v-text-field>
-              </v-toolbar>
-              <v-data-table
-                :headers="headers"
-                :items="experiments"
-                :search="search"
-                class="elevation-1"
+          <v-card>
+            <v-toolbar dark color="blue">
+              <span class="title">Experiments</span>
+              <v-spacer></v-spacer>
+              <v-text-field append-icon="search"
+                            label="Search"
+                            single-line
+                            v-model="search"
               >
-                <template v-slot:items="props">
-                  <tr @click="toggleDetails(props.item)">
-                    <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                    <td v-if="props.item.size < 1000"
-                        class="text-xs-left">{{ props.item.size }} Byte
-                    </td>
-                    <td v-else-if="props.item.size < 1000000"
-                        class="text-xs-left">{{ (props.item.size-(props.item.size%100))/1000 }}
-                      Kilobyte
-                    </td>
-                    <td v-else-if="props.item.size < 1000000000" class="text-xs-left">
-                      {{ (props.item.size-(props.item.size%100000))/1000000 }} Megabyte
-                    </td>
-                  </tr>
-                </template>
-                <template v-slot:footer>
-                  <v-menu
-                    v-model="menu" offset-y :close-on-content-click="false"
-                    transition="scroll-x-transition" attach="">
-                    <template v-slot:activator="{ on }">
-                      <v-divider></v-divider>
-                      <v-btn color="blue" dark v-on="on" class="float-left" id="addExperiButton">
-                        Add Experiment
-                      </v-btn>
-                    </template>
-                    <v-card >
-                      <file-upload></file-upload>
-                    </v-card>
-                  </v-menu>
-                </template>
-              </v-data-table>
-            </v-card>
+              </v-text-field>
+            </v-toolbar>
+            <v-data-table
+              :headers="headers"
+              :items="experiments"
+              :search="search"
+              class="elevation-1"
+            >
+              <template v-slot:items="props">
+                <tr @click="toggleDetails(props.item)">
+                  <td class="text-xs-left">{{ props.item.name }}</td>
+                  <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
+                  <td class="text-xs-left">{{ props.item.size }} Byte</td>
+                </tr>
+              </template>
+              <template v-slot:footer>
+                <v-menu
+                  v-model="menu" offset-y :close-on-content-click="false"
+                  transition="scroll-x-transition" attach="">
+                  <template v-slot:activator="{ on }">
+                    <v-btn color="blue" dark v-on="on" class="float-left mb-2">
+                      Add Experiment
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <file-upload></file-upload>
+                  </v-card>
+                </v-menu>
+              </template>
+            </v-data-table>
+          </v-card>
           <v-flex v-if="showDetails">
             <div class="mt-4">
               <StartExperimentMenu @close="closeDetails"
@@ -68,6 +58,7 @@
 </template>
 
 <script>
+import { isNil } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
@@ -103,6 +94,14 @@ export default {
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    async showExecutions(experiment) {
+      const experimentId = experiment.id;
+
+      if (!isNil(experimentId)) {
+        await this.fetchExecutionsByExperimentId(experimentId);
+        this.$router.push('/executionlist');
+      }
+    },
     closeDetails() {
       this.showDetails = false;
     },
@@ -118,8 +117,4 @@ export default {
 </script>
 
 <style scoped>
-  #addExperiButton {
-    margin-top: 0px;
-    margin-bottom: 15px;
-  }
 </style>

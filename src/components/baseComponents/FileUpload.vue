@@ -1,7 +1,7 @@
 <template slot="body">
   <div class="container">
     <v-hover v-slot:default="{ hover }">
-      <v-card :elevation="hover ? 12 : 2" id="uploadcard">
+      <v-card :elevation="hover ? 12 : 2" class="p-2">
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
             <label><p class="h1">Upload your experiment here:</p><br>
@@ -85,7 +85,4 @@ export default {
 </script>
 
 <style scoped>
-  #uploadcard {
-    padding: 3%;
-  }
 </style>
