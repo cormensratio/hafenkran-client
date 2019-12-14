@@ -4,6 +4,7 @@
     <v-combobox multiple attach outline
                 height="3vh"
                 :items="items"
+                @change="updateFilters($event)"
     >
     </v-combobox>
   </div>
@@ -14,7 +15,12 @@ export default {
   name: 'FilterCombobox',
   props: {
     label: String,
-    items: [],
+    items: {},
+  },
+  methods: {
+    updateFilters(filters) {
+      this.$emit('update', filters);
+    },
   },
 };
 </script>

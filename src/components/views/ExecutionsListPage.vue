@@ -18,7 +18,7 @@
 
           <v-data-table
             :headers="headers"
-            :items="filteredItems"
+            :items="executions"
             :search="search"
           >
             <template v-slot:items="props">
