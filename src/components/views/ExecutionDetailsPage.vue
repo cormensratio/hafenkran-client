@@ -52,7 +52,8 @@
             <div class="content">
               <div v-if="activetab === 1">
                 <v-container class="scroll-y black white--text">
-                  <v-layout column>
+                  <v-layout column
+                  style="height: 25vh">
                     <div class="text-left">Logs are getting updated here:</div>
                     <div class="text-left"
                          :key="log" v-for="log in logs">{{ log }}
