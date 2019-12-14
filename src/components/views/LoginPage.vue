@@ -1,11 +1,10 @@
 <template>
   <base-page>
     <template slot="body">
-      <v-container fluid id="loginbox">
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md6>
+      <v-container>
+        <v-layout justify-center>
+          <v-flex md4>
             <v-card>
-              <v-spacer></v-spacer>
               <v-toolbar dark color="blue">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
                   You are already logged in {{ user.name }}!
@@ -15,20 +14,20 @@
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form" lazy-validation>
-                  <v-text-field v-model="userName"
+                <v-form lazy-validation class="mt-3 mr-4">
+                  <v-text-field v-model="userName" outline
                                 label="Name" prepend-icon="person"></v-text-field>
-                  <v-text-field type="password" v-model="password"
+                  <v-text-field type="password" v-model="password" outline
                                 label="Password" prepend-icon="lock"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
-                <div>
-                  <v-btn large dark color="blue"
-                         @click="loginUser()" class="button">Login
-                  </v-btn>
+                <div class="mb-3">
                   <v-btn large dark color="blue" to="/"
                          class="button">Cancel
+                  </v-btn>
+                  <v-btn large dark color="blue"
+                         @click="loginUser()" class="button">Login
                   </v-btn>
                 </div>
               </v-card-actions>
