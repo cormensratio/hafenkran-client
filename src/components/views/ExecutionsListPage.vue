@@ -3,19 +3,22 @@
     <template slot="body">
       <div class="container">
         <v-card>
-          <v-toolbar color="blue" dark>
-            <span class="title"> Executions </span>
-            <v-spacer></v-spacer>
-            <v-text-field append-icon="search"
-                          label="Search"
-                          single-line
-                          v-model="search"
-            >
-            </v-text-field>
-          </v-toolbar>
+          <base-list-header title="Executions">
+            <template slot="expansion-body">
+              <ExecutionFilters></ExecutionFilters>
+            </template>
+          </base-list-header>
+
+<!--            <v-text-field append-icon="search"-->
+<!--                          label="Search"-->
+<!--                          single-line-->
+<!--                          v-model="search"-->
+<!--            >-->
+<!--            </v-text-field>-->
+
           <v-data-table
             :headers="headers"
-            :items="executions"
+            :items="filteredItems"
             :search="search"
           >
             <template v-slot:items="props">
@@ -49,12 +52,15 @@ import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
+import BaseListHeader from '../baseComponents/BaseListHeader';
+import ExecutionFilters from '../baseComponents/ExecutionFilters';
+import FilterMixin from '../../mixins/FilterMixin';
 
 
 export default {
   name: 'ExecutionsListPage',
-  components: { StatusCell, BasePage },
-  mixins: [timeStampMixin],
+  components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
+  mixins: [timeStampMixin, FilterMixin],
   data() {
     return {
       search: '',
@@ -88,13 +94,13 @@ export default {
     },
   },
   created() {
-    this.fetchAllExecutionsOfUser();
+    this.fetchAllExecutionsOfUser().then(() => {
+      this.items = this.executions;
+    });
   },
 };
 </script>
 
 <style scoped>
-.title {
-  font-size: 14pt;
-}
+
 </style>
