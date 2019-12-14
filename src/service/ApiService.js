@@ -39,7 +39,7 @@ export default class ApiService {
     if (!isNil(data)) {
       requestConfig.data = data;
     }
-    debugger;
+
     return axios.delete(`${url}`, requestConfig).then((resp) => {
       console.log('Received response from: ', url);
       return resp.data;
