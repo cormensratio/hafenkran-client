@@ -52,10 +52,12 @@
             <div class="content">
               <div v-if="activetab === 1">
                 <v-container class="scroll-y black white--text">
-                  <v-layout column>
+                  <v-layout column
+                  style="height: 25vh">
                     <div class="text-left">Logs are getting updated here:</div>
-                    <div class="text-left" id="logText">{{ logs }}</div>
-                    <v-progress-circular
+                    <div class="text-left"
+                         :key="log" v-for="log in logs">{{ log }}
+                    </div>                    <v-progress-circular
                       indeterminate
                       color="blue"
                       v-if="loading"
@@ -66,8 +68,11 @@
                   v-model="userInput"
                   append-icon="send"
                   label="Enter a command here!"
+                  single-line
                   @click:append="sendStdin()"
                   type="text"
+                  clearable
+                  clear-icon="close"
                   outline
                 />
               </div>
@@ -82,7 +87,7 @@
 </template>
 
 <script>
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, forEach } from 'lodash';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
@@ -100,7 +105,7 @@ export default {
       execution: {},
       runtime: '',
       activetab: 1,
-      logs: '',
+      logs: [],
       loading: false,
     };
   },
@@ -126,7 +131,9 @@ export default {
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
           if (!isNil(newLog)) {
-            this.logs = newLog;
+            this.logs = [];
+            const logArray = newLog.split(/\r?\n/);
+            forEach(logArray, log => this.logs.push(log));
             this.loading = false;
           }
         });
@@ -223,9 +230,5 @@ export default {
   .cell {
     margin-top: -8px;
     margin-left: 5px;
-  }
-  #logText {
-    min-height: 250px;
-    padding-top: 20px;
   }
 </style>
