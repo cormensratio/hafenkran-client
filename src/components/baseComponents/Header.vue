@@ -60,6 +60,6 @@ export default {
     margin-top: -15px;
   }
   .hafen-toolbar {
-    background: #106ee0;
+    background: var(--themeColor);
   }
 </style>
