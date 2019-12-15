@@ -65,7 +65,7 @@
     <v-card-actions class="menu-buttons justify-content-end">
       <div>
         <v-btn @click="closeMenu()"> Cancel </v-btn>
-        <v-btn dark color="blue" @click="startExperiment()">
+        <v-btn dark style="background: var(--themeColor)" @click="startExperiment()">
           Start execution
         </v-btn>
       </div>
