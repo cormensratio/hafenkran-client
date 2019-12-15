@@ -5,16 +5,12 @@
         <v-card>
           <base-list-header title="Executions">
             <template slot="expansion-body">
-              <ExecutionFilters @applyFilters="applyFilters($event)"></ExecutionFilters>
+              <ExecutionFilters @applyFilters="applyFilters($event)"
+                                @quickSearch="quickSearch($event)"
+              >
+              </ExecutionFilters>
             </template>
           </base-list-header>
-
-<!--            <v-text-field append-icon="search"-->
-<!--                          label="Search"-->
-<!--                          single-line-->
-<!--                          v-model="search"-->
-<!--            >-->
-<!--            </v-text-field>-->
 
           <v-data-table
             :headers="headers"
@@ -97,6 +93,9 @@ export default {
         // Use object.assign so vue notices filters object was updated
         this.filters = Object.assign({}, filters);
       }
+    },
+    quickSearch(input) {
+      this.search = input;
     },
   },
   created() {

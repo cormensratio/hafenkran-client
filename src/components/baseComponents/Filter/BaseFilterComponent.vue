@@ -17,6 +17,22 @@
           >
           </filter-combobox>
         </v-layout>
+        <v-divider></v-divider>
+        <v-layout column>
+          <v-flex>
+            <div class="filter-title mb-2">Quick search:</div>
+          </v-flex>
+          <v-flex>
+            <v-text-field append-icon="search"
+                          label="Search"
+                          single-line
+                          @input="quickSearch()"
+                          v-model="searchString"
+                          class="search-field"
+            >
+            </v-text-field>
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-card-text>
     <v-card-actions class="justify-content-end filter-actions">
@@ -36,6 +52,7 @@ export default {
   components: { FilterCombobox },
   data() {
     return {
+      searchString: '',
       selectedFilters: {},
     };
   },
@@ -63,7 +80,12 @@ export default {
       if (!isNil(this.$refs.filterCombobox) && this.$refs.filterCombobox.length > 0) {
         forEach(this.$refs.filterCombobox, box => box.clearSelected());
       }
+      this.selectedFilters = {};
       this.$emit('clearFilters');
+      this.applyAllFilters();
+    },
+    quickSearch() {
+      this.$emit('quickSearch', this.searchString);
     },
     isVisible(requiresAdmin) {
       return (isNil(requiresAdmin) || !requiresAdmin)
@@ -80,5 +102,8 @@ export default {
   }
   .filter-actions {
     margin-top: -2%;
+  }
+  .search-field {
+    width: 50vh;
   }
 </style>

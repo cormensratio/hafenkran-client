@@ -1,6 +1,8 @@
 <template>
   <base-filter-component @applyFilters="applyFilters($event)"
-                          :filters="executionFilters">
+                         @quickSearch="quickSearch($event)"
+                          :filters="executionFilters"
+  >
   </base-filter-component>
 </template>
 
@@ -19,12 +21,12 @@ export default {
         name: {
           label: 'Name',
           value: 'name',
-          filterOptions: this.nameOptions,
+          filterOptions: [],
         },
         status: {
           label: 'Status',
           value: 'status',
-          filterOptions: this.statusOptions,
+          filterOptions: [],
         },
         user: {
           label: 'User',
@@ -38,10 +40,10 @@ export default {
   computed: {
     ...mapGetters(['user', 'executions']),
     nameOptions() {
-      return uniq(map(this.executions, 'name'));
+      return uniq(map(this.executions, this.filters.name.value));
     },
     statusOptions() {
-      return uniq(map(this.executions, 'status'));
+      return uniq(map(this.executions, this.filters.status.value));
     },
     executionFilters() {
       this.updateFilterOptions();
@@ -51,6 +53,9 @@ export default {
   methods: {
     applyFilters(appliedFilters) {
       this.$emit('applyFilters', appliedFilters);
+    },
+    quickSearch(input) {
+      this.$emit('quickSearch', input);
     },
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
