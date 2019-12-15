@@ -1,9 +1,11 @@
 <template>
   <div>
-    <label class="text-muted ml-2">{{label}}</label>
     <v-combobox multiple attach outline
-                height="3vh"
                 :items="items"
+                :label="label"
+                v-model="selected"
+                small-chips
+                allow-overflow="false"
                 @change="updateFilters($event)"
     >
     </v-combobox>
@@ -13,13 +15,18 @@
 <script>
 export default {
   name: 'FilterCombobox',
+  data() {
+    return {
+      selected: [],
+    };
+  },
   props: {
     label: String,
     items: {},
   },
   methods: {
-    updateFilters(filters) {
-      this.$emit('update', filters);
+    updateFilters() {
+      this.$emit('update', this.selected);
     },
   },
 };

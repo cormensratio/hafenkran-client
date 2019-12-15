@@ -4,7 +4,7 @@
       <span class="filter-title ml-4">Additional filters:</span>
     </v-card-title>
     <v-card-text>
-      <v-container class="mb-5">
+      <v-container>
         <v-layout>
           <v-flex class="filter-combobox mr-2">
             <filter-combobox label="Name"
@@ -67,7 +67,6 @@ export default {
 <style scoped>
   .filter-combobox {
     max-width: 300px;
-    max-height: 30px;
   }
   .filter-title {
     font-size: 14pt;
