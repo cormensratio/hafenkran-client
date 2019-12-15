@@ -53,7 +53,7 @@ import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import BaseListHeader from '../baseComponents/BaseListHeader';
-import ExecutionFilters from '../baseComponents/ExecutionFilters';
+import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
 import FilterMixin from '../../mixins/FilterMixin';
 
 

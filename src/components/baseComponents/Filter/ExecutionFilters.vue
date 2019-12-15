@@ -21,15 +21,16 @@ export default {
           value: 'name',
           filterOptions: this.nameOptions,
         },
-        user: {
-          label: 'User',
-          value: 'user',
-          filterOptions: [],
-        },
         status: {
           label: 'Status',
           value: 'status',
           filterOptions: this.statusOptions,
+        },
+        user: {
+          label: 'User',
+          value: 'user',
+          filterOptions: [],
+          requiresAdmin: true,
         },
       },
     };

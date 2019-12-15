@@ -13,11 +13,11 @@
                            :value="filter.value"
                            class="mr-2"
                            @update="applyFilter($event)"
+                           v-if="isVisible(filter.requiresAdmin)"
           >
           </filter-combobox>
         </v-layout>
       </v-container>
-      <slot name="filters"></slot>
     </v-card-text>
     <v-card-actions class="justify-content-end filter-actions">
       <v-btn @click="clearFilters()">Clear Filters</v-btn>
@@ -28,6 +28,7 @@
 
 <script>
 import { forEach, isNil } from 'lodash';
+import { mapGetters } from 'vuex';
 import FilterCombobox from './FilterCombobox';
 
 export default {
@@ -45,6 +46,9 @@ export default {
       filterOptions: [], // filter options for the combobox
     },
   },
+  computed: {
+    ...mapGetters(['user']),
+  },
   methods: {
     applyAllFilters() {
       this.$emit('applyFilters', this.selectedFilters);
@@ -53,7 +57,6 @@ export default {
       if (!isNil(filter)) {
         const key = Object.keys(filter)[0];
         this.selectedFilters[key] = filter[key];
-        console.log(this.selectedFilters);
       }
     },
     clearFilters() {
@@ -61,6 +64,10 @@ export default {
         forEach(this.$refs.filterCombobox, box => box.clearSelected());
       }
       this.$emit('clearFilters');
+    },
+    isVisible(requiresAdmin) {
+      return (isNil(requiresAdmin) || !requiresAdmin)
+        || (requiresAdmin && this.user.isAdmin);
     },
   },
 };
