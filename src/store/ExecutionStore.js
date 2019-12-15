@@ -51,7 +51,6 @@ const ExecutionStore = {
       }
     },
     async terminateExecution({ dispatch }, executionId) {
-      store.commit('setSnack', 'Execution canceled');
       if (!isNil(executionId)) {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {
@@ -59,15 +58,17 @@ const ExecutionStore = {
           return response;
         }
       }
+      store.commit('setSnack', 'Execution could not be canceled');
       return null;
     },
     async deleteExecution({ dispatch }, executionId) {
-      store.commit('setSnack', 'Execution canceled');
       const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
       if (!isNil(response)) {
         dispatch('fetchAllExecutionsOfUser');
+        store.commit('setSnack', 'Execution deleted');
         return response;
       }
+      store.commit('setSnack', 'Execution could not be deleted');
       return null;
     },
     getExecutionById({ state }, id) {

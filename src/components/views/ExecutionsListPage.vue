@@ -32,16 +32,20 @@
               <td class="text-xs-left">
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="terminateExecution(props.item.id), showSnackbar = true">
-                  Cancel</v-btn>
-                <v-btn @click="deleteExecution(props.item.id),
-                showSnackbar = true">Delete</v-btn>
+                       @click="executionCancel(props.item.id)">Cancel</v-btn>
+                <v-btn @click="executionDelete(props.item.id)">Delete</v-btn>
+                <v-progress-circular
+                  class=""
+                  indeterminate
+                  color="blue"
+                  v-if="loading"
+                ></v-progress-circular>
               </td>
             </template>
           </v-data-table>
         </v-card>
         <v-btn @click="showSnackbar=!showSnackbar">Click</v-btn>
-        <v-snackbar timeout="3000" v-model="showSnackbar">
+        <v-snackbar timeout="2500" v-model="showSnackbar">
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
@@ -66,6 +70,7 @@ export default {
     return {
       search: '',
       showSnackbar: false,
+      loading: false,
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
@@ -80,8 +85,29 @@ export default {
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
+    ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
+    },
+    async executionCancel(id) {
+      this.loading = true;
+      const canceledExecution = await this.terminateExecution(id);
+      this.loading = false;
+      if (canceledExecution !== null) {
+        this.setSnack(`${canceledExecution.name} has been canceled`);
+      }
+      this.setSnack('Execution could not be canceled');
+      this.showSnackbar = true;
+    },
+    async executionDelete(id) {
+      this.loading = true;
+      const deletedExecution = await this.deleteExecution(id);
+      this.loading = false;
+      if (deletedExecution !== null) {
+        this.setSnack(`${deletedExecution.name} has been deleted`);
+      }
+      this.setSnack('Execution could not be deleted');
+      this.showSnackbar = true;
     },
     cancelButtonDisabled(status) {
       let disabled = true;
