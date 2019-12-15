@@ -40,7 +40,6 @@ export default {
 
 <style scoped>
   .filter-combobox {
-    max-width: 300px;
-    width: 300px;
+    width: 30vh;
   }
 </style>

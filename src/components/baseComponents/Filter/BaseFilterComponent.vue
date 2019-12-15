@@ -5,23 +5,19 @@
     </v-card-title>
     <v-card-text>
       <v-container>
-        <v-layout>
-          <filter-combobox v-for="(filter, id) in filters" :key="id"
-                           ref="filterCombobox"
-                           :items="filter.filterOptions"
-                           :label="filter.label"
-                           :value="filter.value"
-                           class="mr-2"
-                           @update="applyFilter($event)"
-                           v-if="isVisible(filter.requiresAdmin)"
-          >
-          </filter-combobox>
+        <v-layout row>
+            <filter-combobox v-for="(filter, id) in filters" :key="id"
+                             ref="filterCombobox"
+                             :items="filter.filterOptions"
+                             :label="filter.label"
+                             :value="filter.value"
+                             class="mr-4"
+                             @update="applyFilter($event)"
+                             v-if="isVisible(filter.requiresAdmin)"
+            >
+            </filter-combobox>
         </v-layout>
-        <v-divider></v-divider>
         <v-layout column>
-          <v-flex>
-            <div class="filter-title mb-2">Quick search:</div>
-          </v-flex>
           <v-flex>
             <v-text-field append-icon="search"
                           label="Search"
@@ -35,10 +31,6 @@
         </v-layout>
       </v-container>
     </v-card-text>
-    <v-card-actions class="justify-content-end filter-actions">
-      <v-btn @click="clearFilters()">Clear Filters</v-btn>
-      <v-btn dark color="blue" class="m-3" @click="applyAllFilters()">Apply Filters</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -74,6 +66,7 @@ export default {
       if (!isNil(filter)) {
         const key = Object.keys(filter)[0];
         this.selectedFilters[key] = filter[key];
+        this.$emit('applyFilters', this.selectedFilters);
       }
     },
     clearFilters() {
@@ -99,9 +92,6 @@ export default {
   .filter-title {
     font-size: 14pt;
     margin-bottom: -1.5%;
-  }
-  .filter-actions {
-    margin-top: -2%;
   }
   .search-field {
     width: 50vh;
