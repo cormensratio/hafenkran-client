@@ -31,7 +31,7 @@
                 <v-btn color="red" @click="deleteExecution(execution.id)">
                   Delete
                 </v-btn>
-                <v-btn color="blue" @click="downloadResults()">
+                <v-btn dark style="background-color: var(--themeColor)" @click="downloadResults()">
                   Download Results
                   <v-icon right>cloud_download</v-icon>
                 </v-btn>
@@ -40,22 +40,24 @@
           </v-flex>
           <v-flex class="mt-2">
             <v-card class="results elevation-5">
-              <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
-                <v-tab @click="activetab=1">Logs
+              <v-tabs dark centered icons-and-text grow slider-color="white">
+                <v-tab class="color-theme-blue" @click="activeTab=1">Logs
                   <v-icon>description</v-icon>
                 </v-tab>
-                <v-tab @click="activetab=2">Statistics
+                <v-tab class="color-theme-blue" @click="activeTab=2">Statistics
                   <v-icon>timeline</v-icon>
                 </v-tab>
               </v-tabs>
             </v-card>
             <div class="content">
-              <div v-if="activetab === 1">
+              <div v-if="activeTab === 1">
                 <v-container class="scroll-y black white--text">
-                  <v-layout column>
+                  <v-layout column
+                  style="height: 25vh">
                     <div class="text-left">Logs are getting updated here:</div>
-                    <div class="text-left" id="logText">{{ logs }}</div>
-                    <v-progress-circular
+                    <div class="text-left"
+                         :key="log" v-for="log in logs">{{ log }}
+                    </div>                    <v-progress-circular
                       indeterminate
                       color="blue"
                       v-if="loading"
@@ -66,12 +68,15 @@
                   v-model="userInput"
                   append-icon="send"
                   label="Enter a command here!"
+                  single-line
                   @click:append="sendStdin()"
                   type="text"
+                  clearable
+                  clear-icon="close"
                   outline
                 />
               </div>
-              <div v-if="activetab === 2">
+              <div v-if="activeTab === 2">
               </div>
             </div>
           </v-flex>
@@ -82,7 +87,7 @@
 </template>
 
 <script>
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, forEach } from 'lodash';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
@@ -99,8 +104,8 @@ export default {
       userInput: '',
       execution: {},
       runtime: '',
-      activetab: 1,
-      logs: '',
+      activeTab: 1,
+      logs: [],
       loading: false,
     };
   },
@@ -126,7 +131,9 @@ export default {
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
           if (!isNil(newLog)) {
-            this.logs = newLog;
+            this.logs = [];
+            const logArray = newLog.split(/\r?\n/);
+            forEach(logArray, log => this.logs.push(log));
             this.loading = false;
           }
         });
@@ -224,8 +231,8 @@ export default {
     margin-top: -8px;
     margin-left: 5px;
   }
-  #logText {
-    min-height: 250px;
-    padding-top: 20px;
+
+  .color-theme-blue {
+    background: var(--themeColor);
   }
 </style>
