@@ -5,7 +5,7 @@
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
             <label><p class="h1">Upload your experiment here:</p><br>
-              <v-icon id="uploadicon" size="100">file_upload</v-icon>
+              <v-icon class="uploadicon" size="100">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
             </label>
           </div>
@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style scoped>
-  #uploadicon:hover {
-    color: blue;
+  .uploadicon:hover {
+    color: var(--themeColor);
   }
 </style>
