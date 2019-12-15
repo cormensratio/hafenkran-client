@@ -3,10 +3,10 @@
     <v-combobox multiple attach outline
                 :items="items"
                 :label="label"
-                v-model="selected"
+                v-model="selectedItems"
                 small-chips
-                allow-overflow="false"
                 @change="updateFilters($event)"
+                class="filter-combobox"
     >
     </v-combobox>
   </div>
@@ -17,21 +17,30 @@ export default {
   name: 'FilterCombobox',
   data() {
     return {
-      selected: [],
+      selectedItems: [],
     };
   },
   props: {
+    value: String,
     label: String,
     items: {},
   },
   methods: {
     updateFilters() {
-      this.$emit('update', this.selected);
+      const updatedFilters = {};
+      updatedFilters[this.value] = this.selectedItems;
+      this.$emit('update', updatedFilters);
+    },
+    clearSelected() {
+      this.selectedItems = [];
     },
   },
 };
 </script>
 
 <style scoped>
-
+  .filter-combobox {
+    max-width: 300px;
+    width: 300px;
+  }
 </style>

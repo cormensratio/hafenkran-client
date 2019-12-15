@@ -1,49 +1,36 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <span class="filter-title ml-4">Additional filters:</span>
-    </v-card-title>
-    <v-card-text>
-      <v-container>
-        <v-layout>
-          <v-flex class="filter-combobox mr-2">
-            <filter-combobox label="Name"
-                             :items="nameOptions"
-                             @update="filters.name = $event"
-            ></filter-combobox>
-          </v-flex>
-          <v-flex class="filter-combobox mr-2">
-            <filter-combobox label="Status"
-                             :items="statusOptions"
-                             @update="filters.status = $event"
-            ></filter-combobox>
-          </v-flex>
-          <v-flex class="filter-combobox" v-if="user.isAdmin">
-            <filter-combobox label="User"></filter-combobox>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-card-text>
-    <div class="apply-button-container">
-      <v-btn dark color="blue" class="m-3" @click="applyFilters()">Apply Filters</v-btn>
-    </div>
-  </v-card>
+  <base-filter-component @applyFilters="applyFilters($event)"
+                          :filters="executionFilters">
+  </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { uniq, map } from 'lodash';
 import FilterCombobox from './FilterCombobox';
+import BaseFilterComponent from './BaseFilterComponent';
 
 export default {
   name: 'ExecutionFilters',
-  components: { FilterCombobox },
+  components: { BaseFilterComponent, FilterCombobox },
   data() {
     return {
       filters: {
-        name: [],
-        user: [],
-        status: [],
+        name: {
+          label: 'Name',
+          value: 'name',
+          filterOptions: this.nameOptions,
+        },
+        user: {
+          label: 'User',
+          value: 'user',
+          filterOptions: [],
+        },
+        status: {
+          label: 'Status',
+          value: 'status',
+          filterOptions: this.statusOptions,
+        },
       },
     };
   },
@@ -55,25 +42,22 @@ export default {
     statusOptions() {
       return uniq(map(this.executions, 'status'));
     },
+    executionFilters() {
+      this.updateFilterOptions();
+      return this.filters;
+    },
   },
   methods: {
-    applyFilters() {
-      this.$emit('applyFilters', this.filters);
+    applyFilters(appliedFilters) {
+      this.$emit('applyFilters', appliedFilters);
+    },
+    updateFilterOptions() {
+      this.filters.name.filterOptions = this.nameOptions;
+      this.filters.status.filterOptions = this.statusOptions;
     },
   },
 };
 </script>
 
 <style scoped>
-  .filter-combobox {
-    max-width: 300px;
-  }
-  .filter-title {
-    font-size: 14pt;
-    margin-bottom: -2%;
-  }
-  .apply-button-container {
-    display: flex;
-    justify-content: flex-end;
-  }
 </style>
