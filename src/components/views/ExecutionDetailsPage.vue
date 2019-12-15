@@ -31,7 +31,7 @@
                 <v-btn color="red" @click="deleteExecution(execution.id)">
                   Delete
                 </v-btn>
-                <v-btn color="blue" @click="downloadResults()">
+                <v-btn dark style="background-color: var(--themeColor)" @click="downloadResults()">
                   Download Results
                   <v-icon right>cloud_download</v-icon>
                 </v-btn>
@@ -41,10 +41,10 @@
           <v-flex class="mt-2">
             <v-card class="results elevation-5">
               <v-tabs dark centered icons-and-text grow slider-color="white">
-                <v-tab class="tab" @click="activeTab=1">Logs
+                <v-tab class="color-theme-blue" @click="activeTab=1">Logs
                   <v-icon>description</v-icon>
                 </v-tab>
-                <v-tab class="tab" @click="activeTab=2">Statistics
+                <v-tab class="color-theme-blue" @click="activeTab=2">Statistics
                   <v-icon>timeline</v-icon>
                 </v-tab>
               </v-tabs>
@@ -232,7 +232,7 @@ export default {
     margin-left: 5px;
   }
 
-  .tab {
-    background: #106ee0;
+  .color-theme-blue {
+    background: var(--themeColor);
   }
 </style>
