@@ -85,4 +85,7 @@ export default {
 </script>
 
 <style scoped>
+  #uploadicon:hover {
+    color: blue;
+  }
 </style>
