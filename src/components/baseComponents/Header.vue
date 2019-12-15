@@ -1,6 +1,6 @@
 <template>
   <div class="hafen-header pb-1">
-    <v-toolbar height="75vh" color="blue" class="hafen-toolbar">
+    <v-toolbar height="75vh" class="hafen-toolbar">
       <v-toolbar-title class="mr-5 pt-2" @click="navigateToStartPage()">
         <img class="hafen-logo" src="../../assets/hafenkran.png">
         <span class="logo-title">HAFENKRAN</span>
@@ -59,6 +59,9 @@ export default {
   }
   .hafen-header {
     margin-top: -15px;
+  }
+  .hafen-toolbar {
+    background: var(--themeColor);
   }
 
 </style>
