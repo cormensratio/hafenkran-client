@@ -22,18 +22,6 @@ const ExecutionStore = {
         cpu: '',
         bookedTime: '',
       },
-      {
-        id: '1',
-        experimentId: '1',
-        name: 'Test Execution 2',
-        createdAt: new Date(),
-        startedAt: new Date(),
-        terminatedAt: new Date(),
-        status: 'RUNNING',
-        ram: '',
-        cpu: '',
-        bookedTime: '',
-      },
     ],
   },
   getters: {

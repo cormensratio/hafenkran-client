@@ -1,18 +1,20 @@
-import { filter, forEach } from 'lodash';
+import { filter, isNil, forOwn } from 'lodash';
 
 const FilterMixin = {
   data() {
     return {
       items: [],
-      filters: [],
+      filters: {},
     };
   },
   computed: {
     filteredItems() {
       let outPut = this.items;
-      if (this.filters.length > 0) {
-        forEach(this.filters, (option) => {
-          outPut = filter(outPut, item => item[option.key] === option.value);
+      if (!isNil(outPut) && !isNil(this.filters)) {
+        forOwn(this.filters, (value, key) => {
+          if (outPut.length > 0 && !isNil(value) && value.length > 0) {
+            outPut = filter(outPut, item => value.includes(item[key]));
+          }
         });
       }
       return outPut;
