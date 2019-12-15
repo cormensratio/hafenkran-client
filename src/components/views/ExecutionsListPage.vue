@@ -32,9 +32,10 @@
               <td class="text-xs-left">
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="terminateExecution(props.item.id), showSnackbar=!showSnackbar">
+                       @click="terminateExecution(props.item.id), showSnackbar = true">
                   Cancel</v-btn>
-                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
+                <v-btn @click="deleteExecution(props.item.id),
+                showSnackbar = true">Delete</v-btn>
               </td>
             </template>
           </v-data-table>

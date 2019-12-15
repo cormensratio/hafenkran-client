@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { isNil, find } from 'lodash';
 import ApiService from '../service/ApiService';
+import SnackbarStore from './SnackbarStore';
 
 Vue.use(Vuex);
 
@@ -50,7 +51,7 @@ const ExecutionStore = {
       }
     },
     async terminateExecution({ dispatch }, executionId) {
-      this.setSnack('Terminated execution successfully');
+      SnackbarStore.mutations.setSnack('snack', 'Execution cancelled');
       if (!isNil(executionId)) {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {
@@ -61,10 +62,10 @@ const ExecutionStore = {
       return null;
     },
     async deleteExecution({ dispatch }, executionId) {
+      SnackbarStore.setSnack('snack', 'Execution deleted');
       const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
       if (!isNil(response)) {
         dispatch('fetchAllExecutionsOfUser');
-        this.setSnack('Deleted execution successfully');
         return response;
       }
       return null;
