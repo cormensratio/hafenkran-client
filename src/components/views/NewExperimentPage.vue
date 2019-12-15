@@ -3,11 +3,13 @@
     <template slot="body">
       <v-container>
         <v-layout>
-          <v-card class="mx-auto light-blue" width="750">
-            <v-card-title class="m-1 white--text justify-center h1 p-0" >
-              Upload
-            </v-card-title>
-            <file-upload class="pt-0">
+          <v-card class="mx-auto white" width="750">
+            <v-toolbar dark color="blue">
+              <v-toolbar-title color="white" class="justify-center">
+                Upload your experiment here:
+              </v-toolbar-title>
+            </v-toolbar>
+            <file-upload class="pt-4">
               <template slot="button">
                 <v-btn :to="'/experimentlist'">Show Experiments</v-btn>
               </template>
