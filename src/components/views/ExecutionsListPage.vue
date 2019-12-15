@@ -5,7 +5,7 @@
         <v-card>
           <base-list-header title="Executions">
             <template slot="expansion-body">
-              <ExecutionFilters @applyFilters="applyFilters($event)"></ExecutionFilters>
+              <ExecutionFilters></ExecutionFilters>
             </template>
           </base-list-header>
 
@@ -18,7 +18,7 @@
 
           <v-data-table
             :headers="headers"
-            :items="filteredItems"
+            :items="executions"
             :search="search"
           >
             <template v-slot:items="props">
@@ -92,15 +92,9 @@ export default {
       }
       return disabled;
     },
-    applyFilters(filters) {
-      if (!isNil(filters)) {
-        this.filters = Object.assign({}, filters);
-      }
-    },
   },
   created() {
-    this.fetchAllExecutionsOfUser();
-    this.$nextTick(() => {
+    this.fetchAllExecutionsOfUser().then(() => {
       this.items = this.executions;
     });
   },
