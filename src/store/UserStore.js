@@ -14,15 +14,25 @@ const UserStore = {
       isAdmin: '',
       email: '',
     },
+    userList: [
+      {
+        id: 'test',
+        name: 'testuser',
+      },
+    ],
   },
   getters: {
     user: state => state.user,
+    userList: state => state.userList,
     isAuthenticated: state => !isEqual(state.user.name, '')
         && !isNil(localStorage.getItem('user')),
   },
   mutations: {
     updateUser(state, user) {
       state.user = user;
+    },
+    updateUserList(state, userList) {
+      state.userList = userList;
     },
   },
   actions: {
@@ -45,7 +55,15 @@ const UserStore = {
         console.log('Successfully fetched user information');
         return true;
       }
+      return false;
+    },
+    async fetchUserList({ commit }) {
+      const userList = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/`);
 
+      if (!isNil(userList)) {
+        commit('updateUserList', userList);
+        return true;
+      }
       return false;
     },
     logout({ dispatch }) {

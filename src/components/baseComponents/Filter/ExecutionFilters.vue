@@ -30,7 +30,7 @@ export default {
         },
         user: {
           label: 'User',
-          value: 'user',
+          value: 'owner',
           filterOptions: [],
           requiresAdmin: true,
         },
@@ -38,12 +38,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'executions']),
+    ...mapGetters(['user', 'executions', 'userList']),
     nameOptions() {
       return uniq(map(this.executions, this.filters.name.value));
     },
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
+    },
+    userOptions() {
+      return map(this.userList, user => user.name);
     },
     executionFilters() {
       this.updateFilterOptions();
@@ -60,6 +63,7 @@ export default {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
+      this.filters.user.filterOptions = this.userOptions;
     },
   },
 };
