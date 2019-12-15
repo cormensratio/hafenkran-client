@@ -40,17 +40,17 @@
           </v-flex>
           <v-flex class="mt-2">
             <v-card class="results elevation-5">
-              <v-tabs color="blue" dark centered icons-and-text grow slider-color="white">
-                <v-tab @click="activetab=1">Logs
+              <v-tabs dark centered icons-and-text grow slider-color="white">
+                <v-tab class="tab" @click="activeTab=1">Logs
                   <v-icon>description</v-icon>
                 </v-tab>
-                <v-tab @click="activetab=2">Statistics
+                <v-tab class="tab" @click="activeTab=2">Statistics
                   <v-icon>timeline</v-icon>
                 </v-tab>
               </v-tabs>
             </v-card>
             <div class="content">
-              <div v-if="activetab === 1">
+              <div v-if="activeTab === 1">
                 <v-container class="scroll-y black white--text">
                   <v-layout column
                   style="height: 25vh">
@@ -76,7 +76,7 @@
                   outline
                 />
               </div>
-              <div v-if="activetab === 2">
+              <div v-if="activeTab === 2">
               </div>
             </div>
           </v-flex>
@@ -104,7 +104,7 @@ export default {
       userInput: '',
       execution: {},
       runtime: '',
-      activetab: 1,
+      activeTab: 1,
       logs: [],
       loading: false,
     };
@@ -230,5 +230,9 @@ export default {
   .cell {
     margin-top: -8px;
     margin-left: 5px;
+  }
+
+  .tab {
+    background: #106ee0;
   }
 </style>
