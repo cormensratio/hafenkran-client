@@ -1,11 +1,12 @@
-<template>
-  <base-page>
-    <template slot="body">
-      <div class="container">
+<template slot="body">
+  <div class="container">
+    <v-hover v-slot:default="{ hover }">
+      <v-card :elevation="hover ? 12 : 2" class="p-2">
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
-            <label><p class="h1">Upload your experiments here:</p><br>
-              <input type="file" ref="file" id="file" @change="getFile"/>
+            <label>
+              <v-icon class="uploadicon" size="100">file_upload</v-icon>
+              <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
             </label>
           </div>
         </div>
@@ -23,26 +24,27 @@
         </div>
         <div>
           <v-btn v-if="correctFileType"
-                 class="btn btn-success" v-on:click="submitFile()">Submit</v-btn>
-          <v-btn v-else class="btn btn-danger">No file to submit</v-btn>
-          <v-btn to="/experimentlist">See experiments</v-btn>
+                 class="btn btn-success" v-on:click="submitFile()">Submit
+          </v-btn>
+          <v-btn v-else disabled>Submit</v-btn>
+          <slot name="button"></slot>
           <v-progress-circular
             indeterminate
             color="blue"
             v-if="loading"
           ></v-progress-circular>
         </div>
-      </div>
-    </template>
-  </base-page>
+      </v-card>
+    </v-hover>
+  </div>
 </template>
 
 <script>
-import BasePage from '../baseComponents/BasePage';
+import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
 export default {
-  name: 'CreateExperimentPage',
+  name: 'FileUpload',
   components: { BasePage },
   data() {
     return {
@@ -69,21 +71,16 @@ export default {
       this.loading = true;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
-        this.$router.push('/experimentlist');
         this.loading = false;
+        this.$router.push('/experimentlist');
       }
-      this.loading = false;
     },
   },
 };
 </script>
 
 <style scoped>
-  .container {
-    position: relative;
-    background-color: lightblue;
-    margin-top: 4%;
-    padding-left: 20%;
-    padding-right: 20%;
+  .uploadicon:hover {
+    color: var(--themeColor);
   }
 </style>
