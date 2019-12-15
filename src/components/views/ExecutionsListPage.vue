@@ -35,7 +35,6 @@
                        @click="executionCancel(props.item.id)">Cancel</v-btn>
                 <v-btn @click="executionDelete(props.item.id)">Delete</v-btn>
                 <v-progress-circular
-                  class=""
                   indeterminate
                   color="blue"
                   v-if="loading"
