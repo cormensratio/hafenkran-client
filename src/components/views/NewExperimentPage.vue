@@ -4,7 +4,7 @@
       <v-container>
         <v-layout>
           <v-card class="mx-auto white" width="750">
-            <v-toolbar dark color="blue">
+            <v-toolbar dark class="toolbar">
               <v-toolbar-title color="white" class="justify-center">
                 Upload your experiment here:
               </v-toolbar-title>
@@ -32,5 +32,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .toolbar {
+    background: var(--themeColor);
+  }
 </style>

@@ -4,7 +4,7 @@
       <v-card :elevation="hover ? 12 : 2" class="p-2">
         <div class="input-group mb-3">
           <div class="input-group-prepend m-auto">
-            <label><p class="h1">Upload your experiment here:</p><br>
+            <label>
               <v-icon class="uploadicon" size="100">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
             </label>
