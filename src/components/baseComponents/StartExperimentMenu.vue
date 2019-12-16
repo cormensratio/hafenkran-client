@@ -57,9 +57,8 @@
 </template>
 <script>
 import { isNil } from 'lodash';
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { timeStampMixin } from '../../mixins/TimeStamp';
-import ExperimentListPage from '../views/ExperimentListPage';
 
 
 export default {
@@ -84,9 +83,6 @@ export default {
     };
   },
   props: { experiment: {} },
-  computed: {
-    ...mapGetters(['snack']),
-  },
   methods: {
     ...mapActions(['runExecution']),
     ...mapMutations(['setSnack']),
@@ -103,7 +99,8 @@ export default {
         if (!isNil(startedExecution)) {
           this.$router.push('/executionlist');
         } else {
-          ExperimentListPage.testSnack();
+          this.setSnack('Experiment could not be started');
+          this.$emit('notstarted');
         }
       }
     },

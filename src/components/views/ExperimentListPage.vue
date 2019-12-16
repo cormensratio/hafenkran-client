@@ -32,17 +32,18 @@
           </v-flex>
           <v-flex v-if="showDetails">
             <div class="mt-4">
-              <StartExperimentMenu @close="closeDetails"
+              <StartExperimentMenu @close="closeDetails" @notstarted="showSnack"
                                    :experiment="selectedExperiment"
               >
               </StartExperimentMenu>
             </div>
           </v-flex>
         </v-layout>
-        <v-snackbar timeout="2500" v-model="showSnackbar">
+        <v-snackbar v-model="showSnackbar">
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
+        <v-btn @click="showSnackbar = true">Click</v-btn>
       </v-container>
     </template>
   </base-page>
@@ -62,13 +63,14 @@ export default {
   mixins: [timeStampMixin],
 
   computed: {
-    ...mapGetters(['experiments']),
+    ...mapGetters(['experiments', 'snack']),
   },
   data() {
     return {
       search: '',
       showDetails: false,
       selectedExperiment: {},
+      showSnackbar: false,
       headers: [
         {
           text: 'Dockerfile Name',
@@ -91,9 +93,8 @@ export default {
         this.$router.push('/executionlist');
       }
     },
-    testSnack() {
-      this.setSnack('Execution could not be started');
-      console.log(this.snack);
+    showSnack() {
+      this.showSnackbar = true;
     },
     closeDetails() {
       this.showDetails = false;
