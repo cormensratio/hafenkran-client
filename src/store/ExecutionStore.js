@@ -15,11 +15,13 @@ const ExecutionStore = {
         experimentId: '1',
         name: 'Test Execution',
         createdAt: new Date(),
+        startedAt: new Date(),
         terminatedAt: new Date(),
-        status: '',
+        status: 'RUNNING',
         ram: '',
         cpu: '',
         bookedTime: '',
+        ownerId: '',
       },
     ],
   },
@@ -50,15 +52,21 @@ const ExecutionStore = {
     },
     async terminateExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
-        ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`)
-          .then((response) => {
-            if (!isNil(response)) {
-              dispatch('fetchAllExecutionsOfUser');
-              return true;
-            }
-            return false;
-          });
+        const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
+        if (!isNil(response)) {
+          dispatch('fetchAllExecutionsOfUser');
+          return response;
+        }
       }
+      return null;
+    },
+    async deleteExecution({ dispatch }, executionId) {
+      const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
+      if (!isNil(response)) {
+        dispatch('fetchAllExecutionsOfUser');
+        return response;
+      }
+      return null;
     },
     getExecutionById({ state }, id) {
       if (!isNil(id)) {

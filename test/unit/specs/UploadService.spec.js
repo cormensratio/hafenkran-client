@@ -2,20 +2,14 @@ import UploadService from '../../../src/service/UploadService';
 
 describe('UploadService', () => {
   it('should only accept files with the right file type', () => {
-    const mockFileName = 'test.zip';
+    const mockFileType = { type: 'application/x-tar' };
 
-    expect(UploadService.checkFileType(mockFileName)).toBe(true);
-  });
-
-  it('should reject file names with no ending', () => {
-    const mockFileNameWithoutEnding = 'test';
-
-    expect(UploadService.checkFileType(mockFileNameWithoutEnding)).toBe(false);
+    expect(UploadService.checkFileType(mockFileType)).toBe(true);
   });
 
   it('should reject file names with the wrong file type', () => {
-    const mockFileNameWrongType = 'test.jar';
+    const mockWrongFileType = { type: 'application/zip' };
 
-    expect(UploadService.checkFileType(mockFileNameWrongType)).toBe(false);
+    expect(UploadService.checkFileType(mockWrongFileType)).toBe(false);
   });
 });
