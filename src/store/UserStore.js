@@ -6,6 +6,8 @@ import AuthService from '../service/AuthService';
 
 Vue.use(Vuex);
 
+export const serviceUrl = process.env.USER_SERVICE_URL;
+
 const UserStore = {
   state: {
     user: {
@@ -52,7 +54,7 @@ const UserStore = {
       return false;
     },
     async fetchUser({ commit }) {
-      const userInfo = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/users/me`);
+      const userInfo = await ApiService.doGet(`${serviceUrl}/users/me`);
 
       if (!isNil(userInfo)) {
         commit('updateUser', userInfo);
@@ -62,7 +64,7 @@ const UserStore = {
       return false;
     },
     async fetchUserList({ commit }) {
-      const userList = await ApiService.doGet(`${process.env.USER_SERVICE_URL}/users/all`);
+      const userList = await ApiService.doGet(`${serviceUrl}/users/all`);
 
       if (!isNil(userList)) {
         commit('updateUserList', userList);
