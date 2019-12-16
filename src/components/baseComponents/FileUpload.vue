@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
@@ -53,9 +54,11 @@ export default {
       fileName: null,
       correctFileType: false,
       loading: false,
+      showSnackbar: false,
     };
   },
   methods: {
+    ...mapMutations(['setSnack']),
     getFileName() {
       return this.$refs.file.files[0].name;
     },
@@ -68,11 +71,15 @@ export default {
       }
     },
     async submitFile() {
+      this.showSnackbar = false;
       this.loading = true;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
         this.loading = false;
         this.$router.push('/experimentlist');
+      } else {
+        this.setSnack('Experiment could not be uploaoded');
+        this.showSnackbar = true;
       }
     },
   },
