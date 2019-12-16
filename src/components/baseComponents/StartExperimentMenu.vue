@@ -1,6 +1,7 @@
 <template>
   <v-card class="p-3">
     <v-card-text class="details-container">
+      <v-icon @click="closeMenu" class="float-right mb-4">close</v-icon>
       <v-layout column>
         <v-flex class="text-left">
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
@@ -22,6 +23,7 @@
                           outline
                           class="time-input"
                           v-model="bookedHours"
+                          min="0"
             >
             </v-text-field>
           </v-flex>
@@ -31,6 +33,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
+                          min="0"
             >
             </v-text-field>
           </v-flex>
@@ -62,9 +65,8 @@
         </v-layout>
       </v-container>
     </v-card-text>
-    <v-card-actions class="menu-buttons justify-content-end">
+    <v-card-actions class="menu-buttons justify-content-center">
       <div>
-        <v-btn @click="closeMenu()"> Cancel </v-btn>
         <v-btn dark style="background: var(--themeColor)" @click="startExperiment()">
           Start execution
         </v-btn>

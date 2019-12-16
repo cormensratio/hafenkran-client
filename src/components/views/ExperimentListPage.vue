@@ -36,6 +36,7 @@
               :position-x="menuPosX"
               :position-y="menuPosY"
               :close-on-content-click="false"
+              :close-on-click="false"
       >
         <StartExperimentMenu :experiment="selectedExperiment"
                              @menuClosed="closeMenu">
