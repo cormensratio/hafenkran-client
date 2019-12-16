@@ -33,16 +33,39 @@
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
                        @click="executionCancel(props.item.id)">Cancel</v-btn>
-                <v-btn @click="executionDelete(props.item.id)">Delete</v-btn>
-                <v-progress-circular
-                  indeterminate
-                  color="blue"
-                  v-if="loading"
-                ></v-progress-circular>
+                <v-dialog
+                  v-model="dialog"
+                  width="500">
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-if="props.item.status === 'RUNNING' || 'WAITING'" disabled>
+                      Delete
+                    </v-btn>
+                    <v-btn v-else color="red lighten-2" dark v-on="on">
+                      Delete
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      Are you sure you want to delete this Execution?
+                    </v-card-title>
+                    <v-card-actions>
+                      <v-btn class="error"
+                             @click="executionDelete(props.item.id), dialog = false">
+                        Yes, I want to delete</v-btn>
+                      <v-btn @click="dialog = false">No, I'm not sure</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </td>
             </template>
           </v-data-table>
         </v-card>
+        <v-progress-circular
+          size="50"
+          indeterminate
+          color="blue"
+          v-if="loading"
+        ></v-progress-circular>
         <v-snackbar timeout="2500" v-model="showSnackbar">
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
@@ -69,6 +92,7 @@ export default {
       search: '',
       showSnackbar: false,
       loading: false,
+      dialog: false,
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
