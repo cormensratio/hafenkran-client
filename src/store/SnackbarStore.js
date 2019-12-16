@@ -1,6 +1,6 @@
 const SnackbarStore = {
   state: {
-    snack: 'test',
+    snack: '',
   },
   getters: {
     snack: state => state.snack,
