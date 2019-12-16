@@ -13,6 +13,7 @@ const mockExecutions = [
     ram: '',
     cpu: '',
     bookedTime: '',
+    ownerId: '1',
   },
   {
     id: '2',
@@ -25,6 +26,7 @@ const mockExecutions = [
     ram: '',
     cpu: '',
     bookedTime: '',
+    ownerId: '1',
   },
   {
     id: '3',
@@ -37,6 +39,7 @@ const mockExecutions = [
     ram: '',
     cpu: '',
     bookedTime: '',
+    ownerId: '1',
   },
 ];
 
