@@ -36,6 +36,7 @@ export default {
       if (!isNil(token)) {
         AuthService.extractTokenInfo(token);
         store.dispatch('fetchUser');
+        store.dispatch('fetchUserList');
       }
     }
   },

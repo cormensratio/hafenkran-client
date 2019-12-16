@@ -21,7 +21,7 @@ const ExecutionStore = {
         ram: '',
         cpu: '',
         bookedTime: '',
-        ownerId: 1,
+        ownerId: '',
       },
       {
         id: '2',
@@ -34,6 +34,7 @@ const ExecutionStore = {
         ram: '',
         cpu: '',
         bookedTime: '',
+        ownerId: 1,
       },
     ],
   },
