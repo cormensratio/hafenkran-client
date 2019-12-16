@@ -69,6 +69,7 @@
                   append-icon="send"
                   label="Enter a command here!"
                   single-line
+                  v-on:keyup.enter="sendStdin"
                   @click:append="sendStdin()"
                   type="text"
                   clearable

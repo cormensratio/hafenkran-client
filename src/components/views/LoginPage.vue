@@ -33,6 +33,11 @@
                   </v-btn>
                 </div>
               </v-card-actions>
+              <v-progress-circular
+                indeterminate
+                color="blue"
+                v-if="loading"
+              ></v-progress-circular>
               <v-sheet v-if="failedLogin"
                        elevation="5" dark class="bg-danger">Login failed
               </v-sheet>
@@ -56,6 +61,7 @@ export default {
       userName: '',
       password: '',
       failedLogin: false,
+      loading: false,
     };
   },
   computed: {
@@ -64,6 +70,7 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginUser() {
+      this.loading = true;
       if (!this.isAuthenticated) {
         this.login({ name: this.userName, password: this.password })
           .then((response) => {
@@ -71,6 +78,7 @@ export default {
               this.failedLogin = false;
               this.$router.push('/');
             } else {
+              this.loading = false;
               this.failedLogin = true;
             }
           });
