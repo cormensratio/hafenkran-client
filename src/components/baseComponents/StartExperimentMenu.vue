@@ -4,7 +4,7 @@
       <v-layout column>
         <v-flex class="text-left">
           <v-btn class="float-right" @click="closeDetails">
-            <v-icon> close</v-icon>
+            <v-icon>close</v-icon>
           </v-btn>
           <div class="mt-2 h3">Experiment: {{ experiment.name }}</div>
           <div class="mt-2">Uploaded: {{ getTimeStamp(experiment.createdAt) }}</div>
@@ -21,13 +21,11 @@
             :items="ramOptions"
             label="RAM"
             type='Number'
-            attach
           ></v-combobox>
           <v-combobox
             v-model="executionDetails.cpu"
             :items="cpuOptions"
             label="CPU Cores"
-            attach
             type='Number'
           ></v-combobox>
         </v-flex>
@@ -36,12 +34,17 @@
             v-model="executionDetails.bookedTime"
             :items="bookedTimeOptions"
             label="Time in Seconds"
-            attach=""
             type='Number'
           ></v-combobox>
         </v-flex>
       </v-layout>
     </v-card-text>
+    <v-progress-circular
+      size="50"
+      indeterminate
+      color="blue"
+      v-if="loading"
+    ></v-progress-circular>
     <v-card-actions class="col-12 justify-center">
         <v-btn dark color="blue" class="col-3" v-on:click="resetDetails()">
         Reset options
@@ -54,8 +57,9 @@
 </template>
 <script>
 import { isNil } from 'lodash';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import { timeStampMixin } from '../../mixins/TimeStamp';
+import ExperimentListPage from '../views/ExperimentListPage';
 
 
 export default {
@@ -76,21 +80,30 @@ export default {
             cpu: 4,
             bookedTime: 300,
           },
+      loading: false,
     };
   },
   props: { experiment: {} },
+  computed: {
+    ...mapGetters(['snack']),
+  },
   methods: {
     ...mapActions(['runExecution']),
+    ...mapMutations(['setSnack']),
     resetDetails() {
       this.executionDetails.ram = this.ramOptions[0];
       this.executionDetails.cpu = this.cpuOptions[1];
       this.executionDetails.bookedTime = this.bookedTimeOptions[0];
     },
     async startExperiment() {
+      this.loading = true;
       if (!isNil(this.executionDetails.experimentId)) {
         const startedExecution = await this.runExecution(this.executionDetails);
+        this.loading = false;
         if (!isNil(startedExecution)) {
           this.$router.push('/executionlist');
+        } else {
+          ExperimentListPage.testSnack();
         }
       }
     },

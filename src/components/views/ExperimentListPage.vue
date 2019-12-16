@@ -39,6 +39,10 @@
             </div>
           </v-flex>
         </v-layout>
+        <v-snackbar timeout="2500" v-model="showSnackbar">
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
     </template>
   </base-page>
@@ -86,6 +90,10 @@ export default {
         await this.fetchExecutionsByExperimentId(experimentId);
         this.$router.push('/executionlist');
       }
+    },
+    testSnack() {
+      this.setSnack('Execution could not be started');
+      console.log(this.snack);
     },
     closeDetails() {
       this.showDetails = false;
