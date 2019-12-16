@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { isNil, find } from 'lodash';
 import ApiService from '../service/ApiService';
-import store from './store';
 
 Vue.use(Vuex);
 
@@ -58,17 +57,14 @@ const ExecutionStore = {
           return response;
         }
       }
-      store.commit('setSnack', 'Execution could not be canceled');
       return null;
     },
     async deleteExecution({ dispatch }, executionId) {
       const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
       if (!isNil(response)) {
         dispatch('fetchAllExecutionsOfUser');
-        store.commit('setSnack', 'Execution deleted');
         return response;
       }
-      store.commit('setSnack', 'Execution could not be deleted');
       return null;
     },
     getExecutionById({ state }, id) {
