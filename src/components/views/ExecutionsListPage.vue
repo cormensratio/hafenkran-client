@@ -43,7 +43,6 @@
             </template>
           </v-data-table>
         </v-card>
-        <v-btn @click="showSnackbar=!showSnackbar">Click</v-btn>
         <v-snackbar timeout="2500" v-model="showSnackbar">
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
@@ -89,6 +88,7 @@ export default {
       this.$router.push(`/execution/${id}`);
     },
     async executionCancel(id) {
+      this.showSnackbar = false;
       this.loading = true;
       const canceledExecution = await this.terminateExecution(id);
       this.loading = false;
@@ -99,6 +99,7 @@ export default {
       this.showSnackbar = true;
     },
     async executionDelete(id) {
+      this.showSnackbar = false;
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
       this.loading = false;

@@ -4,7 +4,7 @@ import ApiService from './ApiService';
 
 export default class ExecutionDetailService {
   static async getExecutionLogsbyId(id) {
-    const result = await ApiService.doGet(`${serviceUrl}/executions/${id}/logs?withTimestamp=false`);
+    const result = await ApiService.doGet(`${serviceUrl}/executions/${id}/logs?withTimestamp=ulllul`);
     if (result !== undefined) {
       return result;
     }
