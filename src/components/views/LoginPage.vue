@@ -15,9 +15,11 @@
               </v-toolbar>
               <v-card-text>
                 <v-form lazy-validation class="mt-3 mr-4">
-                  <v-text-field v-model="userName" outline
+                  <v-text-field v-model="userName" outline autofocus
+                                v-on:keyup.enter="loginUser"
                                 label="Name" prepend-icon="person"></v-text-field>
                   <v-text-field type="password" v-model="password" outline
+                                v-on:keyup.enter="loginUser"
                                 label="Password" prepend-icon="lock"></v-text-field>
                 </v-form>
               </v-card-text>

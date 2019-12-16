@@ -10,17 +10,26 @@
             </label>
           </div>
         </div>
-        <div class="mb-2">
-          <div class="alert alert-success" v-if="timestamp!=null
-          && correctFileType">Timestamp: {{timestamp}} <br>
+        <div>
+          <div class="alert alert-success"
+               v-if="timestamp!=null&& correctFileType">
             Your file is ready to be uploaded!
           </div>
           <div class="alert alert-danger" role="alert"
                v-else-if="timestamp!=null">Incorrect filetype
           </div>
-          <div class="alert alert-primary" role="alert"
-               v-if="fileName !== null && correctFileType">You can rename your file here!
-            <input v-model="fileName" type="text" class="form-control"/></div>
+          <v-text-field v-if="timestamp!=null && correctFileType" background-color="green"
+            v-model="fileName" outline v-on:keyup.enter="submitFile"
+            label="Rename your .tar File here">
+          </v-text-field>
+          <v-text-field v-else-if="timestamp!=null && !correctFileType" background-color="red"
+                        v-model="fileName" outline v-on:keyup.enter="submitFile"
+                        label="Rename your .tar File here">
+          </v-text-field>
+          <v-text-field v-else
+                        v-model="fileName" outline v-on:keyup.enter="submitFile"
+                        label="Rename your .tar File here">
+          </v-text-field>
         </div>
         <div>
           <v-btn v-if="correctFileType"
@@ -51,7 +60,7 @@ export default {
     return {
       file: null,
       timestamp: null,
-      fileName: null,
+      fileName: '',
       correctFileType: false,
       loading: false,
       showSnackbar: false,
