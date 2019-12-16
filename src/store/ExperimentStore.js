@@ -11,7 +11,8 @@ Vue.use(Vuex);
 const ExperimentStore = {
   state: {
     experiments: [
-      { id: 1,
+      {
+        id: 1,
         name: 'TestDockerfile',
         createdAt: '01.01.20',
         size: '500',

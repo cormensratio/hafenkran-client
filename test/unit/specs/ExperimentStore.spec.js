@@ -4,19 +4,22 @@ import ApiService from '../../../src/service/ApiService';
 const mockServiceUrl = process.env.CLUSTER_SERVICE_URL;
 
 const mockExperiments = [
-  { id: 1,
+  {
+    id: 1,
     name: 'TestDockerfile',
     createdAt: '01.01.20',
     size: '500',
     ownerId: 1,
   },
-  { id: 2,
+  {
+    id: 2,
     name: 'TestDockerfile',
     createdAt: '01.01.20',
     size: '500',
     ownerId: 1,
   },
-  { id: 3,
+  {
+    id: 3,
     name: 'TestDockerfile',
     createdAt: '01.01.20',
     size: '500',
