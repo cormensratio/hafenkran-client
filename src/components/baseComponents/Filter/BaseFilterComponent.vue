@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       <v-container>
-        <v-layout row>
+        <v-layout>
             <filter-combobox v-for="(filter, id) in filters" :key="id"
                              ref="filterCombobox"
                              :items="filter.filterOptions"
@@ -16,6 +16,9 @@
                              v-if="isVisible(filter.requiresAdmin)"
             >
             </filter-combobox>
+          <v-flex>
+            <v-icon class="mt-3" @click="clearFilters">close</v-icon>
+          </v-flex>
         </v-layout>
         <v-layout column>
           <v-flex>
@@ -95,5 +98,8 @@ export default {
   }
   .search-field {
     width: 50vh;
+  }
+  .clear-button {
+
   }
 </style>
