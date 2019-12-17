@@ -67,7 +67,7 @@
           color="#106ee0"
           v-if="loading"
         />
-        <v-snackbar v-model="showSnackbar" top>
+        <v-snackbar v-model="snackShow" top>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       search: '',
-      showSnackbar: false,
       loading: false,
       dialog: false,
       headers: [
@@ -104,35 +103,35 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions', 'snack']),
+    ...mapGetters(['executions', 'snack', 'snackShow']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
     ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
     async executionCancel(id) {
-      this.showSnackbar = false;
       this.loading = true;
       const canceledExecution = await this.terminateExecution(id);
       this.loading = false;
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
+        this.triggerSnack();
       }
       this.setSnack('Execution could not be canceled');
-      this.showSnackbar = true;
+      this.triggerSnack();
     },
     async executionDelete(id) {
-      this.showSnackbar = false;
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
       this.loading = false;
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
+        this.triggerSnack();
       }
       this.setSnack('Execution could not be deleted');
-      this.showSnackbar = true;
+      this.triggerSnack();
     },
     cancelButtonDisabled(status) {
       let disabled = true;

@@ -34,7 +34,7 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="showSnackbar" auto-height top>
+        <v-snackbar v-model="snackShow" auto-height top>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
@@ -67,7 +67,7 @@ export default {
   components: { FileSizeCell, BasePage, StartExperimentMenu },
   mixins: [TimeStampMixin],
   computed: {
-    ...mapGetters(['experiments', 'snack']),
+    ...mapGetters(['experiments', 'snack', 'snackShow']),
   },
   data() {
     return {
@@ -77,7 +77,6 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
-      showSnackbar: false,
       headers: [
         {
           text: 'Dockerfile Name',
@@ -91,7 +90,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
