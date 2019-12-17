@@ -9,28 +9,33 @@ Vue.use(Vuex);
 
 const ResultStore = {
   state: {
-    results: [
-      {
-        id: '',
-        type: 'log',
-      },
-    ],
+    resultList: {
+      executionId: '',
+      updatedAt: '',
+      results: [
+        {
+          id: '',
+          type: '',
+          file: '',
+        },
+      ],
+    },
   },
   getters: {
-    results: state => state.results,
+    resultList: state => state.resultList,
   },
   mutations: {
-    updateResults(state, results) {
-      state.results = results;
+    updateResults(state, resultList) {
+      state.resultList = resultList;
     },
   },
   actions: {
     async fetchResultsByExecutionId({ commit }, executionId) {
       if (!isNil(executionId)) {
-        const results = await ApiService.doGet(`${serviceUrl}/results/${executionId}`);
-        if (!isNil(results)) {
-          commit('updateResults', results);
-          return results;
+        const resultList = await ApiService.doGet(`${serviceUrl}/results/${executionId}`);
+        if (!isNil(resultList)) {
+          commit('updateResults', resultList);
+          return resultList;
         }
       }
       return null;
