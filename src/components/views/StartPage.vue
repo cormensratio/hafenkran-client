@@ -1,43 +1,55 @@
 <template>
-  <base-page>
-    <template slot="body">
-        <v-card flat class="welcome-card" v-if="!isAuthenticated">
-          <v-card-title class="justify-content-center">
-            <h1 v-if="isAuthenticated">Welcome {{ user.name }}</h1>
-            <h1 v-else>Welcome to Hafenkran</h1>
-          </v-card-title>
-          <div class="content">
-            <h1 class="card-title mt-2"> Please login </h1>
-          </div>
+  <div class="base" style="margin-top: 10px; height: 100%">
+    <Header></Header>
+      <div class="start-page">
+        <div style="">
+        <v-card
+          class="content"
+          max-width="700"
+          color="rgb(100, 100, 100, 0.6)"
+        >
+          <v-card-text>
+            <p class="display-1 text--primary">
+              Welcome to HAFENKRAN
+            </p>
+            <div class="text--primary">
+              For quick and easy deployment:
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              style="background-color:  var(--themeColor)"
+              dark
+            >
+              Sign Up Now
+            </v-btn>
+          </v-card-actions>
         </v-card>
-    </template>
-  </base-page>
+        </div>
+      </div>
+    <Footer class="footer-shadow"></Footer>
+  </div>
 </template>
 
 <script>
-
-import { mapGetters } from 'vuex';
-import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
+import Footer from '../baseComponents/Footer';
 
 export default {
   name: 'StartPage',
-  components: { BasePage, Header },
-
-  computed: {
-    ...mapGetters(['user', 'isAuthenticated']),
-  },
+  components: { Footer, Header },
 };
 </script>
 
 <style scoped>
-.welcome-card {
-  width: 100%;
-  height: 60vh;
-  margin-top: 5%;
+
+.start-page {
+  margin-top: -10px;
+  background-image: url('../../assets/port.jpg');
+  background-size: cover;
+  background-position: 0% 35%;
+  box-shadow:inset 0 0 0 2000px rgba(255, 255, 255, 0.2);
+  height: 84%;
 }
-.content {
-  background-color: white;
-  height: 100%;
-}
+
 </style>
