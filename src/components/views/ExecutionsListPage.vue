@@ -3,7 +3,7 @@
     <template slot="body">
       <div class="container">
         <v-card>
-          <v-toolbar color="blue" dark>
+          <v-toolbar style="background: var(--themeColor)" dark>
             <span class="title"> Executions </span>
             <v-spacer></v-spacer>
             <v-text-field append-icon="search"
@@ -37,7 +37,8 @@
                   v-model="dialog"
                   width="500">
                   <template v-slot:activator="{ on }">
-                    <v-btn v-if="props.item.status === 'RUNNING' || 'WAITING'" disabled>
+                    <v-btn v-if="props.item.status === 'RUNNING'
+                    || props.item.status === 'WAITING'" disabled>
                       Delete
                     </v-btn>
                     <v-btn v-else color="red lighten-2" dark v-on="on">
@@ -63,10 +64,10 @@
         <v-progress-circular
           size="50"
           indeterminate
-          color="blue"
+          color="#106ee0"
           v-if="loading"
-        ></v-progress-circular>
-        <v-snackbar timeout="2500" v-model="showSnackbar">
+        />
+        <v-snackbar v-model="showSnackbar" top>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>

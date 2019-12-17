@@ -5,7 +5,7 @@
         <v-layout column>
           <v-flex>
             <v-card>
-              <v-toolbar dark color="blue">
+              <v-toolbar dark style="background: var(--themeColor)">
                 <span class="title">Experiments</span>
                 <v-spacer></v-spacer>
                 <v-text-field append-icon="search"
@@ -34,6 +34,10 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-snackbar v-model="showSnackbar" auto-height top>
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -63,7 +67,7 @@ export default {
   components: { FileSizeCell, BasePage, StartExperimentMenu },
   mixins: [TimeStampMixin],
   computed: {
-    ...mapGetters(['experiments']),
+    ...mapGetters(['experiments', 'snack']),
   },
   data() {
     return {
@@ -73,6 +77,7 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
+      showSnackbar: false,
       headers: [
         {
           text: 'Dockerfile Name',

@@ -5,7 +5,7 @@
         <v-layout justify-center>
           <v-flex md4>
             <v-card>
-              <v-toolbar dark color="blue">
+              <v-toolbar dark style="background: var(--themeColor)">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
                   You are already logged in {{ user.name }}!
                 </v-toolbar-title>
@@ -25,17 +25,17 @@
               </v-card-text>
               <v-card-actions class="justify-center">
                 <div class="mb-3">
-                  <v-btn large dark color="blue" to="/"
-                         class="button">Cancel
-                  </v-btn>
-                  <v-btn large dark color="blue"
+                  <v-btn large dark style="background: var(--themeColor)"
                          @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large to="/"
+                         class="button">Cancel
                   </v-btn>
                 </div>
               </v-card-actions>
               <v-progress-circular
                 indeterminate
-                color="blue"
+                color="#106ee0"
                 v-if="loading"
               />
               <v-sheet v-if="failedLogin"
@@ -76,7 +76,7 @@ export default {
           .then((response) => {
             if (response) {
               this.failedLogin = false;
-              this.$router.push('/');
+              this.$router.push('/experimentlist');
             } else {
               this.loading = false;
               this.failedLogin = true;

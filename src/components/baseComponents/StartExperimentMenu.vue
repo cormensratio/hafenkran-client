@@ -72,6 +72,12 @@
         </v-btn>
       </div>
     </v-card-actions>
+    <v-progress-circular
+      size="50"
+      indeterminate
+      color="#106ee0"
+      v-if="loading"
+    />
   </v-card>
 </template>
 <script>
@@ -79,6 +85,9 @@ import { isNil } from 'lodash';
 import { mapActions } from 'vuex';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
+import { mapActions, mapMutations } from 'vuex';
+import { timeStampMixin } from '../../mixins/TimeStamp';
+
 
 export default {
   name: 'StartExperimentMenu',
