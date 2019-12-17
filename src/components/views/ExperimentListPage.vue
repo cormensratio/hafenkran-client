@@ -22,7 +22,7 @@
                 class="elevation-1"
               >
                 <template v-slot:items="props">
-                  <tr @click="toggleDetails(props.item)">
+                  <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td class="text-xs-left">
@@ -33,16 +33,18 @@
               </v-data-table>
             </v-card>
           </v-flex>
-          <v-flex v-if="showDetails">
-            <div class="mt-4">
-              <StartExperimentMenu @close="closeDetails"
-                                   :experiment="selectedExperiment"
-              >
-              </StartExperimentMenu>
-            </div>
-          </v-flex>
         </v-layout>
       </v-container>
+      <v-menu v-model="showMenu"
+              :position-x="menuPosX"
+              :position-y="menuPosY"
+              :close-on-content-click="false"
+              :close-on-click="false"
+      >
+        <StartExperimentMenu :experiment="selectedExperiment"
+                             @menuClosed="closeMenu">
+        </StartExperimentMenu>
+      </v-menu>
     </template>
   </base-page>
 </template>
@@ -51,7 +53,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
-import { timeStampMixin } from '../../mixins/TimeStamp';
+import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
 import FileSizeCell from '../baseComponents/FileSizeCell';
 
@@ -59,8 +61,7 @@ import FileSizeCell from '../baseComponents/FileSizeCell';
 export default {
   name: 'ExperimentListPage',
   components: { FileSizeCell, BasePage, StartExperimentMenu },
-  mixins: [timeStampMixin],
-
+  mixins: [TimeStampMixin],
   computed: {
     ...mapGetters(['experiments']),
   },
@@ -69,6 +70,9 @@ export default {
       search: '',
       showDetails: false,
       selectedExperiment: {},
+      menuPosX: 0,
+      menuPosY: 0,
+      showMenu: false,
       headers: [
         {
           text: 'Dockerfile Name',
@@ -91,12 +95,17 @@ export default {
         this.$router.push('/executionlist');
       }
     },
-    closeDetails() {
-      this.showDetails = false;
+    closeMenu() {
+      this.showMenu = false;
     },
-    toggleDetails(experiment) {
-      this.showDetails = true;
-      this.selectedExperiment = experiment;
+    showContextMenu(e, selectedExperiment) {
+      this.showMenu = false;
+      this.menuPosX = e.clientX;
+      this.menuPosY = e.clientY;
+      this.selectedExperiment = selectedExperiment;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
     },
   },
   created() {
