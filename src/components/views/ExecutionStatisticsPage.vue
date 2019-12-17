@@ -31,7 +31,6 @@ export default {
       const csvB64 = 'eDt5CjA7MAoxOzEKMjsyCjM7Mwo0OzQKNTs1CjY7Ngo3OzcKODs4Cjk7OQoK';
       const file = ResultService.extractFileObjectFromBase64String(csvB64);
       const content = ResultService.extractFileContent(file);
-      debugger;
     },
   },
   computed: {

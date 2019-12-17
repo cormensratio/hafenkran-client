@@ -44,7 +44,8 @@ export default class ResultService {
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         const reader = new FileReader();
         reader.onload = function () {
-          return reader.result;
+          debugger;
+          console.log(reader.result);
         };
         reader.readAsText(fileObject);
       } else {
