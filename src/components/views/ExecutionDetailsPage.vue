@@ -79,6 +79,8 @@
                 />
               </div>
               <div v-if="activeTab === 2">
+                <execution-statistics-page :execution-id="execution.id">
+                </execution-statistics-page>
               </div>
             </div>
           </v-flex>
@@ -93,14 +95,15 @@ import { isNil, isEqual, forEach } from 'lodash';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
-import { timeStampMixin } from '../../mixins/TimeStamp';
+import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
+import ExecutionStatisticsPage from './ExecutionStatisticsPage';
 
 export default {
   name: 'ExecutionDetailsPage',
-  mixins: [timeStampMixin],
-  components: { StatusCell, BasePage },
+  mixins: [TimeStampMixin],
+  components: { ExecutionStatisticsPage, StatusCell, BasePage },
   data() {
     return {
       userInput: '',

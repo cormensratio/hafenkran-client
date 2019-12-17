@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { isNil } from 'lodash';
-// eslint-disable-next-line import/prefer-default-export
-export const timeStampMixin = {
+
+const TimeStampMixin = {
   methods: {
     getTimeStamp(utcTime) {
       if (!isNil(utcTime)) {
@@ -11,4 +11,6 @@ export const timeStampMixin = {
     },
   },
 };
+
+export default TimeStampMixin;
 

@@ -1,52 +1,76 @@
 <template>
   <v-card class="p-3">
     <v-card-text class="details-container">
+      <v-icon @click="closeMenu" class="float-right mb-4">close</v-icon>
       <v-layout column>
         <v-flex class="text-left">
-          <v-btn class="float-right" @click="closeDetails">
-            <v-icon>close</v-icon>
-          </v-btn>
-          <div class="mt-2 h3">Experiment: {{ experiment.name }}</div>
-          <div class="mt-2">Uploaded: {{ getTimeStamp(experiment.createdAt) }}</div>
-          <div class="mt-2">Size: {{ experiment.size }} Byte</div>
+          <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
+          <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
+          <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
         </v-flex>
       </v-layout>
     </v-card-text>
-    <v-divider></v-divider>
+    <v-divider class="divider"></v-divider>
     <v-card-text>
-      <v-layout row>
-        <v-flex>
-          <v-combobox
-            v-model="executionDetails.ram"
-            :items="ramOptions"
-            label="RAM"
-            type='Number'
-          />
-          <v-combobox
-            v-model="executionDetails.cpu"
-            :items="cpuOptions"
-            label="CPU Cores"
-            type='Number'
-          />
-        </v-flex>
-        <v-flex class="ml-3">
-          <v-combobox
-            v-model="executionDetails.bookedTime"
-            :items="bookedTimeOptions"
-            label="Time in Seconds"
-            type='Number'
-          />
-        </v-flex>
-      </v-layout>
+      <v-container>
+        <div class="input-description text-muted">
+          Book a timespan on the cluster
+        </div>
+        <v-layout>
+          <v-flex>
+            <v-text-field label="Hours"
+                          type="number"
+                          outline
+                          class="time-input"
+                          v-model="bookedHours"
+                          min="0"
+            >
+            </v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-text-field label="Minutes"
+                          type="number"
+                          outline
+                          class="time-input"
+                          v-model="bookedMinutes"
+                          min="0"
+            >
+            </v-text-field>
+          </v-flex>
+        </v-layout>
+        <div class="input-description text-muted">
+          Define resource usage
+        </div>
+        <v-layout>
+          <v-flex>
+            <v-text-field label="RAM"
+                          v-model="ram"
+                          outline type="number"
+                          :rules="[rules.required, rules.positiveNumbers]"
+                          min="1"
+                          class="resource-input"
+            >
+            </v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-text-field label="CPU Cores"
+                          v-model="cpu"
+                          outline type="number"
+                          :rules="[rules.required, rules.positiveNumbers]"
+                          min="1"
+                          class="resource-input"
+            >
+            </v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-card-text>
-    <v-card-actions class="col-12 justify-center">
-        <v-btn dark style="background: var(--themeColor)" class="col-3" v-on:click="resetDetails()">
-        Reset options
-        </v-btn>
-        <v-btn dark style="background: var(--themeColor)"
-               class="col-3" v-on:click="startExperiment()">
+    <v-card-actions class="menu-buttons justify-content-center">
+      <div>
+        <v-btn dark style="background: var(--themeColor)" @click="startExperiment()">
           Start execution
         </v-btn>
+      </div>
     </v-card-actions>
     <v-progress-circular
       size="50"
@@ -58,59 +82,52 @@
 </template>
 <script>
 import { isNil } from 'lodash';
+import { mapActions } from 'vuex';
+import TimeStampMixin from '../../mixins/TimeStamp';
+import RulesMixin from '../../mixins/Rules';
 import { mapActions, mapMutations } from 'vuex';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 
 
 export default {
   name: 'StartExperimentMenu',
-  mixins: [timeStampMixin],
+  mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
-      ramOptions: [2, 4, 6, 8,
-      ],
-      cpuOptions: [2, 4, 6, 8,
-      ],
-      bookedTimeOptions: [300, 360, 720, 920,
-      ],
-      executionDetails:
-          {
-            experimentId: '',
-            ram: 2,
-            cpu: 4,
-            bookedTime: 300,
-          },
-      loading: false,
+      experimentId: '',
+      ram: 2,
+      cpu: 4,
+      bookedHours: 0,
+      bookedMinutes: 0,
     };
   },
   props: { experiment: {} },
+  computed: {
+    bookedTime() {
+      return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
+    },
+  },
   methods: {
     ...mapActions(['runExecution']),
-    ...mapMutations(['setSnack']),
-    resetDetails() {
-      this.executionDetails.ram = this.ramOptions[0];
-      this.executionDetails.cpu = this.cpuOptions[1];
-      this.executionDetails.bookedTime = this.bookedTimeOptions[0];
+    closeMenu() {
+      this.$emit('menuClosed');
     },
     async startExperiment() {
-      this.loading = true;
-      if (!isNil(this.executionDetails.experimentId)) {
-        const startedExecution = await this.runExecution(this.executionDetails);
-        this.loading = false;
+      if (!isNil(this.experimentId)) {
+        const startedExecution = await this.runExecution({
+          experimentId: this.experimentId,
+          ram: this.ram,
+          cpu: this.cpu,
+          bookedTime: this.bookedTime,
+        });
         if (!isNil(startedExecution)) {
           this.$router.push('/executionlist');
-        } else {
-          this.setSnack('Experiment could not be started');
-          this.$emit('notstarted');
         }
       }
     },
-    closeDetails() {
-      this.$emit('close');
-    },
     updateExperimentId() {
       if (!isNil(this.experiment)) {
-        this.executionDetails.experimentId = this.experiment.id;
+        this.experimentId = this.experiment.id;
       }
     },
   },
@@ -125,4 +142,22 @@ export default {
 </script>
 
 <style scoped>
+  .time-input {
+    width: 120px;
+  }
+  .resource-input {
+    width: 120px;
+  }
+  .input-description {
+    text-align: left;
+    font-size: medium;
+    margin-bottom: 10px;
+  }
+  .divider {
+    margin-top: -1%;
+    margin-bottom: -3%;
+  }
+  .menu-buttons {
+    margin-top: -8%;
+  }
 </style>
