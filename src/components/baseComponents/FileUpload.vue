@@ -60,7 +60,7 @@ export default {
     return {
       file: null,
       timestamp: null,
-      fileName: '',
+      fileName: null,
       correctFileType: false,
       loading: false,
       showSnackbar: false,
@@ -87,7 +87,7 @@ export default {
         this.loading = false;
         this.$router.push('/experimentlist');
       } else {
-        this.setSnack('Experiment could not be uploaoded');
+        this.setSnack('Experiment could not be uploaded');
         this.showSnackbar = true;
       }
     },
