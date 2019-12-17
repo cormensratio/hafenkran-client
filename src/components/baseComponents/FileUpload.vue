@@ -19,21 +19,21 @@
                v-else-if="timestamp!=null">Incorrect filetype
           </div>
           <v-text-field v-if="timestamp!=null && correctFileType" background-color="green"
-            v-model="fileName" outline v-on:keyup.enter="submitFile"
+            v-model="fileName" outline @keyup.enter="submitFile"
             label="Rename your .tar File here">
           </v-text-field>
           <v-text-field v-else-if="timestamp!=null && !correctFileType" background-color="red"
-                        v-model="fileName" outline v-on:keyup.enter="submitFile"
+                        v-model="fileName" outline @keyup.enter="submitFile"
                         label="Rename your .tar File here">
           </v-text-field>
           <v-text-field v-else
-                        v-model="fileName" outline v-on:keyup.enter="submitFile"
+                        v-model="fileName" outline @keyup.enter="submitFile"
                         label="Rename your .tar File here">
           </v-text-field>
         </div>
         <div>
           <v-btn v-if="correctFileType"
-                 class="btn btn-success" v-on:click="submitFile()">Submit
+                 class="btn btn-success" @click="submitFile()">Submit
           </v-btn>
           <v-btn v-else disabled>Submit</v-btn>
           <slot name="button"></slot>
@@ -41,7 +41,7 @@
             indeterminate
             color="blue"
             v-if="loading"
-          ></v-progress-circular>
+          />
         </div>
       </v-card>
     </v-hover>

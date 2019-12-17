@@ -16,11 +16,11 @@
               <v-card-text>
                 <v-form lazy-validation class="mt-3 mr-4">
                   <v-text-field v-model="userName" outline autofocus
-                                v-on:keyup.enter="loginUser"
-                                label="Name" prepend-icon="person"></v-text-field>
+                                @keyup.enter="loginUser"
+                                label="Name" prepend-icon="person"/>
                   <v-text-field type="password" v-model="password" outline
-                                v-on:keyup.enter="loginUser"
-                                label="Password" prepend-icon="lock"></v-text-field>
+                                @keyup.enter="loginUser"
+                                label="Password" prepend-icon="lock"/>
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
@@ -37,7 +37,7 @@
                 indeterminate
                 color="blue"
                 v-if="loading"
-              ></v-progress-circular>
+              />
               <v-sheet v-if="failedLogin"
                        elevation="5" dark class="bg-danger">Login failed
               </v-sheet>
