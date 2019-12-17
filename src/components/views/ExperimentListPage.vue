@@ -43,7 +43,6 @@
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
-        <v-btn @click="showSnackbar = true">Click</v-btn>
       </v-container>
     </template>
   </base-page>
@@ -100,7 +99,7 @@ export default {
       this.showDetails = false;
     },
     toggleDetails(experiment) {
-      this.showDetails = true;
+      this.showDetails = !this.showDetails;
       this.selectedExperiment = experiment;
     },
   },

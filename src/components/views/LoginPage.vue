@@ -17,19 +17,19 @@
                 <v-form lazy-validation class="mt-3 mr-4">
                   <v-text-field v-model="userName" outline autofocus
                                 v-on:keyup.enter="loginUser"
-                                label="Name" prepend-icon="person"></v-text-field>
+                                label="Name" prepend-icon="person"/>
                   <v-text-field type="password" v-model="password" outline
                                 v-on:keyup.enter="loginUser"
-                                label="Password" prepend-icon="lock"></v-text-field>
+                                label="Password" prepend-icon="lock"/>
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
                 <div class="mb-3">
-                  <v-btn large dark color="blue" to="/"
-                         class="button">Cancel
-                  </v-btn>
                   <v-btn large dark color="blue"
                          @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large dark color="blue" to="/"
+                         class="button">Cancel
                   </v-btn>
                 </div>
               </v-card-actions>
@@ -37,7 +37,7 @@
                 indeterminate
                 color="blue"
                 v-if="loading"
-              ></v-progress-circular>
+              />
               <v-sheet v-if="failedLogin"
                        elevation="5" dark class="bg-danger">Login failed
               </v-sheet>
@@ -76,7 +76,7 @@ export default {
           .then((response) => {
             if (response) {
               this.failedLogin = false;
-              this.$router.push('/');
+              this.$router.push('/experimentlist');
             } else {
               this.loading = false;
               this.failedLogin = true;

@@ -37,7 +37,8 @@
                   v-model="dialog"
                   width="500">
                   <template v-slot:activator="{ on }">
-                    <v-btn v-if="props.item.status === 'RUNNING' || 'WAITING'" disabled>
+                    <v-btn v-if="props.item.status === 'RUNNING'
+                    || props.item.status === 'WAITING'" disabled>
                       Delete
                     </v-btn>
                     <v-btn v-else color="red lighten-2" dark v-on="on">

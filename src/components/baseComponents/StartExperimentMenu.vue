@@ -21,13 +21,13 @@
             :items="ramOptions"
             label="RAM"
             type='Number'
-          ></v-combobox>
+          />
           <v-combobox
             v-model="executionDetails.cpu"
             :items="cpuOptions"
             label="CPU Cores"
             type='Number'
-          ></v-combobox>
+          />
         </v-flex>
         <v-flex class="ml-3">
           <v-combobox
@@ -35,16 +35,10 @@
             :items="bookedTimeOptions"
             label="Time in Seconds"
             type='Number'
-          ></v-combobox>
+          />
         </v-flex>
       </v-layout>
     </v-card-text>
-    <v-progress-circular
-      size="50"
-      indeterminate
-      color="blue"
-      v-if="loading"
-    ></v-progress-circular>
     <v-card-actions class="col-12 justify-center">
         <v-btn dark color="blue" class="col-3" v-on:click="resetDetails()">
         Reset options
@@ -53,6 +47,12 @@
           Start execution
         </v-btn>
     </v-card-actions>
+    <v-progress-circular
+      size="50"
+      indeterminate
+      color="blue"
+      v-if="loading"
+    />
   </v-card>
 </template>
 <script>
