@@ -34,6 +34,7 @@
                           class="time-input"
                           v-model="bookedMinutes"
                           min="0"
+                          @change="checkMinutes"
             >
             </v-text-field>
           </v-flex>
@@ -114,6 +115,12 @@ export default {
         if (!isNil(startedExecution)) {
           this.$router.push('/executionlist');
         }
+      }
+    },
+    checkMinutes() {
+      if (this.bookedMinutes >= 60) {
+        this.bookedMinutes = this.bookedMinutes % 60;
+        this.bookedHours = this.bookedHours + 1;
       }
     },
     updateExperimentId() {
