@@ -21,13 +21,16 @@
                 :search="search"
                 :items-per-page="5"
                 class="elevation-1"
-              ><template v-slot:items="props">
-                <tr @click="toggleDetails(props.item)">
-                  <td class="text-xs-left">{{ props.item.name }}</td>
-                  <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                  <td class="text-xs-left">{{ props.item.size }} Byte</td>
-                </tr>
-              </template>
+              >
+                <template v-slot:items="props">
+                  <tr @click="toggleDetails(props.item)">
+                    <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
+                    <td class="text-xs-left">
+                      <file-size-cell :size="props.item.size"></file-size-cell>
+                    </td>
+                  </tr>
+                </template>
               </v-data-table>
             </v-card>
           </v-flex>
@@ -52,11 +55,12 @@ import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
+import FileSizeCell from '../baseComponents/FileSizeCell';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { BasePage, StartExperimentMenu },
+  components: { FileSizeCell, BasePage, StartExperimentMenu },
   mixins: [timeStampMixin],
 
   computed: {
