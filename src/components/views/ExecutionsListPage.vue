@@ -47,14 +47,14 @@
 import { mapActions, mapGetters } from 'vuex';
 import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
-import { timeStampMixin } from '../../mixins/TimeStamp';
+import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 
 
 export default {
   name: 'ExecutionsListPage',
   components: { StatusCell, BasePage },
-  mixins: [timeStampMixin],
+  mixins: [TimeStampMixin],
   data() {
     return {
       search: '',
