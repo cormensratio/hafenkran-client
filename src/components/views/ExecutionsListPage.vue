@@ -46,7 +46,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
-import { timeStampMixin } from '../../mixins/TimeStamp';
+import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
@@ -56,7 +56,7 @@ import FilterMixin from '../../mixins/FilterMixin';
 export default {
   name: 'ExecutionsListPage',
   components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
-  mixins: [timeStampMixin, FilterMixin],
+  mixins: [TimeStampMixin],
   data() {
     return {
       search: '',
