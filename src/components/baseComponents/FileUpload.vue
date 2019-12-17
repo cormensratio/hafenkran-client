@@ -2,10 +2,10 @@
   <div class="container">
     <v-hover v-slot:default="{ hover }">
       <v-card :elevation="hover ? 12 : 2" class="p-2">
-        <div class="input-group mb-3">
+        <div class="input-group">
           <div class="input-group-prepend m-auto">
             <label>
-              <v-icon class="uploadicon" size="100">file_upload</v-icon>
+              <v-icon class="uploadicon" size="150">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
             </label>
           </div>
@@ -36,12 +36,12 @@
                  class="btn btn-success" v-on:click="submitFile()">Submit
           </v-btn>
           <v-btn v-else disabled>Submit</v-btn>
-          <slot name="button"></slot>
+          <slot name="button"/>
           <v-progress-circular
             indeterminate
-            color="blue"
+            color="#106ee0"
             v-if="loading"
-          ></v-progress-circular>
+          />
         </div>
       </v-card>
     </v-hover>

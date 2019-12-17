@@ -59,7 +59,7 @@
                          :key="log" v-for="log in logs">{{ log }}
                     </div>                    <v-progress-circular
                       indeterminate
-                      color="blue"
+                      color="#106ee0"
                       v-if="loading"
                     />
                   </v-layout>
