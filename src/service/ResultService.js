@@ -40,20 +40,13 @@ export default class ResultService {
   }
 
   static extractFileContent(fileObject) {
-    debugger;
     if (!isNil(fileObject)) {
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         const reader = new FileReader();
         reader.onload = function () {
-          alert(reader.result);
+          return reader.result;
         };
         reader.readAsText(fileObject);
-        const content = reader.result;
-        debugger;
-
-        if (!isNil(content)) {
-          return content;
-        }
       } else {
         console.log('[ERROR] The browser does not support file reading!');
       }
