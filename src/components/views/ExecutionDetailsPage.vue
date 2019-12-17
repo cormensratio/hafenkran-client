@@ -77,6 +77,8 @@
                 />
               </div>
               <div v-if="activeTab === 2">
+                <execution-statistics-page :execution-id="execution.id">
+                </execution-statistics-page>
               </div>
             </div>
           </v-flex>
@@ -94,11 +96,12 @@ import BasePage from '../baseComponents/BasePage';
 import { timeStampMixin } from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
+import ExecutionStatisticsPage from './ExecutionStatisticsPage';
 
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [timeStampMixin],
-  components: { StatusCell, BasePage },
+  components: { ExecutionStatisticsPage, StatusCell, BasePage },
   data() {
     return {
       userInput: '',
