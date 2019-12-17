@@ -5,7 +5,7 @@
         <v-layout justify-center>
           <v-flex md4>
             <v-card>
-              <v-toolbar dark color="#106ee0">
+              <v-toolbar dark style="background: var(--themeColor)">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
                   You are already logged in {{ user.name }}!
                 </v-toolbar-title>
@@ -25,7 +25,7 @@
               </v-card-text>
               <v-card-actions class="justify-center">
                 <div class="mb-3">
-                  <v-btn large dark color="#106ee0"
+                  <v-btn large dark style="background: var(--themeColor)"
                          @click="loginUser()" class="button">Login
                   </v-btn>
                   <v-btn large to="/"

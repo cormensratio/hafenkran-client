@@ -40,10 +40,11 @@
       </v-layout>
     </v-card-text>
     <v-card-actions class="col-12 justify-center">
-        <v-btn dark color="#106ee0" class="col-3" v-on:click="resetDetails()">
+        <v-btn dark style="background: var(--themeColor)" class="col-3" v-on:click="resetDetails()">
         Reset options
         </v-btn>
-        <v-btn dark color="#106ee0" class="col-3" v-on:click="startExperiment()">
+        <v-btn dark style="background: var(--themeColor)"
+               class="col-3" v-on:click="startExperiment()">
           Start execution
         </v-btn>
     </v-card-actions>

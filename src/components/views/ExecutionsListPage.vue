@@ -3,7 +3,7 @@
     <template slot="body">
       <div class="container">
         <v-card>
-          <v-toolbar color="#106ee0" dark>
+          <v-toolbar style="background: var(--themeColor)" dark>
             <span class="title"> Executions </span>
             <v-spacer></v-spacer>
             <v-text-field append-icon="search"

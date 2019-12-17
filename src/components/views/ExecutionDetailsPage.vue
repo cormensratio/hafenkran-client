@@ -57,7 +57,8 @@
                     <div class="text-left">Logs are getting updated here:</div>
                     <div class="text-left"
                          :key="log" v-for="log in logs">{{ log }}
-                    </div>                    <v-progress-circular
+                    </div>
+                    <v-progress-circular
                       indeterminate
                       color="#106ee0"
                       v-if="loading"

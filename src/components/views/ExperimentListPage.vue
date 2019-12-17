@@ -5,7 +5,7 @@
         <v-layout column>
           <v-flex>
             <v-card>
-              <v-toolbar dark color="#106ee0">
+              <v-toolbar dark style="background: var(--themeColor)">
                 <span class="title">Experiments</span>
                 <v-spacer></v-spacer>
                 <v-text-field append-icon="search"
