@@ -56,7 +56,7 @@ import FilterMixin from '../../mixins/FilterMixin';
 export default {
   name: 'ExecutionsListPage',
   components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
-  mixins: [TimeStampMixin],
+  mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
       search: '',
