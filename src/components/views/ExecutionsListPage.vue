@@ -66,8 +66,8 @@
           indeterminate
           color="blue"
           v-if="loading"
-        ></v-progress-circular>
-        <v-snackbar timeout="2500" v-model="showSnackbar">
+        />
+        <v-snackbar v-model="showSnackbar" top>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>

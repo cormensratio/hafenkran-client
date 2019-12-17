@@ -39,7 +39,7 @@
             </div>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="showSnackbar">
+        <v-snackbar v-model="showSnackbar" auto-height top>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
