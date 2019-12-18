@@ -19,6 +19,7 @@ const SnackbarStore = {
     triggerSnack({ commit }) {
       commit('showSnack', true);
       setTimeout(() => {
+        commit('setSnack', '');
         commit('showSnack', false);
       }, 2500);
     },

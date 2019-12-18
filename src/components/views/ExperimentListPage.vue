@@ -23,7 +23,7 @@
                   <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                    <td class="text-xs-left">
+                    <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
                     </td>
                   </tr>
@@ -121,6 +121,11 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
+    },
+  },
+  watch: {
+    experiments() {
+      this.items = this.experiments;
     },
   },
   created() {
