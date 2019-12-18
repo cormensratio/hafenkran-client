@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, isEqual, find } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import ApiService from '../service/ApiService';
 import AuthService from '../service/AuthService';
 
@@ -74,7 +74,13 @@ const UserStore = {
     },
     async getUserNameOfResource({ state }, userId) {
       if (!isNil(userId)) {
-        const matchingUser = find(state.userList, user => user.id === userId);
+        let matchingUser = null;
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < state.userList.length; i++) {
+          if (state.userList[i] === userId) {
+            matchingUser = state.userList[i];
+          }
+        }
         if (!isNil(matchingUser)) {
           return matchingUser.name;
         }

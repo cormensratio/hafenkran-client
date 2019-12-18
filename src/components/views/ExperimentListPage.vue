@@ -85,6 +85,7 @@ export default {
           sortable: true,
           value: 'name',
         },
+        { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],

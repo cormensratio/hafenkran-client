@@ -65,6 +65,7 @@ export default {
       search: '',
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
+        { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
