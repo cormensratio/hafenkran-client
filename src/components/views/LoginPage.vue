@@ -38,9 +38,10 @@
                 color="#106ee0"
                 v-if="loading"
               />
-              <v-sheet v-if="failedLogin"
-                       elevation="5" dark class="bg-danger">Login failed
-              </v-sheet>
+              <v-snackbar v-model="snackShow" right>
+                {{ snack }}
+                <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+              </v-snackbar>
             </v-card>
           </v-flex>
         </v-layout>
@@ -50,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
@@ -60,27 +61,28 @@ export default {
     return {
       userName: '',
       password: '',
-      failedLogin: false,
       loading: false,
     };
   },
   computed: {
-    ...mapGetters(['user', 'isAuthenticated']),
+    ...mapGetters(['user', 'isAuthenticated', 'snack', 'snackShow']),
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'triggerSnack']),
+    ...mapMutations(['setSnack']),
     loginUser() {
       this.loading = true;
       if (!this.isAuthenticated) {
         this.login({ name: this.userName, password: this.password })
           .then((response) => {
             if (response) {
-              this.failedLogin = false;
+              this.setSnack('Login successful');
               this.$router.push('/experimentlist');
             } else {
+              this.setSnack('Login failed');
               this.loading = false;
-              this.failedLogin = true;
             }
+            this.triggerSnack();
           });
       }
     },
