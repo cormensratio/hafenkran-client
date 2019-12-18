@@ -116,22 +116,20 @@ export default {
     async executionCancel(id) {
       this.loading = true;
       const canceledExecution = await this.terminateExecution(id);
-      this.loading = false;
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
-        this.triggerSnack();
       }
+      this.loading = false;
       this.setSnack('Execution could not be canceled');
       this.triggerSnack();
     },
     async executionDelete(id) {
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
-      this.loading = false;
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
-        this.triggerSnack();
       }
+      this.loading = false;
       this.setSnack('Execution could not be deleted');
       this.triggerSnack();
     },
