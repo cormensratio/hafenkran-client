@@ -10,13 +10,18 @@ Vue.use(Vuex);
 const ResultStore = {
   state: {
     resultList: {
-      executionId: '',
+      executionId: '1',
       updatedAt: '',
       results: [
         {
-          id: '',
-          type: '',
-          file: '',
+          id: '1',
+          type: 'csv',
+          file: 'eDt5CjA7MAoxOzEKMjsyCjM7Mwo0OzQKNTs1CjY7Ngo3OzcKODs4Cjk7OQoK',
+        },
+        {
+          id: '2',
+          type: 'csv',
+          file: 'eDt5CjA7MAoxOzIKMjs0CjM7OAo0OzE2CjU7MzIKNjs2NAo3OzEyOAo4OzI1Ngo5OzUxMgoK',
         },
       ],
     },

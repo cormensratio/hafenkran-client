@@ -1,5 +1,7 @@
 <template>
-  <vega-lite :data="spec.data.values" mark="line" :encoding="spec.data.encoding"></vega-lite>
+  <div v-if="chartData.length > 0">
+    <vega-lite :data="spec.data.values" mark="line" :encoding="spec.data.encoding"></vega-lite>
+  </div>
 </template>
 
 <script>
@@ -11,7 +13,6 @@ Vue.use(VueVega);
 export default {
   name: 'StatisticsComponent',
   props: {
-    type: 'csv',
     chartData: '',
   },
   data() {
@@ -22,12 +23,7 @@ export default {
           format: {
             type: 'json',
           },
-          values:
-          [
-            // { a: 'A', b: 28 }, { a: 'B', b: 55 }, { a: 'C', b: 43 },
-            // { a: 'D', b: 91 }, { a: 'E', b: 81 }, { a: 'F', b: 53 },
-            // { a: 'G', b: 19 }, { a: 'H', b: 87 }, { a: 'I', b: 52 },
-          ],
+          values: [],
           encoding: {
             x: { field: 'x', type: 'ordinal' },
             y: { field: 'y', type: 'quantitative' },

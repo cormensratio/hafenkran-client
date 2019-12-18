@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-layout row>
-      <v-flex class="list-container">
+      <v-flex md6>
         <v-list>
           <v-list-tile v-for="(result, index) in resultList.results" :key="index"
-                       @click="showResult(result.id)">
+                       @click="loadResultContent(result)">
             <v-list-tile-title>Result {{index + 1}}</v-list-tile-title>
             <v-list-tile-content>
               <div class="mr-1">{{result.type}}</div>
@@ -12,10 +12,10 @@
           </v-list-tile>
         </v-list>
       </v-flex>
-      <v-flex>
-        <statistics-component :chart-data="chartdata">
+      <v-flex md6>
+        <statistics-component v-if="selectedResult.type === 'csv'" :chart-data="chartData">
         </statistics-component>
-        <v-btn @click="test">TEEEST</v-btn>
+        <div v-else> Result has unsupported format!</div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -23,7 +23,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { replace } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import ResultService from '../../service/ResultService';
 import StatisticsComponent from '../baseComponents/StatisticsComponent';
 
@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       selectedResult: '',
-      chartdata: [],
+      chartData: [],
     };
   },
   props: {
@@ -44,21 +44,17 @@ export default {
   },
   methods: {
     ...mapActions(['fetchResultsByExecutionId']),
-    showResult(result) {
+    loadResultContent(result) {
       this.selectedResult = result;
+      if (!isNil(result) && !isNil(result.file) && !isEqual(result.file, '')) {
+        const file = ResultService.extractFileObjectFromBase64String(result.file, result.id);
+        ResultService.extractFileContent(file, this.showResult);
+      }
     },
-    test() {
-      const csvB64 = 'eDt5CjA7MAoxOzEKMjsyCjM7Mwo0OzQKNTs1CjY7Ngo3OzcKODs4Cjk7OQoK';
-      const file = ResultService.extractFileObjectFromBase64String(csvB64, 'test');
-      const content = ResultService.extractFileContent(file, this.showTest);
-    },
-    showTest(text) {
-      const csvJson = ResultService.convertCsVToJson(text);
-      this.chartdata = csvJson;
-      const csv = replace(text, ';', ',');
-      const csv2 = csv.replace(/(\r\n|\n|\r)/gm, '\n');
+    showResult(fileContent) {
       debugger;
-      this.testText = csv2;
+      const csvJson = ResultService.convertCsVToJson(fileContent);
+      this.chartData = csvJson;
     },
   },
   created() {

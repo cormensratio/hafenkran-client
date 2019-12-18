@@ -16,7 +16,6 @@ export default class ResultService {
   static convertCsVToJson(csvString) {
     if (!isNil(csvString)) {
       try {
-        debugger;
         const jsonObj = csv2json(csvString, { parseNumbers: true });
 
         if (!isNil(jsonObj)) {
@@ -24,17 +23,6 @@ export default class ResultService {
         }
       } catch (error) {
         console.log(error);
-      }
-    }
-    return null;
-  }
-
-  static extractFileFromResult(resultObject) {
-    if (!isNil(resultObject)) {
-      const file = this.extractFileObjectFromBase64String(resultObject.file, resultObject.id);
-
-      if (!isNil(file)) {
-        return file;
       }
     }
     return null;
