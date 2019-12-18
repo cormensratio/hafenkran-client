@@ -118,9 +118,10 @@ export default {
       const canceledExecution = await this.terminateExecution(id);
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
+      } else {
+        this.setSnack('Execution could not be canceled');
       }
       this.loading = false;
-      this.setSnack('Execution could not be canceled');
       this.triggerSnack();
     },
     async executionDelete(id) {
@@ -128,9 +129,10 @@ export default {
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
+      } else {
+        this.setSnack('Execution could not be deleted');
       }
       this.loading = false;
-      this.setSnack('Execution could not be deleted');
       this.triggerSnack();
     },
     cancelButtonDisabled(status) {
@@ -152,6 +154,11 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
+    },
+  },
+  watch: {
+    executions() {
+      this.items = this.executions;
     },
   },
   created() {
