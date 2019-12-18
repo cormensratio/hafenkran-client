@@ -23,6 +23,11 @@ const ResultStore = {
           type: 'csv',
           file: 'eDt5CjA7MAoxOzIKMjs0CjM7OAo0OzE2CjU7MzIKNjs2NAo3OzEyOAo4OzI1Ngo5OzUxMgoK',
         },
+        {
+          id: '3',
+          type: 'log',
+          file: 'RGFzIGlzdCBlaW4gdGVzdCBkdSBzcGFzdAo=',
+        },
       ],
     },
   },
