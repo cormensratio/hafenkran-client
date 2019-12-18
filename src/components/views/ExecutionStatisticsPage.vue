@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout row>
-      <v-flex md6>
+      <v-flex md4>
         <v-list>
           <v-list-tile v-for="(result, index) in resultList.results" :key="index"
                        @click="loadResultContent(result)">
@@ -12,7 +12,7 @@
           </v-list-tile>
         </v-list>
       </v-flex>
-      <v-flex md6>
+      <v-flex md8>
         <statistics-component v-if="selectedResult.type === 'csv'" :chart-data="chartData">
         </statistics-component>
         <div v-else> Result has unsupported format!</div>
@@ -48,13 +48,24 @@ export default {
       this.selectedResult = result;
       if (!isNil(result) && !isNil(result.file) && !isEqual(result.file, '')) {
         const file = ResultService.extractFileObjectFromBase64String(result.file, result.id);
-        ResultService.extractFileContent(file, this.showResult);
+        const callbackFunction = this.getCallback(result.type);
+        ResultService.extractFileContent(file, callbackFunction);
       }
     },
-    showResult(fileContent) {
-      debugger;
+    showResultCsv(fileContent) {
       const csvJson = ResultService.convertCsVToJson(fileContent);
       this.chartData = csvJson;
+    },
+    showResultLog(fileContent) {
+      return fileContent;
+    },
+    getCallback(resultType) {
+      if (isEqual(resultType, 'csv')) {
+        return this.showResultCsv;
+      } else if (isEqual(resultType, 'log')) {
+        return this.showResultLog;
+      }
+      return null;
     },
   },
   created() {
