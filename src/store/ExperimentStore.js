@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, find } from 'lodash';
+import { isNil, filter } from 'lodash';
 import ApiService from '../service/ApiService';
 
 export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
@@ -12,7 +12,7 @@ const ExperimentStore = {
   state: {
     experiments: [
       {
-        id: 1,
+        id: '1',
         name: 'TestDockerfile',
         createdAt: '01.01.20',
         size: '500',
@@ -36,12 +36,13 @@ const ExperimentStore = {
         commit('updateExperiments', newExperiments);
       }
     },
-    async getExperimentNameFromId({ state }, id) {
-      const experiment = find(state.experiments, ['experimentId', id]);
+    getExperimentFromId({ state }, id) {
+      debugger;
+      const experiment = filter(state.experiments, e => e.id === id)[0];
       if (!isNil(experiment)) {
-        return experiment.name;
+        return experiment;
       }
-      return 'No name Found';
+      return null;
     },
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
