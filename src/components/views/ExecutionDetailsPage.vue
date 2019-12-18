@@ -17,7 +17,7 @@
                 <span class="mb-3">Runtime: {{runtime}}</span>
                 <div class="status">
                   <span>Status:</span>
-                  <status-cell :status="execution.status" class="cell"></status-cell>
+                  <status-cell :status="execution.status" class="cell"/>
                 </div>
               </v-card-text>
               <v-progress-circular
@@ -36,12 +36,29 @@
                     Download Results
                     <v-icon right>cloud_download</v-icon>
                   </v-btn>
-                  <v-btn color="red right" :disabled="errorButtonDisabled"
-                         @click="deleteExecution(execution.id)">
-                    Delete
-                  </v-btn>
+                  <v-dialog
+                    v-model="dialog"
+                    width="500">
+                    <template v-slot:activator="{ on }">
+                      <v-btn color="red" class="right"
+                             dark v-on="on">
+                        Delete
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        Are you sure you want to delete this Execution?
+                      </v-card-title>
+                      <v-card-actions>
+                        <v-btn class="error"
+                               @click="executionDelete(execution.id)">
+                          Yes, I want to delete</v-btn>
+                        <v-btn @click="dialog = false">No, I'm not sure</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                   <v-btn class="right"
-                         @click="terminateExecution(execution.id)">
+                         @click="executionCancel(execution.id)">
                     Cancel execution
                     <v-icon right dark>cancel</v-icon>
                   </v-btn>
@@ -106,7 +123,7 @@
 </template>
 
 <script>
-import { isNil, isEqual, forEach } from 'lodash';
+import { isNil, forEach } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
@@ -128,6 +145,7 @@ export default {
       logs: [],
       loading: false,
       loadingLogs: false,
+      dialog: false,
     };
   },
   props: {
@@ -135,16 +153,6 @@ export default {
   },
   computed: {
     ...mapGetters(['snack', 'snackShow']),
-    errorButtonDisabled() {
-      const status = this.execution.status;
-      let disabled = true;
-      if (!isNil(status)) {
-        if (!isEqual(status, 'RUNNING' || 'WAITING')) {
-          disabled = false;
-        }
-      }
-      return disabled;
-    },
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
@@ -163,6 +171,29 @@ export default {
             this.triggerSnack();
           }
         });
+    },
+    async executionCancel(id) {
+      this.loading = true;
+      const canceledExecution = await this.terminateExecution(id);
+      if (canceledExecution !== null) {
+        this.setSnack(`${canceledExecution.name} has been canceled`);
+      } else {
+        this.setSnack('Execution could not be canceled');
+      }
+      this.loading = false;
+      this.triggerSnack();
+    },
+    async executionDelete(id) {
+      this.dialog = false;
+      this.loading = true;
+      const deletedExecution = await this.deleteExecution(id);
+      if (deletedExecution !== null) {
+        this.setSnack(`${deletedExecution.name} has been deleted`);
+      } else {
+        this.setSnack('Execution could not be deleted');
+      }
+      this.loading = false;
+      this.triggerSnack();
     },
     calculateRuntime() {
       const terminated = moment(this.execution.terminatedAt);
@@ -232,40 +263,19 @@ export default {
 </script>
 
 <style scoped>
-  .buttons {
-    display: flex;
-    margin-top: 1%;
-    padding-bottom: 1%;
-    justify-content: flex-end;
-  }
-
   .details {
     display: flex;
     flex-direction: column;
     font-size: 12pt;
   }
-
-  .execution-title {
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-  }
-
-  .title-text {
-    font-size: 18pt;
-    text-decoration: underline;
-  }
-
   .status {
     display: flex;
     flex-direction: row;
   }
-
   .cell {
     margin-top: -8px;
     margin-left: 5px;
   }
-
   .color-theme-blue {
     background: var(--themeColor);
   }
