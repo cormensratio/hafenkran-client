@@ -55,7 +55,6 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     background-color: #e8ebed;
-    overflow: hidden;
     padding: 0;
     margin: 0;
     width: 100%;
