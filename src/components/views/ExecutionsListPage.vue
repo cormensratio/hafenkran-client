@@ -127,7 +127,6 @@ export default {
     async executionDelete(id) {
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
-      debugger;
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
       } else {
