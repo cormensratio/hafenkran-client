@@ -16,6 +16,7 @@ export default class ResultService {
   static convertCsVToJson(csvFile) {
     if (!isNil(csvFile)) {
       try {
+        debugger;
         const jsonObj = csvjson.toObject(csvFile);
 
         if (!isNil(jsonObj)) {
@@ -39,19 +40,15 @@ export default class ResultService {
     return null;
   }
 
-  static extractFileContent(fileObject) {
+  static extractFileContent(fileObject, callBack) {
     if (!isNil(fileObject)) {
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         const reader = new FileReader();
-        reader.onload = function () {
-          debugger;
-          console.log(reader.result);
-        };
         reader.readAsText(fileObject);
+        reader.onload = () => callBack(reader.result);
       } else {
         console.log('[ERROR] The browser does not support file reading!');
       }
     }
-    return null;
   }
 }
