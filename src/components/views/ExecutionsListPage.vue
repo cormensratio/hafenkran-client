@@ -113,6 +113,28 @@ export default {
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
+    async executionCancel(id) {
+      this.loading = true;
+      const canceledExecution = await this.terminateExecution(id);
+      this.loading = false;
+      if (canceledExecution !== null) {
+        this.setSnack(`${canceledExecution.name} has been canceled`);
+        this.triggerSnack();
+      }
+      this.setSnack('Execution could not be canceled');
+      this.triggerSnack();
+    },
+    async executionDelete(id) {
+      this.loading = true;
+      const deletedExecution = await this.deleteExecution(id);
+      this.loading = false;
+      if (deletedExecution !== null) {
+        this.setSnack(`${deletedExecution.name} has been deleted`);
+        this.triggerSnack();
+      }
+      this.setSnack('Execution could not be deleted');
+      this.triggerSnack();
+    },
     cancelButtonDisabled(status) {
       let disabled = true;
       if (!isNil(status)) {
