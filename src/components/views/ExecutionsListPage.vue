@@ -163,6 +163,9 @@ export default {
   },
   created() {
     this.fetchAllExecutionsOfUser();
+    this.$nextTick(() => {
+      this.items = this.executions;
+    });
   },
 };
 </script>
