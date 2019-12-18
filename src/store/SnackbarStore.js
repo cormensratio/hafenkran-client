@@ -11,18 +11,15 @@ const SnackbarStore = {
     setSnack(state, snack) {
       state.snack = snack;
     },
-    hideSnack(state) {
-      state.snackShow = false;
-    },
-    showSnack(state) {
-      state.snackShow = true;
+    showSnack(state, show) {
+      state.snackShow = show;
     },
   },
   actions: {
     triggerSnack(context) {
-      context.commit('showSnack');
+      context.commit('showSnack', true);
       setTimeout(() => {
-        context.commit('hideSnack');
+        context.commit('showSnack', false);
       }, 2500);
     },
   },

@@ -45,11 +45,15 @@
         </div>
       </v-card>
     </v-hover>
+    <v-snackbar v-model="snackShow" right>
+      {{ snack }}
+      <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
@@ -63,11 +67,14 @@ export default {
       fileName: null,
       correctFileType: false,
       loading: false,
-      showSnackbar: false,
     };
+  },
+  computed: {
+    ...mapGetters(['snack', 'snackShow']),
   },
   methods: {
     ...mapMutations(['setSnack']),
+    ...mapActions(['triggerSnack']),
     getFileName() {
       return this.$refs.file.files[0].name;
     },
@@ -80,16 +87,15 @@ export default {
       }
     },
     async submitFile() {
-      this.showSnackbar = false;
       this.loading = true;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
-        this.loading = false;
         this.$router.push('/experimentlist');
       } else {
         this.setSnack('Experiment could not be uploaded');
-        this.showSnackbar = true;
       }
+      this.loading = false;
+      this.triggerSnack();
     },
   },
 };

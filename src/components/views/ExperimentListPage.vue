@@ -34,7 +34,7 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="snackShow" auto-height top>
+        <v-snackbar v-model="snackShow" right>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>

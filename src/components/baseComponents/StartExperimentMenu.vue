@@ -125,12 +125,11 @@ export default {
         this.loading = false;
         if (!isNil(startedExecution)) {
           this.setSnack('Execution started successfully');
-          this.triggerSnack();
           this.$router.push('/executionlist');
         } else {
           this.setSnack('Execution could not be started');
-          this.triggerSnack();
         }
+        this.triggerSnack();
       }
     },
     updateExperimentId() {

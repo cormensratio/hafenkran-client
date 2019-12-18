@@ -67,7 +67,7 @@
           color="#106ee0"
           v-if="loading"
         />
-        <v-snackbar v-model="snackShow" top>
+        <v-snackbar v-model="snackShow" right>
           {{ snack }}
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
