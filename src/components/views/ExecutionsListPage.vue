@@ -3,19 +3,18 @@
     <template slot="body">
       <div class="container">
         <v-card>
-          <v-toolbar style="background: var(--themeColor)" dark>
-            <span class="title"> Executions </span>
-            <v-spacer></v-spacer>
-            <v-text-field append-icon="search"
-                          label="Search"
-                          single-line
-                          v-model="search"
-            >
-            </v-text-field>
-          </v-toolbar>
+          <base-list-header title="Executions">
+            <template slot="expansion-body">
+              <ExecutionFilters @applyFilters="applyFilters($event)"
+                                @quickSearch="quickSearch($event)"
+              >
+              </ExecutionFilters>
+            </template>
+          </base-list-header>
+
           <v-data-table
             :headers="headers"
-            :items="executions"
+            :items="filteredItems"
             :search="search"
           >
             <template v-slot:items="props">
@@ -82,12 +81,15 @@ import { isNil, isEqual } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
+import BaseListHeader from '../baseComponents/BaseListHeader';
+import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
+import FilterMixin from '../../mixins/FilterMixin';
 
 
 export default {
   name: 'ExecutionsListPage',
-  components: { StatusCell, BasePage },
-  mixins: [TimeStampMixin],
+  components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
+  mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
       search: '',
@@ -111,28 +113,6 @@ export default {
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
-    async executionCancel(id) {
-      this.loading = true;
-      const canceledExecution = await this.terminateExecution(id);
-      this.loading = false;
-      if (canceledExecution !== null) {
-        this.setSnack(`${canceledExecution.name} has been canceled`);
-        this.triggerSnack();
-      }
-      this.setSnack('Execution could not be canceled');
-      this.triggerSnack();
-    },
-    async executionDelete(id) {
-      this.loading = true;
-      const deletedExecution = await this.deleteExecution(id);
-      this.loading = false;
-      if (deletedExecution !== null) {
-        this.setSnack(`${deletedExecution.name} has been deleted`);
-        this.triggerSnack();
-      }
-      this.setSnack('Execution could not be deleted');
-      this.triggerSnack();
-    },
     cancelButtonDisabled(status) {
       let disabled = true;
       if (!isNil(status)) {
@@ -144,15 +124,25 @@ export default {
       }
       return disabled;
     },
+    applyFilters(filters) {
+      if (!isNil(filters)) {
+        // Use object.assign so vue notices filters object was updated
+        this.filters = Object.assign({}, filters);
+      }
+    },
+    quickSearch(input) {
+      this.search = input;
+    },
   },
   created() {
     this.fetchAllExecutionsOfUser();
+    this.$nextTick(() => {
+      this.items = this.executions;
+    });
   },
 };
 </script>
 
 <style scoped>
-.title {
-  font-size: 14pt;
-}
+
 </style>

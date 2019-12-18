@@ -49,7 +49,6 @@ export default {
 </script>
 
 <style scoped>
-
   .hafen-logo {
     width: 60px;
     height: 60px;
@@ -63,5 +62,4 @@ export default {
   .hafen-toolbar {
     background: var(--themeColor);
   }
-
 </style>
