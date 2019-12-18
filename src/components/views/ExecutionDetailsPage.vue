@@ -5,37 +5,48 @@
         <v-layout column>
           <v-flex>
             <v-card class="flex">
-              <v-card-title>
-                <div class="execution-title">
-                  <span class="title-text">{{execution.name}}</span>
-                </div>
-              </v-card-title>
+              <v-toolbar dark style="background: var(--themeColor)">
+                <v-toolbar-title color="white" class="justify-center">
+                  {{ execution.name }}
+                </v-toolbar-title>
+              </v-toolbar>
               <v-card-text class="text-left details">
             <span class="mb-3">
               Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
             </span>
                 <span class="mb-3">Runtime: {{runtime}}</span>
                 <div class="status">
-                  <span>Current status:</span>
+                  <span>Status:</span>
                   <status-cell :status="execution.status" class="cell"></status-cell>
                 </div>
               </v-card-text>
-              <div class="buttons">
-                <v-btn class="logs" @click="getLogs">Load Logs
-                </v-btn>
-                <v-btn class="red" :disabled="cancelButtonDisabled"
-                       @click="terminateExecution(execution.id)">
-                  Cancel execution
-                  <v-icon right dark>cancel</v-icon>
-                </v-btn>
-                <v-btn color="red" @click="deleteExecution(execution.id)">
-                  Delete
-                </v-btn>
-                <v-btn dark style="background-color: var(--themeColor)" @click="downloadResults()">
-                  Download Results
-                  <v-icon right>cloud_download</v-icon>
-                </v-btn>
-              </div>
+              <v-progress-circular
+                indeterminate
+                color="#106ee0"
+                v-if="loading"
+              />
+              <v-card-actions>
+                <v-flex>
+                  <v-btn class="logs left" dark style="background-color: var(--themeColor)"
+                         @click="getLogs">
+                    Load Logs
+                  </v-btn>
+                  <v-btn dark style="background-color: var(--themeColor)"
+                         @click="downloadResults()" class="left">
+                    Download Results
+                    <v-icon right>cloud_download</v-icon>
+                  </v-btn>
+                  <v-btn color="red right" :disabled="errorButtonDisabled"
+                         @click="deleteExecution(execution.id)">
+                    Delete
+                  </v-btn>
+                  <v-btn class="right"
+                         @click="terminateExecution(execution.id)">
+                    Cancel execution
+                    <v-icon right dark>cancel</v-icon>
+                  </v-btn>
+                </v-flex>
+              </v-card-actions>
             </v-card>
           </v-flex>
           <v-flex class="mt-2">
@@ -61,7 +72,7 @@
                     <v-progress-circular
                       indeterminate
                       color="#106ee0"
-                      v-if="loading"
+                      v-if="loadingLogs"
                     />
                   </v-layout>
                 </v-container>
@@ -85,6 +96,10 @@
             </div>
           </v-flex>
         </v-layout>
+        <v-snackbar v-model="snackShow" right>
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
     </template>
   </base-page>
@@ -92,7 +107,7 @@
 
 <script>
 import { isNil, isEqual, forEach } from 'lodash';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
@@ -112,13 +127,15 @@ export default {
       activeTab: 1,
       logs: [],
       loading: false,
+      loadingLogs: false,
     };
   },
   props: {
     executionId: String,
   },
   computed: {
-    cancelButtonDisabled() {
+    ...mapGetters(['snack', 'snackShow']),
+    errorButtonDisabled() {
       const status = this.execution.status;
       let disabled = true;
       if (!isNil(status)) {
@@ -130,16 +147,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
+    ...mapMutations(['setSnack']),
     getLogs() {
-      this.loading = true;
+      this.loadingLogs = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
+          this.loadingLogs = false;
           if (!isNil(newLog)) {
             this.logs = [];
             const logArray = newLog.split(/\r?\n/);
             forEach(logArray, log => this.logs.push(log));
-            this.loading = false;
+          } else {
+            this.setSnack('Couldn\'t fetch any logs');
+            this.triggerSnack();
           }
         });
     },
@@ -185,7 +206,15 @@ export default {
       this.userInput = '';
     },
     async downloadResults() {
-      await ExecutionDetailService.downloadResults(this.execution.id, this.execution.name);
+      let downloaded = false;
+      this.loading = true;
+      downloaded =
+          await ExecutionDetailService.downloadResults(this.execution.id, this.execution.name);
+      this.loading = false;
+      if (!downloaded) {
+        this.setSnack('Could\'t download results');
+        this.triggerSnack();
+      }
     },
   },
   created() {
@@ -195,9 +224,9 @@ export default {
           this.execution = execution;
         }
       });
-  },
-  beforeUpdate() {
-    this.calculateRuntime();
+    setInterval(() => {
+      this.calculateRuntime();
+    }, 1000);
   },
 };
 </script>
