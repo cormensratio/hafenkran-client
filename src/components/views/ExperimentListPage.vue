@@ -32,6 +32,10 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-snackbar v-model="snackShow" right>
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -65,7 +69,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments']),
+    ...mapGetters(['experiments', 'snack', 'snackShow']),
   },
   data() {
     return {
@@ -88,7 +92,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
