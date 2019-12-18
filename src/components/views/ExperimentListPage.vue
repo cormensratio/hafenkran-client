@@ -23,9 +23,10 @@
                   <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                    <td class="text-xs-left">
-                      <file-size-cell :size="props.item.size"></file-size-cell>
-                    </td>
+<!--                    <td class="text-xs-left">-->
+<!--                      <file-size-cell :size="props.item.size"></file-size-cell>-->
+<!--                    </td>-->
+                    <td>{{props.item.size}}</td>
                   </tr>
                 </template>
               </v-data-table>
@@ -123,11 +124,13 @@ export default {
       this.search = input;
     },
   },
+  watch: {
+    experiments() {
+      this.items = this.experiments;
+    },
+  },
   created() {
     this.fetchExperiments();
-    this.$nextTick(() => {
-      this.items = this.experiments;
-    });
   },
 };
 </script>

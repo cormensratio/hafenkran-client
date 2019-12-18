@@ -118,19 +118,22 @@ export default {
       const canceledExecution = await this.terminateExecution(id);
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
+      } else {
+        this.setSnack('Execution could not be canceled');
       }
       this.loading = false;
-      this.setSnack('Execution could not be canceled');
       this.triggerSnack();
     },
     async executionDelete(id) {
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
+      debugger;
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
+      } else {
+        this.setSnack('Execution could not be deleted');
       }
       this.loading = false;
-      this.setSnack('Execution could not be deleted');
       this.triggerSnack();
     },
     cancelButtonDisabled(status) {
@@ -154,11 +157,13 @@ export default {
       this.search = input;
     },
   },
+  watch: {
+    executions() {
+      this.items = this.executions;
+    },
+  },
   created() {
     this.fetchAllExecutionsOfUser();
-    this.$nextTick(() => {
-      this.items = this.executions;
-    });
   },
 };
 </script>
