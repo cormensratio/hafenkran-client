@@ -13,8 +13,9 @@
         </v-list>
       </v-flex>
       <v-flex>
-        <statistics-component :chart-data="testText">
+        <statistics-component :chart-data="chartdata">
         </statistics-component>
+        <v-btn @click="test">TEEEST</v-btn>
       </v-flex>
     </v-layout>
   </v-container>
@@ -32,7 +33,7 @@ export default {
   data() {
     return {
       selectedResult: '',
-      testText: '',
+      chartdata: [],
     };
   },
   props: {
@@ -49,9 +50,11 @@ export default {
     test() {
       const csvB64 = 'eDt5CjA7MAoxOzEKMjsyCjM7Mwo0OzQKNTs1CjY7Ngo3OzcKODs4Cjk7OQoK';
       const file = ResultService.extractFileObjectFromBase64String(csvB64, 'test');
-      const csvJson = ResultService.convertCsVToJson(file);
+      const content = ResultService.extractFileContent(file, this.showTest);
     },
     showTest(text) {
+      const csvJson = ResultService.convertCsVToJson(text);
+      this.chartdata = csvJson;
       const csv = replace(text, ';', ',');
       const csv2 = csv.replace(/(\r\n|\n|\r)/gm, '\n');
       debugger;

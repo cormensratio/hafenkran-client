@@ -1,5 +1,5 @@
 <template>
-  <vega-lite :spec="spec"></vega-lite>
+  <vega-lite :data="spec.data.values" mark="line" :encoding="spec.data.encoding"></vega-lite>
 </template>
 
 <script>
@@ -20,14 +20,18 @@ export default {
         data: {
           name: 'TEEEST',
           format: {
-            type: 'csv',
+            type: 'json',
           },
-          values: [],
-          // [
+          values:
+          [
             // { a: 'A', b: 28 }, { a: 'B', b: 55 }, { a: 'C', b: 43 },
             // { a: 'D', b: 91 }, { a: 'E', b: 81 }, { a: 'F', b: 53 },
             // { a: 'G', b: 19 }, { a: 'H', b: 87 }, { a: 'I', b: 52 },
-          // ],
+          ],
+          encoding: {
+            x: { field: 'x', type: 'ordinal' },
+            y: { field: 'y', type: 'quantitative' },
+          },
         },
         mark: 'line',
       },

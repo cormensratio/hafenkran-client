@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import csvjson from 'csvjson';
+import csv2json from 'csvjson-csv2json';
 
 export default class ResultService {
   static extractFileObjectFromBase64String(fileString, fileName) {
@@ -13,11 +13,11 @@ export default class ResultService {
     return null;
   }
 
-  static convertCsVToJson(csvFile) {
-    if (!isNil(csvFile)) {
+  static convertCsVToJson(csvString) {
+    if (!isNil(csvString)) {
       try {
         debugger;
-        const jsonObj = csvjson.toObject(csvFile);
+        const jsonObj = csv2json(csvString, { parseNumbers: true });
 
         if (!isNil(jsonObj)) {
           return jsonObj;
