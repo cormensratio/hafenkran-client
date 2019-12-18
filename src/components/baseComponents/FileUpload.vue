@@ -90,6 +90,7 @@ export default {
       this.loading = true;
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
+        this.setSnack(`${this.fileName} was successfully uploaded`);
         this.$router.push('/experimentlist');
       } else {
         this.setSnack('Experiment could not be uploaded');

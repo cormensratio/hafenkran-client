@@ -16,10 +16,11 @@ const SnackbarStore = {
     },
   },
   actions: {
-    triggerSnack(context) {
-      context.commit('showSnack', true);
+    triggerSnack({ commit }) {
+      commit('showSnack', true);
       setTimeout(() => {
-        context.commit('showSnack', false);
+        commit('setSnack', '');
+        commit('showSnack', false);
       }, 2500);
     },
   },
