@@ -19,6 +19,9 @@
           >
             <template v-slot:items="props">
               <td class="text-xs-left">{{ props.item.name }}</td>
+              <td class="text-xs-left" v-if="user.isAdmin">
+                {{ getUserNameOfResource(props.item.ownerId) }}
+              </td>
               <td class="text-xs-left">
                 {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
               </td>
@@ -70,10 +73,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions']),
+    ...mapGetters(['executions', 'user']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'getUserNameOfResource']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },

@@ -21,7 +21,7 @@ const ExecutionStore = {
         ram: '',
         cpu: '',
         bookedTime: '',
-        ownerId: '',
+        ownerId: 'test',
       },
       {
         id: '2',

@@ -22,6 +22,9 @@
                 <template v-slot:items="props">
                   <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left" v-if="user.isAdmin">
+                      {{ getUserNameOfResource(props.item.ownerId) }}
+                    </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td class="text-xs-left">
                       <file-size-cell :size="props.item.size"></file-size-cell>
@@ -65,7 +68,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments']),
+    ...mapGetters(['experiments', 'user']),
   },
   data() {
     return {
@@ -88,7 +91,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'getUserNameOfResource']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
