@@ -3,12 +3,14 @@
       <div class="row">
         <div class="col-4">
           <v-list class="result-list">
-            <v-list-tile v-for="(result, index) in resultList.results"
+            <v-list-tile v-for="(result, index) in resultList.resultList"
                          :key="index"
                          @click="loadResultContent(result)">
-              <v-list-tile-title>Result {{index + 1}}</v-list-tile-title>
+              <v-list-tile-title>{{result.name}}</v-list-tile-title>
               <v-list-tile-content>
-                <div class="mr-1">{{result.type}}</div>
+                <v-icon v-if="getResultType(result.type) === 'log'">description</v-icon>
+                <v-icon v-if="getResultType(result.type) === 'csv'">timeline</v-icon>
+                <v-icon v-if="getResultType(result.type) === ''">error</v-icon>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
