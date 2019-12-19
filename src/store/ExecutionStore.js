@@ -21,6 +21,7 @@ const ExecutionStore = {
         ram: '',
         cpu: '',
         bookedTime: '',
+        ownerId: '',
       },
     ],
   },
@@ -56,6 +57,14 @@ const ExecutionStore = {
           dispatch('fetchAllExecutionsOfUser');
           return response;
         }
+      }
+      return null;
+    },
+    async deleteExecution({ dispatch }, executionId) {
+      const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/delete`);
+      if (!isNil(response)) {
+        dispatch('fetchAllExecutionsOfUser');
+        return response;
       }
       return null;
     },

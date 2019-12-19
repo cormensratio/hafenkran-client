@@ -1,15 +1,13 @@
-import { last, filter, isNil } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import ApiService from './ApiService';
 
-const fileFilter = ['tar'];
+const fileFilter = 'application/x-tar';
 const serviceUrl = process.env.CLUSTER_SERVICE_URL;
 
 export default class UploadService {
-  static checkFileType(fileName) {
-    const type = last(fileName.split('.'));
-    const matches = filter(fileFilter, f => f === type);
-
-    return !isNil(matches) && matches.length === 1;
+  static checkFileType(file) {
+    const type = file.type;
+    return isEqual(type, fileFilter) || isEqual(type, '');
   }
 
   static getTimeStamp() {

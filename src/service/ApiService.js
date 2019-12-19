@@ -32,6 +32,23 @@ export default class ApiService {
       });
   }
 
+  static async doDelete(url, data, additionalHeaders) {
+    const requestConfig = {};
+    requestConfig.headers = await this.computeRequestHeaders(additionalHeaders);
+
+    if (!isNil(data)) {
+      requestConfig.data = data;
+    }
+
+    return axios.delete(`${url}`, requestConfig).then((resp) => {
+      console.log('Received response from: ', url);
+      return resp.data;
+    })
+      .catch((error) => {
+        console.log(`Response to ${url} failed: `, error);
+      });
+  }
+
   static async computeRequestHeaders(config) {
     const loggedIn = !isNil(localStorage.getItem('user'));
     const headers = {};

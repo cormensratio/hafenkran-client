@@ -3,11 +3,11 @@ import Router from 'vue-router';
 import { isNil } from 'lodash';
 import StartPage from '../components/views/StartPage';
 import ExperimentListPage from '../components/views/ExperimentListPage';
-import CreateExperimentPage from '../components/views/CreateExperimentPage';
 import LoginPage from '../components/views/LoginPage';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
-import UserRegistrationPage from '../components/views/UserRegistrationPage';
+import NewExperimentPage from '../components/views/NewExperimentPage';
+import SignUpPage from '../components/views/SignUpPage';
 
 Vue.use(Router);
 
@@ -33,7 +33,7 @@ const router = new Router({
     {
       path: '/newexperiment',
       name: 'NewExperimentPage',
-      component: CreateExperimentPage,
+      component: NewExperimentPage,
       meta: {
         requiresAuth: true,
       },
@@ -64,9 +64,9 @@ const router = new Router({
       },
     },
     {
-      path: '/registration',
-      name: 'UserRegistrationPage',
-      component: UserRegistrationPage,
+      path: '/signup',
+      name: 'SignUpPage',
+      component: SignUpPage,
       meta: {
         requiresAuth: false,
       },
