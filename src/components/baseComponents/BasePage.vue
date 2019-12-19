@@ -9,10 +9,11 @@
 <script>
 import Header from './Header';
 import Footer from './Footer';
+import StartPage from '../views/StartPage';
 
 export default {
   name: 'BasePage',
-  components: { Footer, Header },
+  components: { StartPage, Footer, Header },
 };
 </script>
 
