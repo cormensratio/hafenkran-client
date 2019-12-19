@@ -7,6 +7,9 @@
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
           <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
           <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
+          <div v-if="previousRam > 0" class="mt-2">
+            <b>Previously run for:</b>{{ previousHours }} {{ previousMinutes }}
+            <b>with</b> {{ previousRam }} {{ previousCpu }}</div>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -90,12 +93,13 @@ export default {
       cpu: 4,
       bookedHours: 0,
       bookedMinutes: 0,
+      previousRam: 0,
+      previousCpu: 'Cpu',
+      previousHours: 'Hours',
+      previousMinutes: 'Minutes',
     };
   },
   props: { experiment: {},
-    previousRam: undefined,
-    previousCpu: undefined,
-    previousBookedTime: undefined,
   },
   computed: {
     bookedTime() {
@@ -116,6 +120,10 @@ export default {
           bookedTime: this.bookedTime,
         });
         if (!isNil(startedExecution)) {
+          this.previousRam = startedExecution.ram;
+          this.previousCpu = startedExecution.cpu;
+          this.previousMinutes = this.bookedMinutes;
+          this.previousHours = this.bookedHours;
           this.$router.push('/executionlist');
         }
       }
