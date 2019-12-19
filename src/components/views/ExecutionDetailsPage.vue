@@ -151,7 +151,7 @@ export default {
         case 'RUNNING':
           this.runtime = this.msToTime(moment(now.diff(startedAt)));
           break;
-        case 'TERMINATED':
+        case 'FINISHED':
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
