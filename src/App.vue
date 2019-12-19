@@ -54,6 +54,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
+    overflow: hidden;
     background-color: #e8ebed;
     padding: 0;
     margin: 0;
