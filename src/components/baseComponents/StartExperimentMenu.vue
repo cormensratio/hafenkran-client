@@ -102,9 +102,9 @@ export default {
       bookedMinutes: 0,
       loading: false,
       previousRam: 0,
-      previousCpu: 'Cpu',
-      previousHours: 'Hours',
-      previousMinutes: 'Minutes',
+      previousCpu: 0,
+      previousHours: 0,
+      previousMinutes: 0,
     };
   },
   props: { experiment: {},
