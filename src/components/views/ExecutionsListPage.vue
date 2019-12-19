@@ -46,9 +46,6 @@
                                        @menuClosed="closeMenu">
                   </StartExperimentMenu>
                 </v-menu>
-                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
-                <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="executionCancel(props.item.id)">Cancel</v-btn>
                 <v-dialog
                   v-model="dialog"
                   width="500">
