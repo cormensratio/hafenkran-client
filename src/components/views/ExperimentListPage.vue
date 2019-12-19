@@ -26,7 +26,7 @@
                       {{ getUserNameOfResource(props.item.ownerId) }}
                     </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
-                    <td class="text-xs-left">
+                    <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
                     </td>
                   </tr>
@@ -35,6 +35,10 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-snackbar v-model="snackShow" right>
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -68,7 +72,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments', 'user']),
+    ...mapGetters(['experiments', 'snack', 'snackShow', 'user']),
   },
   data() {
     return {
@@ -92,7 +96,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'getUserNameOfResource']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'getUserNameOfResource']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
@@ -121,6 +125,11 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
+    },
+  },
+  watch: {
+    experiments() {
+      this.items = this.experiments;
     },
   },
   created() {

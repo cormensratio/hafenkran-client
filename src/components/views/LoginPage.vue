@@ -5,7 +5,7 @@
         <v-layout justify-center>
           <v-flex md4>
             <v-card>
-              <v-toolbar dark color="blue">
+              <v-toolbar dark style="background: var(--themeColor)">
                 <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
                   You are already logged in {{ user.name }}!
                 </v-toolbar-title>
@@ -15,25 +15,33 @@
               </v-toolbar>
               <v-card-text>
                 <v-form lazy-validation class="mt-3 mr-4">
-                  <v-text-field v-model="userName" outline
-                                label="Name" prepend-icon="person"></v-text-field>
+                  <v-text-field v-model="userName" outline autofocus
+                                @keyup.enter="loginUser"
+                                label="Name" prepend-icon="person"/>
                   <v-text-field type="password" v-model="password" outline
-                                label="Password" prepend-icon="lock"></v-text-field>
+                                @keyup.enter="loginUser"
+                                label="Password" prepend-icon="lock"/>
                 </v-form>
               </v-card-text>
               <v-card-actions class="justify-center">
                 <div class="mb-3">
-                  <v-btn large dark color="blue" to="/"
-                         class="button">Cancel
-                  </v-btn>
-                  <v-btn large dark color="blue"
+                  <v-btn large dark style="background: var(--themeColor)"
                          @click="loginUser()" class="button">Login
+                  </v-btn>
+                  <v-btn large to="/"
+                         class="button">Cancel
                   </v-btn>
                 </div>
               </v-card-actions>
-              <v-sheet v-if="failedLogin"
-                       elevation="5" dark class="bg-danger">Login failed
-              </v-sheet>
+              <v-progress-circular
+                indeterminate
+                color="#106ee0"
+                v-if="loading"
+              />
+              <v-snackbar v-model="snackShow" right>
+                {{ snack }}
+                <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+              </v-snackbar>
             </v-card>
           </v-flex>
         </v-layout>
@@ -43,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
 export default {
@@ -53,24 +61,28 @@ export default {
     return {
       userName: '',
       password: '',
-      failedLogin: false,
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters(['user', 'isAuthenticated']),
+    ...mapGetters(['user', 'isAuthenticated', 'snack', 'snackShow']),
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'triggerSnack']),
+    ...mapMutations(['setSnack']),
     loginUser() {
+      this.loading = true;
       if (!this.isAuthenticated) {
         this.login({ name: this.userName, password: this.password })
           .then((response) => {
             if (response) {
-              this.failedLogin = false;
-              this.$router.push('/');
+              this.setSnack('Login successful');
+              this.$router.push('/experimentlist');
             } else {
-              this.failedLogin = true;
+              this.setSnack('Login failed');
+              this.loading = false;
             }
+            this.triggerSnack();
           });
       }
     },

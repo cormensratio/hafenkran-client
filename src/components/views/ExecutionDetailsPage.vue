@@ -57,9 +57,10 @@
                     <div class="text-left">Logs are getting updated here:</div>
                     <div class="text-left"
                          :key="log" v-for="log in logs">{{ log }}
-                    </div>                    <v-progress-circular
+                    </div>
+                    <v-progress-circular
                       indeterminate
-                      color="blue"
+                      color="#106ee0"
                       v-if="loading"
                     />
                   </v-layout>
@@ -69,6 +70,7 @@
                   append-icon="send"
                   label="Enter a command here!"
                   single-line
+                  @keyup.enter="sendStdin"
                   @click:append="sendStdin()"
                   type="text"
                   clearable
