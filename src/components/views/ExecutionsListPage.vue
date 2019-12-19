@@ -32,30 +32,9 @@
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
                        @click="executionCancel(props.item.id)">Cancel</v-btn>
-                <v-dialog
-                  v-model="dialog"
-                  width="500">
-                  <template v-slot:activator="{ on }">
-                    <v-btn v-if="props.item.status === 'RUNNING'
-                    || props.item.status === 'WAITING'" disabled>
-                      Delete
-                    </v-btn>
-                    <v-btn v-else color="red lighten-2" dark v-on="on">
-                      Delete
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      Are you sure you want to delete this Execution?
-                    </v-card-title>
-                    <v-card-actions>
-                      <v-btn class="error"
-                             @click="executionDelete(props.item.id), dialog = false">
-                        Yes, I want to delete</v-btn>
-                      <v-btn @click="dialog = false">No, I'm not sure</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <delete-dialog @deleteClicked="executionDelete(props.item.id)"
+                               :execution="props.item"
+                ></delete-dialog>
               </td>
             </template>
           </v-data-table>
@@ -84,11 +63,12 @@ import StatusCell from '../baseComponents/StatusCell';
 import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
 import FilterMixin from '../../mixins/FilterMixin';
+import DeleteDialog from '../baseComponents/DeleteDialog';
 
 
 export default {
   name: 'ExecutionsListPage',
-  components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
+  components: { DeleteDialog, ExecutionFilters, BaseListHeader, StatusCell, BasePage },
   mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {

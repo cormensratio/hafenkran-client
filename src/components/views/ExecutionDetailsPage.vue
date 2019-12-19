@@ -36,27 +36,9 @@
                     Download Results
                     <v-icon right>cloud_download</v-icon>
                   </v-btn>
-                  <v-dialog
-                    v-model="dialog"
-                    width="500">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="red" class="right"
-                             dark v-on="on">
-                        Delete
-                      </v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        Are you sure you want to delete this Execution?
-                      </v-card-title>
-                      <v-card-actions>
-                        <v-btn class="error"
-                               @click="executionDelete(execution.id)">
-                          Yes, I want to delete</v-btn>
-                        <v-btn @click="dialog = false">No, I'm not sure</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <delete-dialog @deleteClicked="executionDelete"
+                                 :execution="execution" class="right">
+                  </delete-dialog>
                   <v-btn class="right"
                          @click="executionCancel(execution.id)">
                     Cancel execution
@@ -131,11 +113,12 @@ import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
 import ExecutionStatisticsPage from './ExecutionStatisticsPage';
+import DeleteDialog from '../baseComponents/DeleteDialog';
 
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [TimeStampMixin],
-  components: { ExecutionStatisticsPage, StatusCell, BasePage },
+  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage },
   data() {
     return {
       userInput: '',

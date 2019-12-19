@@ -1,7 +1,7 @@
 <template>
   <base-filter-component @applyFilters="applyFilters($event)"
                          :filters="experimentFilters"
-                         @quickSearch="quickSeatch($event)"
+                         @quickSearch="quickSearch($event)"
   >
   </base-filter-component>
 </template>
