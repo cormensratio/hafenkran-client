@@ -1,10 +1,10 @@
 <template>
-  <v-container>
-    <div class="container">
+  <v-container class="result-container">
       <div class="row">
         <div class="col-4">
-          <v-list>
-            <v-list-tile v-for="(result, index) in resultList.results" :key="index" id=index
+          <v-list class="result-list">
+            <v-list-tile v-for="(result, index) in resultList.results"
+                         :key="index"
                          @click="loadResultContent(result)">
               <v-list-tile-title>Result {{index + 1}}</v-list-tile-title>
               <v-list-tile-content>
@@ -13,14 +13,22 @@
             </v-list-tile>
           </v-list>
         </div>
-        <div class="col-8 bg-white">
-          <statistics-component v-if="selectedResult.type === 'csv'" :chart-data="chartData">
+        <div class="col-8 bg-white result-container">
+          <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
+                                :chart-data="chartData">
           </statistics-component>
-          <div v-else-if="selectedResult.type === 'log'">{{ logData }}</div>
-          <div v-else> Result has unsupported format!</div>
+          <div v-else-if="getResultType(selectedResult.type) === 'log'"
+               class="log-container">{{ logData }}
+          </div>
+          <div v-else-if="!selectedResult"
+               class="hint text-muted">
+            Select a Result
+          </div>
+          <div v-else class="hint text-muted">
+            Result has unsupported format!
+          </div>
         </div>
       </div>
-    </div>
   </v-container>
 </template>
 
@@ -57,9 +65,9 @@ export default {
       }
     },
     getCallback(resultType) {
-      if (isEqual(resultType, 'csv')) {
+      if (isEqual(this.getResultType(resultType), 'csv')) {
         return this.showResultCsv;
-      } else if (isEqual(resultType, 'log')) {
+      } else if (isEqual(this.getResultType(resultType), 'log')) {
         return this.showResultLog;
       }
       return null;
@@ -71,6 +79,12 @@ export default {
     showResultLog(fileContent) {
       this.logData = fileContent;
     },
+    getResultType(type) {
+      if (!isNil(type)) {
+        return type.toString().toLowerCase();
+      }
+      return '';
+    },
   },
   created() {
     this.fetchResultsByExecutionId(this.executionId);
@@ -79,5 +93,25 @@ export default {
 </script>
 
 <style scoped>
-
+  .hint {
+    font-size: 14pt;
+    margin-top: 2%;
+  }
+  .log-container {
+    overflow-y: auto;
+    height: 100%;
+  }
+  .log-container::-webkit-scrollbar {
+    display: none;
+  }
+  .result-list {
+    overflow-y: scroll;
+    max-height: 38vh;
+  }
+  .result-list::-webkit-scrollbar {
+    display: none;
+  }
+  .result-container {
+    max-height: 38vh;
+  }
 </style>

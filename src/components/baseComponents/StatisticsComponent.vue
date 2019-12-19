@@ -1,6 +1,10 @@
 <template>
-  <div v-if="chartData.length > 0">
-    <vega-lite :data="spec.data.values" mark="line" :encoding="spec.data.encoding"></vega-lite>
+  <div v-if="chartData.length > 0" class="chart-container">
+    <vega-lite :data="spec.data.values"
+               mark="line"
+               :encoding="spec.data.encoding"
+               class="chart"
+    ></vega-lite>
   </div>
 </template>
 
@@ -42,5 +46,19 @@ export default {
 </script>
 
 <style scoped>
+  .chart-container {
+    height: 100%;
+    width: 100%;
+  }
+  .chart {
+    width: 100%;
+    height: 100%;
+  }
+</style>
 
+<style>
+  .marks {
+    width: 100%;
+    height: 100% !important;
+  }
 </style>
