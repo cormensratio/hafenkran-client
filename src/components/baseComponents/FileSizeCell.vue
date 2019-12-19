@@ -23,12 +23,12 @@ export default {
 
       if (newSize >= 1024) {
         newSize /= 1024;
-        unit = 'MBytes';
+        unit = 'KBytes';
       }
 
       if (newSize >= 1024) {
         newSize /= 1024;
-        unit = 'GBytes';
+        unit = 'MBytes';
       }
 
       return `${Number(newSize).toFixed(2)} ${unit}`;
