@@ -1,7 +1,9 @@
 <template>
   <div class="base-page">
     <Header></Header>
-    <slot name="body"></slot>
+    <div class="page-container">
+      <slot name="body"></slot>
+    </div>
     <Footer></Footer>
   </div>
 </template>
@@ -21,5 +23,8 @@ export default {
   .base-page {
     height: 100%;
     margin-top: 10px;
+  }
+  .page-container {
+    margin-bottom: 120px;
   }
 </style>

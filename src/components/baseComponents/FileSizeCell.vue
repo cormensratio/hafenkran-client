@@ -1,5 +1,5 @@
 <template>
-  <div class="text-xs-right">
+  <div class="text-xs-left">
     <span>{{ fileSizeText }}</span>
   </div>
 </template>
@@ -10,7 +10,7 @@ import { isNil } from 'lodash';
 export default {
   name: 'FileSizeCell',
   props: {
-    size: Number,
+    size: undefined,
   },
   computed: {
     fileSizeText() {
