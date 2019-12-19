@@ -14,17 +14,17 @@
           style="margin: 10px"
         >
           <v-card-text>
-            <p class="display-1 welcome-card-text" style="font-weight: bold">
+            <p class="display-1 welcome-card-text-title">
               Containerize now!
             </p>
-            <div class="welcome-card-text justify-center" style="font-size: 12pt">
+            <div class="welcome-card-text justify-center">
               HAFENKRAN is the best platform to quickly deploy your Docker containers
               on a high performance cluster system, while giving you full control
               over managing allowed resource usage and the ability to evaluate the complex
               output of your computations efficiently.
             </div>
           </v-card-text>
-          <v-card-actions class="justify-center" style="padding-bottom: 15px">
+          <v-card-actions class="justify-center signup-button">
             <v-btn
               style="background-color:  var(--themeColor)"
               dark
@@ -66,9 +66,20 @@ export default {
     height: 100%;
   }
 
+  .welcome-card-text-title {
+    font-weight: bold;
+    text-align: center;
+    color: white;
+  }
+
   .welcome-card-text {
     text-align: center;
     color: white;
+    font-size: 15px;
+  }
+
+  .signup-button{
+    margin-bottom: 15px;
   }
 
   .content {
