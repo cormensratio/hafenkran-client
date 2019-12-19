@@ -33,7 +33,6 @@
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn v-if="!hasTerminated(props.item.status)"
                        @click="terminateExecution(props.item.id)">Cancel</v-btn>
-                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
                 <v-menu v-model="showMenu"
                         :close-on-content-click="false"
                         :close-on-click="true"
@@ -48,6 +47,7 @@
                                        @menuClosed="closeMenu">
                   </StartExperimentMenu>
                 </v-menu>
+                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
               </td>
             </template>
           </v-data-table>
