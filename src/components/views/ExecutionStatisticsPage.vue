@@ -79,7 +79,5 @@ export default {
 </script>
 
 <style scoped>
-  .list-container {
-    max-width: 35vh;
-  }
+
 </style>

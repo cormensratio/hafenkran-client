@@ -19,7 +19,7 @@ export default {
     return {
       spec: {
         data: {
-          name: 'TEEEST',
+          name: 'ResultStatistics',
           format: {
             type: 'json',
           },
