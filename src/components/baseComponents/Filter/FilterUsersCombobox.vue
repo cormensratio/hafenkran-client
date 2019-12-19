@@ -6,12 +6,13 @@
                 v-model="selectedItems"
                 @change="updateFilters($event)"
                 :items="userList"
+                class="filter-combobox"
     >
       <template slot="item" slot-scope="data">
         <span> {{ data.item.name }}</span>
       </template>
       <template slot="selection" slot-scope="data">
-        <span> {{ data.item.name }}</span>
+        <v-chip :small="true">{{data.item.name}}</v-chip>
       </template>
     </v-combobox>
   </v-flex>
@@ -49,5 +50,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .filter-combobox {
+    width: 25vh;
+  }
 </style>
