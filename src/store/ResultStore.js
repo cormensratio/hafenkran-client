@@ -15,6 +15,7 @@ const ResultStore = {
       results: [
         {
           id: '',
+          name: '',
           type: '',
           file: '',
         },
