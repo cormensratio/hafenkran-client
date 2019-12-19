@@ -16,6 +16,7 @@
                              v-if="isVisible(filter.requiresAdmin)"
             >
             </filter-combobox>
+            <slot name="customFilter"></slot>
           <v-flex>
             <v-icon class="mt-3" @click="clearFilters">close</v-icon>
           </v-flex>
