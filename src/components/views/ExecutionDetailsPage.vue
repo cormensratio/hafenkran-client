@@ -36,9 +36,8 @@
                     Download Results
                     <v-icon right>cloud_download</v-icon>
                   </v-btn>
-                  <delete-dialog @deleteClicked="executionDelete"
-                                 :execution="execution" class="right">
-                  </delete-dialog>
+                  <v-btn class="error right"
+                         @click="setExecution()">Delete</v-btn>
                   <v-btn class="right"
                          @click="executionCancel(execution.id)">
                     Cancel execution
@@ -46,6 +45,11 @@
                   </v-btn>
                 </v-flex>
               </v-card-actions>
+              <delete-dialog @deleteClicked="executionDelete"
+                             @hideDialog="dialog = false"
+                             :extern-execution="execution"
+                             :extern-dialog="dialog"
+              ></delete-dialog>
             </v-card>
           </v-flex>
           <v-flex class="mt-2">
@@ -129,6 +133,7 @@ export default {
       loading: false,
       loadingLogs: false,
       dialog: false,
+      selectedExecution: {},
     };
   },
   props: {
@@ -155,6 +160,9 @@ export default {
           }
         });
     },
+    setExecution() {
+      this.dialog = !this.dialog;
+    },
     async executionCancel(id) {
       this.loading = true;
       const canceledExecution = await this.terminateExecution(id);
@@ -169,6 +177,7 @@ export default {
     async executionDelete(id) {
       this.dialog = false;
       this.loading = true;
+      console.log(id);
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);

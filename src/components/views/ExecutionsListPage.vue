@@ -11,34 +11,39 @@
               </ExecutionFilters>
             </template>
           </base-list-header>
-
           <v-data-table
             :headers="headers"
             :items="filteredItems"
             :search="search"
           >
             <template v-slot:items="props">
-              <td class="text-xs-left">{{ props.item.name }}</td>
-              <td class="text-xs-left">
-                {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
-              </td>
-              <td class="text-xs-left">
-                {{ getTimeStamp(props.item.terminatedAt) || 'Not terminated yet'}}
-              </td>
-              <td class="text-xs-left">
-                <status-cell :status="props.item.status"></status-cell>
-              </td>
-              <td class="text-xs-left">
-                <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
-                <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="executionCancel(props.item.id)">Cancel</v-btn>
-                <delete-dialog @deleteClicked="executionDelete(props.item.id)"
-                               :execution="props.item"
-                ></delete-dialog>
-              </td>
+              <tr>
+                <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left">
+                  {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
+                </td>
+                <td class="text-xs-left">
+                  {{ getTimeStamp(props.item.terminatedAt) || 'Not terminated yet'}}
+                </td>
+                <td class="text-xs-left">
+                  <status-cell :status="props.item.status"></status-cell>
+                </td>
+                <td class="text-xs-left">
+                  <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
+                  <v-btn :disabled="cancelButtonDisabled(props.item.status)"
+                         @click="executionCancel(props.item.id)">Cancel</v-btn>
+                  <v-btn class="error"
+                         @click="setExecution(props.item)">Delete</v-btn>
+                </td>
+              </tr>
             </template>
           </v-data-table>
         </v-card>
+        <delete-dialog @deleteClicked="executionDelete"
+                       @hideDialog="dialog = false"
+                       :extern-execution="selectedExecution"
+                       :extern-dialog="dialog"
+        ></delete-dialog>
         <v-progress-circular
           size="50"
           indeterminate
@@ -75,6 +80,7 @@ export default {
       search: '',
       loading: false,
       dialog: false,
+      selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
@@ -93,6 +99,10 @@ export default {
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
+    setExecution(item) {
+      this.dialog = !this.dialog;
+      this.selectedExecution = item;
+    },
     async executionCancel(id) {
       this.loading = true;
       const canceledExecution = await this.terminateExecution(id);
@@ -105,6 +115,7 @@ export default {
       this.triggerSnack();
     },
     async executionDelete(id) {
+      this.dialog = false;
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {

@@ -1,12 +1,5 @@
 <template>
   <div>
-    <v-btn v-if="execution.status = 'RUNNING'" dark style="background-color: red"
-           @click="dialog = true">
-      Delete
-    </v-btn>
-    <v-btn v-else color="red" dark @click="dialog = true">
-      Delete
-    </v-btn>
     <v-dialog
       v-model="dialog"
       width="500">
@@ -15,10 +8,9 @@
           Are you sure you want to delete this Execution?
         </v-card-title>
         <v-card-actions>
-          <v-btn class="error"
-                 @click="deleteClicked">
+          <v-btn class="error" @click="deleteClicked">
             Yes, I want to delete</v-btn>
-          <v-btn @click="dialog = false">No, I'm not sure</v-btn>
+          <v-btn @click="hideDialog">No, I'm not sure</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -29,19 +21,26 @@
 export default {
   name: 'DeleteDialog',
   props: {
-    execution: {},
+    externExecution: {},
+    externDialog: false,
   },
   data() {
     return {
       dialog: false,
+      execution: {},
     };
   },
-  computed: {
+  watch: {
+    externDialog() {
+      this.dialog = this.externDialog;
+    },
   },
   methods: {
     deleteClicked() {
-      this.dialog = false;
-      this.$emit('deleteClicked');
+      this.$emit('deleteClicked', this.externExecution.id);
+    },
+    hideDialog() {
+      this.$emit('hideDialog');
     },
   },
 };
