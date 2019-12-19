@@ -36,7 +36,11 @@
                   <v-btn :disabled="cancelButtonDisabled(props.item.status)"
                          @click="executionCancel(props.item.id)">Cancel</v-btn>
                   <v-btn class="error"
-                         @click="setExecution(props.item)">Delete</v-btn>
+                         @click="setExecution(props.item)"
+                         :disabled="!isExecutionDeletable(props.item.status)"
+                  >
+                    Delete
+                  </v-btn>
                 </td>
               </tr>
             </template>
@@ -106,6 +110,16 @@ export default {
     setExecution(item) {
       this.dialog = !this.dialog;
       this.selectedExecution = item;
+    },
+    isExecutionDeletable(status) {
+      if (!isNil(status)) {
+        if (status === 'RUNNING') {
+          return false;
+        } else if (status === 'WAITING') {
+          return false;
+        }
+      }
+      return true;
     },
     async executionCancel(id) {
       this.loading = true;

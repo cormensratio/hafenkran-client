@@ -5,18 +5,18 @@
     </v-card-title>
     <v-card-text>
       <v-container>
-        <v-layout>
-            <filter-combobox v-for="(filter, id) in filters" :key="id"
-                             ref="filterCombobox"
-                             :items="filter.filterOptions"
-                             :label="filter.label"
-                             :value="filter.value"
-                             class="mr-4"
-                             @update="applyFilter($event)"
-                             v-if="isVisible(filter.requiresAdmin)"
-            >
-            </filter-combobox>
-            <slot name="customFilter"></slot>
+        <v-layout justify-start>
+          <filter-combobox v-for="(filter, id) in filters" :key="id"
+                           ref="filterCombobox"
+                           :items="filter.filterOptions"
+                           :label="filter.label"
+                           :value="filter.value"
+                           class="mr-4"
+                           @update="applyFilter($event)"
+                           v-if="isVisible(filter.requiresAdmin)"
+          >
+          </filter-combobox>
+          <slot name="customFilter"></slot>
           <v-flex>
             <v-icon class="mt-3" @click="clearFilters">close</v-icon>
           </v-flex>
