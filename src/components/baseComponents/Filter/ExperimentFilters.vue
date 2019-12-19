@@ -27,11 +27,6 @@ export default {
           value: 'size',
           filterOptions: [],
         },
-        owner: {
-          label: 'User',
-          value: 'owner',
-          filterOptions: [],
-        },
       },
     };
   },
@@ -47,15 +42,11 @@ export default {
     sizeOptions() {
       return uniq(map(this.experiments, this.filters.size.value));
     },
-    userOptions() {
-      return map(this.userList, user => user.name);
-    },
   },
   methods: {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.size.filterOptions = this.sizeOptions;
-      this.filters.owner.filterOptions = this.userOptions;
     },
     applyFilters(appliedFilters) {
       this.$emit('applyFilters', appliedFilters);

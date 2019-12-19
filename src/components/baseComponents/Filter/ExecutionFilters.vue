@@ -28,12 +28,6 @@ export default {
           value: 'status',
           filterOptions: [],
         },
-        user: {
-          label: 'User',
-          value: 'owner',
-          filterOptions: [],
-          requiresAdmin: true,
-        },
       },
     };
   },
@@ -44,9 +38,6 @@ export default {
     },
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
-    },
-    userOptions() {
-      return map(this.userList, user => user.name);
     },
     executionFilters() {
       this.updateFilterOptions();
@@ -63,7 +54,6 @@ export default {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
-      this.filters.user.filterOptions = this.userOptions;
     },
   },
 };

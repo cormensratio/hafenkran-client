@@ -18,7 +18,7 @@ const UserStore = {
     },
     userList: [
       {
-        id: 'test',
+        id: '1',
         name: 'testuser',
         isAdmin: '',
         eMail: '',
@@ -71,21 +71,6 @@ const UserStore = {
         return true;
       }
       return false;
-    },
-    async getUserNameOfResource({ state }, userId) {
-      if (!isNil(userId)) {
-        let matchingUser = null;
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < state.userList.length; i++) {
-          if (state.userList[i] === userId) {
-            matchingUser = state.userList[i];
-          }
-        }
-        if (!isNil(matchingUser)) {
-          return matchingUser.name;
-        }
-      }
-      return '';
     },
     logout({ dispatch }) {
       AuthService.logout();

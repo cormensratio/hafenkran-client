@@ -23,7 +23,7 @@
                   <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
                     <td class="text-xs-left" v-if="user.isAdmin">
-                      {{ getUserNameOfResource(props.item.ownerId) }}
+                      {{ getUserNameOfExperiment(props.item.ownerId) }}
                     </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td>
@@ -56,7 +56,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { isNil } from 'lodash';
+import { isNil, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -72,7 +72,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments', 'snack', 'snackShow', 'user']),
+    ...mapGetters(['experiments', 'snack', 'snackShow', 'user', 'userList']),
   },
   data() {
     return {
@@ -96,7 +96,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'getUserNameOfResource']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
@@ -125,6 +125,16 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
+    },
+    getUserNameOfExperiment(ownerId) {
+      if (!isNil(ownerId)) {
+        const matching = filter(this.userList, user => user.id === ownerId);
+
+        if (!isNil(matching) && matching.length > 0) {
+          return matching[0].name;
+        }
+      }
+      return '';
     },
   },
   watch: {
