@@ -92,7 +92,11 @@ export default {
       bookedMinutes: 0,
     };
   },
-  props: { experiment: {} },
+  props: { experiment: {},
+    previousRam: undefined,
+    previousCpu: undefined,
+    previousBookedTime: undefined,
+  },
   computed: {
     bookedTime() {
       return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
