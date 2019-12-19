@@ -6,16 +6,16 @@
     <v-card-text>
       <v-container>
         <v-layout>
-            <filter-combobox v-for="(filter, id) in filters" :key="id"
-                             ref="filterCombobox"
-                             :items="filter.filterOptions"
-                             :label="filter.label"
-                             :value="filter.value"
-                             class="mr-4"
-                             @update="applyFilter($event)"
-                             v-if="isVisible(filter.requiresAdmin)"
-            >
-            </filter-combobox>
+          <filter-combobox v-for="(filter, id) in filters" :key="id"
+                           ref="filterCombobox"
+                           :items="filter.filterOptions"
+                           :label="filter.label"
+                           :value="filter.value"
+                           class="mr-4"
+                           @update="applyFilter($event)"
+                           v-if="isVisible(filter.requiresAdmin)"
+          >
+          </filter-combobox>
           <v-flex>
             <v-icon class="mt-3" @click="clearFilters">close</v-icon>
           </v-flex>
@@ -85,7 +85,7 @@ export default {
     },
     isVisible(requiresAdmin) {
       return (isNil(requiresAdmin) || !requiresAdmin)
-        || (requiresAdmin && this.user.isAdmin);
+          || (requiresAdmin && this.user.isAdmin);
     },
   },
 };
@@ -96,10 +96,8 @@ export default {
     font-size: 14pt;
     margin-bottom: -1.5%;
   }
+
   .search-field {
     width: 50vh;
-  }
-  .clear-button {
-
   }
 </style>
