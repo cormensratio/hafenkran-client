@@ -1,24 +1,28 @@
 <template>
-  <div class="page">
-    <div class="float-left">
-      <v-btn class="mx-2" fab dark color="blue" @click="navigationToggled">
-        <v-icon >view_list</v-icon>
-      </v-btn>
-    </div>
-    <div v-if="isAuthenticated" class="float-right">
-      <v-btn color="blue" round dark @click="logoutUser()">
-        Logout
-      </v-btn>
-      <v-avatar class="mx-2" color="blue" dark round>
-        <span class="white--text headline">{{ user.name.charAt(0) }}</span>
-      </v-avatar>
-    </div>
-    <div v-else class="float-right">
-      <v-btn class="m-3" :to="'/login'"> Login </v-btn>
-    </div>
-    <div class="hafen-header">
-      <router-link to="/"><img src="../../assets/hafenkranlogo.svg" class="logo"></router-link>
-    </div>
+  <div class="hafen-header pb-1">
+    <v-toolbar height="75vh" class="hafen-toolbar">
+      <v-toolbar-title class="mr-5 pt-2" @click="navigateToStartPage()">
+        <img class="hafen-logo" src="../../assets/hafenkran.png">
+        <span class="logo-title">HAFENKRAN</span>
+      </v-toolbar-title>
+      <v-toolbar-items v-if="isAuthenticated">
+        <v-btn flat dark to="/experimentlist">Experiments</v-btn>
+        <v-btn flat dark to="/executionlist">Executions</v-btn>
+        <v-btn flat dark to="/newexperiment">Upload</v-btn>
+      </v-toolbar-items>
+      <v-spacer></v-spacer>
+      <div v-if="isAuthenticated">
+        <v-btn flat dark @click="logoutUser()">
+          Logout
+        </v-btn>
+        <v-avatar color="white" dark round>
+          <span class="headline">{{ user.name.charAt(0) }}</span>
+        </v-avatar>
+      </div>
+      <div v-else>
+        <v-btn flat dark class="m-3" to="/login"> Login </v-btn>
+      </div>
+    </v-toolbar>
   </div>
 </template>
 
@@ -32,68 +36,30 @@ export default {
   },
   methods: {
     ...mapActions(['logout']),
-    navigationToggled() {
-      this.$emit('navigationToggle');
-    },
     logoutUser() {
       this.logout().then(() => {
         this.$router.push('/');
       });
+    },
+    navigateToStartPage() {
+      this.$router.push('/');
     },
   },
 };
 </script>
 
 <style scoped>
-  .page {
-    padding: auto;
-    margin: auto;
+  .hafen-logo {
+    width: 60px;
+    height: 60px;
   }
-
+  .logo-title {
+    color: white;
+  }
   .hafen-header {
-    position: relative;
-    height: 130px;
-    width: 130px;
-    margin: auto;
+    margin-top: -15px;
   }
-
-  .logo {
-    height: 100%;
-    width: 100%;
-    margin: auto;
-    animation-name: shrink;
-    animation-duration: 1s;
-  }
-
-  .logo:hover {
-    animation-name: scaling;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;
-    -webkit-animation-fill-mode: forwards;
-  }
-
-  .logo:not(hover) {
-    animation-name: leave;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-    -webkit-animation-fill-mode: forwards;
-  }
-
-  @keyframes scaling {
-    50% {
-      transform: scale(1.6, 1.6);
-    }
-    100% {
-      transform: scale(1.5, 1.5);
-    }
-  }
-
-  @keyframes leave {
-    0% {
-      transform: scale(1.5, 1.5);
-    }
-    100% {
-      transform: scale(1, 1);
-    }
+  .hafen-toolbar {
+    background: var(--themeColor);
   }
 </style>
