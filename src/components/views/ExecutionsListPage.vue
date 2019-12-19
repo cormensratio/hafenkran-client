@@ -19,6 +19,9 @@
             <template v-slot:items="props">
               <tr>
                 <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left" v-if="user.isAdmin">
+                  {{ getUserNameOfExecution(props.item.ownerId) }}
+                </td>
                 <td class="text-xs-left">
                   {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
                 </td>
@@ -61,7 +64,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -83,6 +86,7 @@ export default {
       selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
+        { text: 'Owner', value: 'name', sortable: true },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
@@ -91,10 +95,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions', 'snack', 'snackShow']),
+    ...mapGetters(['executions', 'user', 'snackShow', 'userList', 'snack']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
     ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
@@ -146,6 +150,16 @@ export default {
     quickSearch(input) {
       this.search = input;
     },
+    getUserNameOfExecution(ownerId) {
+      if (!isNil(ownerId)) {
+        const matching = filter(this.userList, user => user.id === ownerId);
+
+        if (!isNil(matching) && matching.length > 0) {
+          return matching[0].name;
+        }
+      }
+      return '';
+    },
   },
   watch: {
     executions() {
@@ -154,6 +168,7 @@ export default {
   },
   created() {
     this.fetchAllExecutionsOfUser();
+    this.fetchUserList();
     this.$nextTick(() => {
       this.items = this.executions;
     });

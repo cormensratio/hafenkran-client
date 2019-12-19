@@ -70,7 +70,7 @@
                   style="height: 25vh">
                     <div class="text-left">Logs are getting updated here:</div>
                     <div class="text-left"
-                         :key="log" v-for="log in logs">{{ log }}
+                         :key="id" v-for="(log, id) in logs">{{ log }}
                     </div>
                     <v-progress-circular
                       indeterminate
