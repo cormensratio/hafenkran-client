@@ -3,23 +3,25 @@
     <template slot="body">
       <div class="container">
         <v-card>
-          <v-toolbar color="blue" dark>
-            <span class="title"> Executions </span>
-            <v-spacer></v-spacer>
-            <v-text-field append-icon="search"
-                          label="Search"
-                          single-line
-                          v-model="search"
-            >
-            </v-text-field>
-          </v-toolbar>
+          <base-list-header title="Executions">
+            <template slot="expansion-body">
+              <ExecutionFilters @applyFilters="applyFilters($event)"
+                                @quickSearch="quickSearch($event)"
+              >
+              </ExecutionFilters>
+            </template>
+          </base-list-header>
+
           <v-data-table
             :headers="headers"
-            :items="executions"
+            :items="filteredItems"
             :search="search"
           >
             <template v-slot:items="props">
               <td class="text-xs-left">{{ props.item.name }}</td>
+              <td class="text-xs-left" v-if="user.isAdmin">
+                {{ getUserNameOfExecution(props.item.ownerId) }}
+              </td>
               <td class="text-xs-left">
                 {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
               </td>
@@ -32,34 +34,73 @@
               <td class="text-xs-left">
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn :disabled="cancelButtonDisabled(props.item.status)"
-                       @click="terminateExecution(props.item.id)">Cancel</v-btn>
-                <v-btn @click="deleteExecution(props.item.id)">Delete</v-btn>
+                       @click="executionCancel(props.item.id)">Cancel</v-btn>
+                <v-dialog
+                  v-model="dialog"
+                  width="500">
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-if="props.item.status === 'RUNNING'
+                    || props.item.status === 'WAITING'" disabled>
+                      Delete
+                    </v-btn>
+                    <v-btn v-else color="red lighten-2" dark v-on="on">
+                      Delete
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      Are you sure you want to delete this Execution?
+                    </v-card-title>
+                    <v-card-actions>
+                      <v-btn class="error"
+                             @click="executionDelete(props.item.id), dialog = false">
+                        Yes, I want to delete</v-btn>
+                      <v-btn @click="dialog = false">No, I'm not sure</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </td>
             </template>
           </v-data-table>
         </v-card>
+        <v-progress-circular
+          size="50"
+          indeterminate
+          color="#106ee0"
+          v-if="loading"
+        />
+        <v-snackbar v-model="snackShow" right>
+          {{ snack }}
+          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </div>
     </template>
   </base-page>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { isNil, isEqual } from 'lodash';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { isNil, isEqual, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
-import { timeStampMixin } from '../../mixins/TimeStamp';
+import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
+import BaseListHeader from '../baseComponents/BaseListHeader';
+import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
+import FilterMixin from '../../mixins/FilterMixin';
 
 
 export default {
   name: 'ExecutionsListPage',
-  components: { StatusCell, BasePage },
-  mixins: [timeStampMixin],
+  components: { ExecutionFilters, BaseListHeader, StatusCell, BasePage },
+  mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
       search: '',
+      loading: false,
+      dialog: false,
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
+        { text: 'Owner', value: 'name', sortable: true },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
@@ -68,12 +109,35 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions']),
+    ...mapGetters(['executions', 'user', 'snackShow', 'userList', 'snack']),
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
+    ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
+    },
+    async executionCancel(id) {
+      this.loading = true;
+      const canceledExecution = await this.terminateExecution(id);
+      if (canceledExecution !== null) {
+        this.setSnack(`${canceledExecution.name} has been canceled`);
+      } else {
+        this.setSnack('Execution could not be canceled');
+      }
+      this.loading = false;
+      this.triggerSnack();
+    },
+    async executionDelete(id) {
+      this.loading = true;
+      const deletedExecution = await this.deleteExecution(id);
+      if (deletedExecution !== null) {
+        this.setSnack(`${deletedExecution.name} has been deleted`);
+      } else {
+        this.setSnack('Execution could not be deleted');
+      }
+      this.loading = false;
+      this.triggerSnack();
     },
     cancelButtonDisabled(status) {
       let disabled = true;
@@ -86,15 +150,40 @@ export default {
       }
       return disabled;
     },
+    applyFilters(filters) {
+      if (!isNil(filters)) {
+        // Use object.assign so vue notices filters object was updated
+        this.filters = Object.assign({}, filters);
+      }
+    },
+    quickSearch(input) {
+      this.search = input;
+    },
+    getUserNameOfExecution(ownerId) {
+      if (!isNil(ownerId)) {
+        const matching = filter(this.userList, user => user.id === ownerId);
+
+        if (!isNil(matching) && matching.length > 0) {
+          return matching[0].name;
+        }
+      }
+      return '';
+    },
+  },
+  watch: {
+    executions() {
+      this.items = this.executions;
+    },
   },
   created() {
     this.fetchAllExecutionsOfUser();
+    this.$nextTick(() => {
+      this.items = this.executions;
+    });
   },
 };
 </script>
 
 <style scoped>
-.title {
-  font-size: 14pt;
-}
+
 </style>

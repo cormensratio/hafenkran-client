@@ -63,14 +63,14 @@ export default {
 
 <style scoped>
   .footer-logo {
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     margin-left: 30px;
     margin-right: 30px;
   }
   .hafen-footer {
     height: 120px !important;
-    background-color: transparent;
+    background-color: #e8ebed;
   }
   .ref-links {
     margin-top: -1%;
