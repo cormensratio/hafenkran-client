@@ -32,26 +32,14 @@
                 <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
                 <v-btn v-if="!hasTerminated(props.item.status)"
                        @click="terminateExecution(props.item.id)">Cancel</v-btn>
-                <v-menu v-model="showMenu"
-                        :close-on-content-click="false"
-                        :close-on-click="true"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-btn v-if="hasTerminated(props.item.status)" v-on="on"
-                           @click="updateSelectedExperiment(props.item.experimentId)">
-                      Repeat
-                    </v-btn>
-                  </template>
-                  <StartExperimentMenu :experiment="selectedExperiment"
-                                       @menuClosed="closeMenu">
-                  </StartExperimentMenu>
-                </v-menu>
+                <v-btn v-else @click="showContextMenu($event, props.item.experimentId)">
+                  Repeat
+                </v-btn>
                 <v-dialog
                   v-model="dialog"
                   width="500">
                   <template v-slot:activator="{ on }">
-                    <v-btn v-if="props.item.status === 'RUNNING'
-                    || props.item.status === 'WAITING'" disabled>
+                    <v-btn v-if="!hasTerminated(props.item.status)" disabled>
                       Delete
                     </v-btn>
                     <v-btn v-else color="red lighten-2" dark v-on="on">
@@ -85,6 +73,16 @@
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
       </div>
+      <v-menu v-model="showMenu"
+              :position-x="menuPosX"
+              :position-y="menuPosY"
+              :close-on-content-click="false"
+              :close-on-click="false"
+      >
+        <StartExperimentMenu :experiment="selectedExperiment"
+                             @menuClosed="closeMenu">
+        </StartExperimentMenu>
+      </v-menu>
     </template>
   </base-page>
 </template>
@@ -107,10 +105,11 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
-      terminated: '',
       search: '',
       showMenu: false,
       selectedExperiment: {},
+      menuPosX: 0,
+      menuPosY: 0,
       loading: false,
       dialog: false,
       headers: [
@@ -125,6 +124,7 @@ export default {
   computed: {
     ...mapGetters(['executions', 'snack', 'snackShow', 'experiments']),
   },
+
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'getExperimentFromId']),
     ...mapMutations(['setSnack']),
@@ -167,6 +167,16 @@ export default {
 
     closeMenu() {
       this.showMenu = false;
+    },
+
+    showContextMenu(event, experimentId) {
+      this.updateSelectedExperiment(experimentId);
+      this.showMenu = false;
+      this.menuPosX = event.clientX;
+      this.menuPosY = event.clientY;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
     },
 
     updateSelectedExperiment(experimentId) {
