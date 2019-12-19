@@ -112,7 +112,7 @@ export default {
     ...mapGetters(['executions', 'user', 'snackShow', 'userList', 'snack']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList']),
     ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
@@ -177,6 +177,7 @@ export default {
   },
   created() {
     this.fetchAllExecutionsOfUser();
+    this.fetchUserList();
     this.$nextTick(() => {
       this.items = this.executions;
     });
