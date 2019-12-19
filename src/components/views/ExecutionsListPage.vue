@@ -112,7 +112,7 @@ export default {
     ...mapGetters(['executions', 'user', 'snackShow', 'userList', 'snack']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
     ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
