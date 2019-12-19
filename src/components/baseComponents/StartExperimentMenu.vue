@@ -37,6 +37,7 @@
                           class="time-input"
                           v-model="bookedMinutes"
                           min="0"
+                          @change="checkMinutes"
             >
             </v-text-field>
           </v-flex>
@@ -75,11 +76,17 @@
         </v-btn>
       </div>
     </v-card-actions>
+    <v-progress-circular
+      size="50"
+      indeterminate
+      color="#106ee0"
+      v-if="loading"
+    />
   </v-card>
 </template>
 <script>
 import { isNil } from 'lodash';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
 
@@ -93,6 +100,7 @@ export default {
       cpu: 4,
       bookedHours: 0,
       bookedMinutes: 0,
+      loading: false,
       previousRam: 0,
       previousCpu: 'Cpu',
       previousHours: 'Hours',
@@ -102,16 +110,19 @@ export default {
   props: { experiment: {},
   },
   computed: {
+    ...mapGetters(['snackShow']),
     bookedTime() {
       return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
     },
   },
   methods: {
-    ...mapActions(['runExecution']),
+    ...mapActions(['runExecution', 'triggerSnack']),
+    ...mapMutations(['setSnack']),
     closeMenu() {
       this.$emit('menuClosed');
     },
     async startExperiment() {
+      this.loading = true;
       if (!isNil(this.experimentId)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
@@ -119,13 +130,24 @@ export default {
           cpu: this.cpu,
           bookedTime: this.bookedTime,
         });
+        this.loading = false;
         if (!isNil(startedExecution)) {
           this.previousRam = startedExecution.ram;
           this.previousCpu = startedExecution.cpu;
           this.previousMinutes = this.bookedMinutes;
           this.previousHours = this.bookedHours;
+          this.setSnack('Execution started successfully');
           this.$router.push('/executionlist');
+        } else {
+          this.setSnack('Execution could not be started');
         }
+        this.triggerSnack();
+      }
+    },
+    checkMinutes() {
+      if (this.bookedMinutes >= 60) {
+        this.bookedMinutes = this.bookedMinutes % 60;
+        this.bookedHours = this.bookedHours + 1;
       }
     },
     updateExperimentId() {

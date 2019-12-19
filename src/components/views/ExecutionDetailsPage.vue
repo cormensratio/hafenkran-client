@@ -57,9 +57,10 @@
                     <div class="text-left">Logs are getting updated here:</div>
                     <div class="text-left"
                          :key="log" v-for="log in logs">{{ log }}
-                    </div>                    <v-progress-circular
+                    </div>
+                    <v-progress-circular
                       indeterminate
-                      color="blue"
+                      color="#106ee0"
                       v-if="loading"
                     />
                   </v-layout>
@@ -69,6 +70,7 @@
                   append-icon="send"
                   label="Enter a command here!"
                   single-line
+                  @keyup.enter="sendStdin"
                   @click:append="sendStdin()"
                   type="text"
                   clearable
@@ -77,6 +79,8 @@
                 />
               </div>
               <div v-if="activeTab === 2">
+                <execution-statistics-page :execution-id="execution.id">
+                </execution-statistics-page>
               </div>
             </div>
           </v-flex>
@@ -94,11 +98,12 @@ import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
+import ExecutionStatisticsPage from './ExecutionStatisticsPage';
 
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [TimeStampMixin],
-  components: { StatusCell, BasePage },
+  components: { ExecutionStatisticsPage, StatusCell, BasePage },
   data() {
     return {
       userInput: '',
