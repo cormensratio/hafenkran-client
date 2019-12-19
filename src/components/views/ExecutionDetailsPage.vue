@@ -172,6 +172,7 @@ export default {
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {
         this.setSnack(`${deletedExecution.name} has been deleted`);
+        this.$router.push('/executionlist');
       } else {
         this.setSnack('Execution could not be deleted');
       }
