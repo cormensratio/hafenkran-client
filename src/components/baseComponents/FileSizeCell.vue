@@ -10,7 +10,7 @@ import { isNil } from 'lodash';
 export default {
   name: 'FileSizeCell',
   props: {
-    size: String,
+    size: undefined,
   },
   computed: {
     fileSizeText() {

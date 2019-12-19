@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import csvjson from 'csvjson';
+import csv2json from 'csvjson-csv2json';
 
 export default class ResultService {
   static extractFileObjectFromBase64String(fileString, fileName) {
@@ -13,10 +13,10 @@ export default class ResultService {
     return null;
   }
 
-  static convertCsVToJson(csvFile) {
-    if (!isNil(csvFile)) {
+  static convertCsVToJson(csvString) {
+    if (!isNil(csvString)) {
       try {
-        const jsonObj = csvjson.toObject(csvFile);
+        const jsonObj = csv2json(csvString, { parseNumbers: true });
 
         if (!isNil(jsonObj)) {
           return jsonObj;
@@ -28,29 +28,15 @@ export default class ResultService {
     return null;
   }
 
-  static extractFileFromResult(resultObject) {
-    if (!isNil(resultObject)) {
-      const file = this.extractFileObjectFromBase64String(resultObject.file, resultObject.id);
-
-      if (!isNil(file)) {
-        return file;
-      }
-    }
-    return null;
-  }
-
-  static extractFileContent(fileObject) {
+  static extractFileContent(fileObject, callBack) {
     if (!isNil(fileObject)) {
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         const reader = new FileReader();
-        reader.onload = function () {
-          return reader.result;
-        };
         reader.readAsText(fileObject);
+        reader.onload = () => callBack(reader.result);
       } else {
         console.log('[ERROR] The browser does not support file reading!');
       }
     }
-    return null;
   }
 }
