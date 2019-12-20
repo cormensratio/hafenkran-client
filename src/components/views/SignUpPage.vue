@@ -15,6 +15,7 @@
                 :rules="[rules.required]"
                 label="Username"
                 placeholder=""
+                autofocus
                 outline
                 required
               ></v-text-field>
@@ -28,7 +29,7 @@
               ></v-text-field>
               <v-text-field
                 v-model="password"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.min, rules.matchWithConfirm]"
                 :type="show ? 'text' : 'password'"
                 label="Password"
                 placeholder=""
@@ -39,7 +40,7 @@
               ></v-text-field>
               <v-text-field
                 v-model="confirmPassword"
-                :rules="[rules.required, passwordConfirmationRule]"
+                :rules="[rules.required, rules.min, rules.matchWithPassword]"
                 :type="show ? 'text' : 'password'"
                 label="Confirm Password"
                 outline
@@ -71,18 +72,15 @@
     </template>
   </base-page>
 </template>
-
 <script>
 import { isNil } from 'lodash';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
 import UserService from '../../service/UserService';
-import RulesMixin from '../../mixins/Rules';
 
 export default {
   name: 'UserRegistrationPage',
-  mixins: [RulesMixin],
   components: { BasePage, Header },
   data() {
     return {
@@ -95,6 +93,8 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         min: v => v.length >= 8 || 'At least 8 characters',
+        matchWithConfirm: v => v === this.confirmPassword || 'Passwords must match',
+        matchWithPassword: v => v === this.password || 'Passwords must match',
       },
       emailRules: {
         required: v => !!v || 'E-mail is required',
@@ -104,13 +104,24 @@ export default {
   },
   computed: {
     ...mapGetters(['userList', 'snack', 'snackShow']),
-    passwordConfirmationRule() {
-      return () => (this.password === this.confirmPassword) || 'Password must match';
-    },
   },
   methods: {
     ...mapActions(['triggerSnack']),
     ...mapMutations(['setSnack']),
+    validateForm() {
+      if (isNil(this.userName)) {
+        this.userName = '';
+      }
+      if (isNil(this.userEmail)) {
+        this.userEmail = '';
+      }
+      if (isNil(this.password)) {
+        this.password = '';
+      }
+      if (isNil(this.confirmPassword)) {
+        this.confirmPassword = '';
+      }
+    },
     async submitForm() {
       if (!isNil(this.userName) && !isNil(this.userEmail) && !isNil(this.password)
           && !isNil(this.confirmPassword)
@@ -119,17 +130,17 @@ export default {
           this.userEmail,
           this.password);
         if (created) {
-          this.setSnack(`${this.userName} has been registrated successfully.`);
+          this.$router.push('/'); // successfully added user
         } else {
           this.setSnack('Username already taken.');
         }
         this.loading = false;
         this.triggerSnack();
       } else {
+        this.validateForm();
         this.setSnack('Form not valid.');
         this.triggerSnack();
       }
-      this.$router.push('/');
     },
   },
 };
