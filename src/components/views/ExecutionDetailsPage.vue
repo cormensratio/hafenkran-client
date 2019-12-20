@@ -140,10 +140,10 @@ export default {
     executionId: String,
   },
   computed: {
-    ...mapGetters(['snack', 'snackShow']),
+    ...mapGetters(['snack', 'snackShow', 'executions']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack']),
     getLogs() {
       this.loadingLogs = true;
@@ -241,7 +241,10 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    if (!isNil(this.executions) && this.executions.length > 0) {
+      await this.fetchAllExecutionsOfUser();
+    }
     this.getExecutionById(this.executionId)
       .then((execution) => {
         if (!isNil(execution)) {
