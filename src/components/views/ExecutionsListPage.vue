@@ -40,11 +40,12 @@
                   </v-btn>
                   <v-btn class="error"
                          @click="setExecution(props.item)"
-                         :disabled="hasTerminated(props.item.status)"
+                         :disabled="!hasTerminated(props.item.status)"
                   >
                     Delete
                   </v-btn>
               </td>
+              </tr>
             </template>
           </v-data-table>
         </v-card>
@@ -93,7 +94,12 @@ import DeleteDialog from '../baseComponents/DeleteDialog';
 
 export default {
   name: 'ExecutionsListPage',
-  components: { DeleteDialog, ExecutionFilters, BaseListHeader, StatusCell, BasePage, StartExperimentMenu },
+  components: { DeleteDialog,
+    ExecutionFilters,
+    BaseListHeader,
+    StatusCell,
+    BasePage,
+    StartExperimentMenu },
   mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {

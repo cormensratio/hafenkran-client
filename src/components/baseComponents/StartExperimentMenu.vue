@@ -8,8 +8,8 @@
           <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
           <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
           <div v-if="previousRam > 0" class="mt-2">
-            <b>Previously run for:</b>{{ previousHours }} {{ previousMinutes }}
-            <b>with</b> {{ previousRam }} {{ previousCpu }}</div>
+            <b>Previously run for: </b>{{ previousHours }} Hours {{ previousMinutes }} Minutes
+            <b>with</b> {{ previousRam }} Ram and {{ previousCpu }} Cpu</div>
         </v-flex>
       </v-layout>
     </v-card-text>
