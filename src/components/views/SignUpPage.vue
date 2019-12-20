@@ -52,9 +52,9 @@
             </v-card-text>
             <v-divider class="mt-3 p-0 m-0"></v-divider>
             <v-card-actions>
-              <v-btn dark style="background-color: var(--themeColor);
-              padding: 0; margin: auto;"
-                     @click="submitForm()">Sign Up</v-btn>
+              <v-btn dark style="background-color: var(--themeColor);"
+                     class="signup-button"
+                     @click="register()">Sign Up</v-btn>
             </v-card-actions>
             <v-progress-circular
               size="50"
@@ -78,10 +78,12 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
 import UserService from '../../service/UserService';
+import RulesMixin from '../../mixins/Rules';
 
 export default {
   name: 'UserRegistrationPage',
   components: { BasePage, Header },
+  mixins: [RulesMixin],
   data() {
     return {
       userName: null,
@@ -90,23 +92,13 @@ export default {
       confirmPassword: null,
       show: false,
       loading: false,
-      rules: {
-        required: value => !!value || 'Required.',
-        min: v => v.length >= 8 || 'At least 8 characters',
-        matchWithConfirm: v => v === this.confirmPassword || 'Passwords must match',
-        matchWithPassword: v => v === this.password || 'Passwords must match',
-      },
-      emailRules: {
-        required: v => !!v || 'E-mail is required',
-        regex: v => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail must be valid',
-      },
     };
   },
   computed: {
     ...mapGetters(['userList', 'snack', 'snackShow']),
   },
   methods: {
-    ...mapActions(['triggerSnack']),
+    ...mapActions(['triggerSnack', 'registerUser']),
     ...mapMutations(['setSnack']),
     validateForm() {
       if (isNil(this.userName)) {
@@ -120,6 +112,24 @@ export default {
       }
       if (isNil(this.confirmPassword)) {
         this.confirmPassword = '';
+      }
+    },
+    async register() {
+      if (!isNil(this.userName) && !isNil(this.userEmail) && !isNil(this.password)
+        && !isNil(this.confirmPassword)) {
+        const response = await this.registerUser({
+          username: this.userName,
+          password: this.password,
+          email: this.userEmail,
+          isAdmin: false,
+        });
+
+        if (!isNil(response)) {
+          this.setSnack('Signup successful');
+          this.$router.push('/login');
+        } else {
+          this.setSnack('Signup failed');
+        }
       }
     },
     async submitForm() {
@@ -149,5 +159,9 @@ export default {
 <style scoped>
   .toolbar {
     background: var(--themeColor);
+  }
+  .signup-button {
+    padding: 0;
+    margin: auto;
   }
 </style>

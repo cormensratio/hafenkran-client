@@ -28,6 +28,7 @@
             <v-btn
               style="background-color:  var(--themeColor)"
               dark
+              to="/signup"
             >
               Get started
             </v-btn>
