@@ -22,6 +22,9 @@
                 <template v-slot:items="props">
                   <tr @click="showContextMenu($event, props.item)">
                     <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left" v-if="user.isAdmin">
+                      {{ getUserNameOfExperiment(props.item.ownerId) }}
+                    </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
@@ -53,7 +56,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { isNil } from 'lodash';
+import { isNil, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -69,7 +72,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments', 'snack', 'snackShow']),
+    ...mapGetters(['experiments', 'snack', 'snackShow', 'user', 'userList']),
   },
   data() {
     return {
@@ -86,13 +89,14 @@ export default {
           sortable: true,
           value: 'name',
         },
+        { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
@@ -122,6 +126,16 @@ export default {
     quickSearch(input) {
       this.search = input;
     },
+    getUserNameOfExperiment(ownerId) {
+      if (!isNil(ownerId)) {
+        const matching = filter(this.userList, user => user.id === ownerId);
+
+        if (!isNil(matching) && matching.length > 0) {
+          return matching[0].name;
+        }
+      }
+      return '';
+    },
   },
   watch: {
     experiments() {
@@ -129,6 +143,7 @@ export default {
     },
   },
   created() {
+    this.fetchUserList();
     this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;

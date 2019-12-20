@@ -50,10 +50,13 @@ export default {
 
 <style scoped>
   .hafen-logo {
-    width: 60px;
-    height: 60px;
+    margin-left: 30px;
+    width: 55px;
+    height: 55px;
+    filter: invert(1);
   }
   .logo-title {
+    padding-left: 10px;
     color: white;
   }
   .hafen-header {
