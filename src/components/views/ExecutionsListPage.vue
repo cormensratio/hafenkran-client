@@ -44,7 +44,7 @@
                   >
                     Delete
                   </v-btn>
-              </td>
+                </td>
               </tr>
             </template>
           </v-data-table>

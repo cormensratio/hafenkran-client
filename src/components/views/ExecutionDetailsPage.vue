@@ -145,6 +145,7 @@ export default {
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
     ...mapMutations(['setSnack']),
+
     getLogs() {
       this.loadingLogs = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
