@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <v-app>
+      <router-view/>
+    </v-app>
   </div>
 </template>
 
@@ -23,23 +25,43 @@ export default {
     if (process.env.USE_TEST_TOKEN) {
       localStorage.removeItem('user');
       localStorage.setItem('user', process.env.TEST_TOKEN);
-    }
-
-    const token = localStorage.getItem('user');
-    if (!isNil(token)) {
-      AuthService.extractTokenInfo(token);
-      store.dispatch('fetchUser');
+      store.commit('updateUser', {
+        id: '1',
+        name: 'Test-Mortimer',
+        isAdmin: true,
+        email: 'test.rick@pickle.com',
+      });
+    } else {
+      const token = localStorage.getItem('user');
+      if (!isNil(token)) {
+        AuthService.extractTokenInfo(token);
+        store.dispatch('fetchUser');
+        store.dispatch('fetchUserList');
+      }
     }
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  #app {
+    font-family: Camphor,Open Sans,Segoe UI,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    overflow: hidden;
+    background-color: #e8ebed;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  :root {
+    --themeColor: #106ee0;
+  }
 </style>

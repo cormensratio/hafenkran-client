@@ -11,11 +11,12 @@ Vue.use(Vuex);
 const ExperimentStore = {
   state: {
     experiments: [
-      { id: 1,
+      {
+        id: '1',
         name: 'TestDockerfile',
         createdAt: '01.01.20',
         size: '500',
-        ownerId: 1,
+        ownerId: '1',
       },
     ],
   },
@@ -44,9 +45,8 @@ const ExperimentStore = {
     },
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
-        const executionId = executionDetails.experimentId;
         const response = await ApiService.doPost(
-          `${serviceUrl}/experiments/${executionId}/execute`, executionDetails);
+          `${serviceUrl}/experiments/${executionDetails.experimentId}/execute`, executionDetails);
 
         if (!isNil(response)) {
           return response;
