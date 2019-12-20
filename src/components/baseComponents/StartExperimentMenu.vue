@@ -132,6 +132,7 @@ export default {
         });
         this.loading = false;
         if (!isNil(startedExecution)) {
+          this.setSnack('Experiment started successfully');
           this.previousRam = startedExecution.ram;
           this.previousCpu = startedExecution.cpu;
           this.previousMinutes = this.bookedMinutes;
@@ -139,15 +140,17 @@ export default {
           this.setSnack('Execution started successfully');
           this.$router.push('/executionlist');
         } else {
-          this.setSnack('Execution could not be started');
+          this.setSnack('Experiment could not be started');
         }
         this.triggerSnack();
       }
     },
     checkMinutes() {
       if (this.bookedMinutes >= 60) {
+        const tempMinutes = this.bookedMinutes;
+        const addedHours = Math.floor(tempMinutes / 60);
+        this.bookedHours = this.bookedHours + addedHours;
         this.bookedMinutes = this.bookedMinutes % 60;
-        this.bookedHours = this.bookedHours + 1;
       }
     },
     updateExperimentId() {

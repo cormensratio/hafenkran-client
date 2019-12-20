@@ -2,19 +2,26 @@
   <base-filter-component @applyFilters="applyFilters($event)"
                          @quickSearch="quickSearch($event)"
                           :filters="executionFilters"
+                         @clearFilters="clearCustomFilter()"
   >
+    <template slot="customFilter">
+      <filter-users-combobox ref="userFilterExecutions"
+                             @update="applyUserFilters($event)"
+      >
+      </filter-users-combobox>
+    </template>
   </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map } from 'lodash';
-import FilterCombobox from './FilterCombobox';
+import { uniq, map, extend } from 'lodash';
+import FilterUsersCombobox from './FilterUsersCombobox';
 import BaseFilterComponent from './BaseFilterComponent';
 
 export default {
   name: 'ExecutionFilters',
-  components: { BaseFilterComponent, FilterCombobox },
+  components: { BaseFilterComponent, FilterUsersCombobox },
   data() {
     return {
       filters: {
@@ -28,12 +35,6 @@ export default {
           value: 'status',
           filterOptions: [],
         },
-        user: {
-          label: 'User',
-          value: 'owner',
-          filterOptions: [],
-          requiresAdmin: true,
-        },
       },
     };
   },
@@ -45,9 +46,6 @@ export default {
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
     },
-    userOptions() {
-      return map(this.userList, user => user.name);
-    },
     executionFilters() {
       this.updateFilterOptions();
       return this.filters;
@@ -55,7 +53,14 @@ export default {
   },
   methods: {
     applyFilters(appliedFilters) {
-      this.$emit('applyFilters', appliedFilters);
+      this.currentFilters = appliedFilters;
+      const output = extend(this.currentFilters, this.currentUserFilters);
+      this.$emit('applyFilters', output);
+    },
+    applyUserFilters(appliedUserFilters) {
+      this.currentUserFilters = appliedUserFilters;
+      const output = extend(this.currentFilters, this.currentUserFilters);
+      this.$emit('applyFilters', output);
     },
     quickSearch(input) {
       this.$emit('quickSearch', input);
@@ -63,7 +68,9 @@ export default {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
-      this.filters.user.filterOptions = this.userOptions;
+    },
+    clearCustomFilter() {
+      this.$refs.userFilterExecutions.clearSelected();
     },
   },
 };

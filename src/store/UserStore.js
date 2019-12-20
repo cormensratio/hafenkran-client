@@ -18,7 +18,7 @@ const UserStore = {
     },
     userList: [
       {
-        id: 'test',
+        id: '1',
         name: 'testuser',
         isAdmin: '',
         eMail: '',
@@ -64,7 +64,7 @@ const UserStore = {
       return false;
     },
     async fetchUserList({ commit }) {
-      const userList = await ApiService.doGet(`${serviceUrl}/users/all`);
+      const userList = await ApiService.doGet(`${serviceUrl}/users`);
 
       if (!isNil(userList)) {
         commit('updateUserList', userList);
