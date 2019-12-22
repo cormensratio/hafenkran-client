@@ -22,7 +22,9 @@
           </v-flex>
           <slot name="customFilter"></slot>
           <v-flex>
-            <v-icon class="mt-3" @click="clearFilters">close</v-icon>
+            <v-btn class="m-2">
+              Clear all filters
+            </v-btn>
           </v-flex>
         </v-layout>
         <v-layout column>

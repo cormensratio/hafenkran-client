@@ -14,6 +14,9 @@
       <template slot="selection" slot-scope="data">
         <v-chip :small="true">{{data.item.name}}</v-chip>
       </template>
+      <template slot="append">
+        <v-icon @click="clearSelected">close</v-icon>
+      </template>
     </v-combobox>
   </v-flex>
 </template>

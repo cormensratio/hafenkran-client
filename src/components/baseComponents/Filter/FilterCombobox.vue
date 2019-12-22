@@ -8,6 +8,9 @@
                 @change="updateFilters($event)"
                 class="filter-combobox"
     >
+      <template slot="append">
+        <v-icon @click="clearCombobox">close</v-icon>
+      </template>
     </v-combobox>
   </v-flex>
 </template>
@@ -33,6 +36,10 @@ export default {
     },
     clearSelected() {
       this.selectedItems = [];
+    },
+    clearCombobox() {
+      this.clearSelected();
+      this.updateFilters();
     },
   },
 };
