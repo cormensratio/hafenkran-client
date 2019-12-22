@@ -16,6 +16,10 @@
                            v-if="isVisible(filter.requiresAdmin)"
           >
           </filter-combobox>
+          <v-flex>
+            <date-time-filter class="mr-2">
+            </date-time-filter>
+          </v-flex>
           <slot name="customFilter"></slot>
           <v-flex>
             <v-icon class="mt-3" @click="clearFilters">close</v-icon>
@@ -42,10 +46,11 @@
 import { forEach, isNil } from 'lodash';
 import { mapGetters } from 'vuex';
 import FilterCombobox from './FilterCombobox';
+import DateTimeFilter from './DateTimeFilter';
 
 export default {
   name: 'BaseFilterComponent',
-  components: { FilterCombobox },
+  components: { DateTimeFilter, FilterCombobox },
   data() {
     return {
       searchString: '',
