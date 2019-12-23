@@ -7,14 +7,14 @@
       :label="label"
       :items="items"
       v-model="selectedDates"
-      @click.stop="display = true"
-      readonly
       outline
       small-chips
       multiple
+      attach
       class="filter-combobox"
     >
       <template slot="append">
+        <v-icon @click.stop="display = true">event</v-icon>
         <v-icon @click="clear">close</v-icon>
       </template>
     </v-combobox>
@@ -82,7 +82,7 @@ export default {
     event: 'input',
   },
   props: {
-    items: [], // combobox items
+    items: {}, // combobox items
     datetime: {
       type: [Date, String],
       default: null,
@@ -218,8 +218,8 @@ export default {
 
 <style scoped>
   .filter-combobox {
-    min-width: 20vh;
-    width: 25vh;
+    min-width: 25vh;
+    width: 30vh;
   }
 </style>
 

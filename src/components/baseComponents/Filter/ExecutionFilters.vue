@@ -12,15 +12,15 @@
         </filter-users-combobox>
       </v-flex>
       <v-flex>
-        <filter-date-time ref="startTimeFilter"
-                          label="Terminated at"
-                          :items="terminatedTimeOptions"
+        <filter-date-time ref="terminatedTimeFilter"
+                          label="Started at"
+                          :items="startTimeOptions"
         >
         </filter-date-time>
       </v-flex>
       <v-flex>
-        <filter-date-time ref="terminatedTimeFilter"
-                          label="Started at"
+        <filter-date-time ref="startTimeFilter"
+                          label="Terminated at"
                           :items="terminatedTimeOptions"
         >
         </filter-date-time>
@@ -64,10 +64,10 @@ export default {
       return uniq(map(this.executions, this.filters.status.value));
     },
     startTimeOptions() {
-      return uniq(map(this.executions, () => 'startedAt'));
+      return uniq(map(this.executions, execution => execution.startedAt));
     },
     terminatedTimeOptions() {
-      return uniq(map(this.executions, () => 'terminatedAt'));
+      return uniq(map(this.executions, 'terminatedAt'));
     },
     executionFilters() {
       this.updateFilterOptions();
