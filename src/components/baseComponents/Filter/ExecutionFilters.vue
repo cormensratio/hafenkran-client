@@ -5,10 +5,26 @@
                          @clearFilters="clearCustomFilter()"
   >
     <template slot="customFilter">
-      <filter-users-combobox ref="userFilterExecutions"
-                             @update="applyUserFilters($event)"
-      >
-      </filter-users-combobox>
+      <v-flex>
+        <filter-users-combobox ref="userFilterExecutions"
+                               @update="applyUserFilters($event)"
+        >
+        </filter-users-combobox>
+      </v-flex>
+      <v-flex>
+        <filter-date-time ref="startTimeFilter"
+                          label="Terminated at"
+                          :items="terminatedTimeOptions"
+        >
+        </filter-date-time>
+      </v-flex>
+      <v-flex>
+        <filter-date-time ref="terminatedTimeFilter"
+                          label="Started at"
+                          :items="terminatedTimeOptions"
+        >
+        </filter-date-time>
+      </v-flex>
     </template>
   </base-filter-component>
 </template>
@@ -18,10 +34,11 @@ import { mapGetters } from 'vuex';
 import { uniq, map, extend } from 'lodash';
 import FilterUsersCombobox from './FilterUsersCombobox';
 import BaseFilterComponent from './BaseFilterComponent';
+import FilterDateTime from './FilterDateTime';
 
 export default {
   name: 'ExecutionFilters',
-  components: { BaseFilterComponent, FilterUsersCombobox },
+  components: { FilterDateTime, BaseFilterComponent, FilterUsersCombobox },
   data() {
     return {
       filters: {
@@ -45,6 +62,12 @@ export default {
     },
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
+    },
+    startTimeOptions() {
+      return uniq(map(this.executions, () => 'startedAt'));
+    },
+    terminatedTimeOptions() {
+      return uniq(map(this.executions, () => 'terminatedAt'));
     },
     executionFilters() {
       this.updateFilterOptions();
@@ -71,6 +94,8 @@ export default {
     },
     clearCustomFilter() {
       this.$refs.userFilterExecutions.clearSelected();
+      this.$refs.startTimeFilter.clear();
+      this.$refs.terminatedTimeFilter.clear();
     },
   },
 };

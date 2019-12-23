@@ -5,13 +5,18 @@
       :disabled="disabled"
       :loading="loading"
       :label="label"
+      :items="items"
       v-model="selectedDates"
       @click.stop="display = true"
       readonly
       outline
       small-chips
       multiple
+      class="filter-combobox"
     >
+      <template slot="append">
+        <v-icon @click="clear">close</v-icon>
+      </template>
     </v-combobox>
     <v-dialog v-model="display" :width="dialogWidth">
       <v-card>
@@ -60,6 +65,7 @@
 
 <script>
 import { format, parse } from 'date-fns';
+import { isNil, isEqual } from 'lodash';
 
 const DEFAULT_DATE = '';
 const DEFAULT_TIME = '00:00:00';
@@ -70,7 +76,7 @@ const DEFAULT_CLEAR_TEXT = 'CLEAR';
 const DEFAULT_OK_TEXT = 'OK';
 
 export default {
-  name: 'datetime-picker',
+  name: 'FilterDateTime',
   model: {
     prop: 'datetime',
     event: 'input',
@@ -174,7 +180,11 @@ export default {
     },
     okHandler() {
       this.resetPicker();
-      this.selectedDates.push(this.formattedDatetime);
+      const newValue = this.formattedDatetime;
+
+      if (!isNil(newValue) && !isEqual(newValue, '')) {
+        this.selectedDates.push(this.formattedDatetime);
+      }
       debugger;
       this.$emit('input', this.selectedDatetime);
     },
@@ -205,4 +215,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .filter-combobox {
+    min-width: 20vh;
+    width: 25vh;
+  }
+</style>
 

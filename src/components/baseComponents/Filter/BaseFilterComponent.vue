@@ -11,15 +11,10 @@
                            :items="filter.filterOptions"
                            :label="filter.label"
                            :value="filter.value"
-                           class="mr-4"
                            @update="applyFilter($event)"
                            v-if="isVisible(filter.requiresAdmin)"
           >
           </filter-combobox>
-          <v-flex>
-            <date-time-filter class="mr-2">
-            </date-time-filter>
-          </v-flex>
           <slot name="customFilter"></slot>
           <v-flex>
             <v-btn class="m-2">
@@ -48,7 +43,7 @@
 import { forEach, isNil } from 'lodash';
 import { mapGetters } from 'vuex';
 import FilterCombobox from './FilterCombobox';
-import DateTimeFilter from './DateTimeFilter';
+import DateTimeFilter from './FilterDateTime';
 
 export default {
   name: 'BaseFilterComponent',

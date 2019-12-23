@@ -54,6 +54,6 @@ export default {
 
 <style scoped>
   .filter-combobox {
-    width: 25vh;
-  }
+    min-width: 20vh;
+    width: 25vh;  }
 </style>
