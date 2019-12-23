@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     updateFilters() {
-      const updatedFilters = {};
+      const updatedFilters = { ownerId: [] };
 
       if (!isNil(this.selectedItems) && this.selectedItems.length > 0) {
         updatedFilters.ownerId = map(this.selectedItems, user => user.id);
@@ -46,7 +46,7 @@ export default {
     },
     clearSelected() {
       this.selectedItems = [];
-      this.$emit('update', this.selectedItems);
+      this.updateFilters();
     },
   },
 };

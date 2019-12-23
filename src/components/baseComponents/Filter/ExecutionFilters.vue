@@ -2,36 +2,13 @@
   <base-filter-component @applyFilters="applyFilters($event)"
                          @quickSearch="quickSearch($event)"
                           :filters="executionFilters"
-                         @clearFilters="clearCustomFilter()"
   >
-    <template slot="customFilter">
-      <v-flex>
-        <filter-users-combobox ref="userFilterExecutions"
-                               @update="applyUserFilters($event)"
-        >
-        </filter-users-combobox>
-      </v-flex>
-      <v-flex>
-        <filter-date-time ref="terminatedTimeFilter"
-                          label="Started at"
-                          :items="startTimeOptions"
-        >
-        </filter-date-time>
-      </v-flex>
-      <v-flex>
-        <filter-date-time ref="startTimeFilter"
-                          label="Terminated at"
-                          :items="terminatedTimeOptions"
-        >
-        </filter-date-time>
-      </v-flex>
-    </template>
   </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map, extend } from 'lodash';
+import { uniq, map } from 'lodash';
 import FilterUsersCombobox from './FilterUsersCombobox';
 import BaseFilterComponent from './BaseFilterComponent';
 import FilterDateTime from './FilterDateTime';
@@ -45,12 +22,29 @@ export default {
         name: {
           label: 'Name',
           value: 'name',
+          type: 'basic',
           filterOptions: [],
         },
         status: {
           label: 'Status',
           value: 'status',
+          type: 'basic',
           filterOptions: [],
+        },
+        user: {
+          label: 'User',
+          value: '',
+          type: 'user',
+        },
+        startTime: {
+          label: 'Started at',
+          value: 'startedAt',
+          type: 'dateTime',
+        },
+        cancelTime: {
+          label: 'Canceled at',
+          value: 'terminatedAt',
+          type: 'dateTime',
         },
       },
     };
@@ -64,10 +58,10 @@ export default {
       return uniq(map(this.executions, this.filters.status.value));
     },
     startTimeOptions() {
-      return uniq(map(this.executions, execution => execution.startedAt));
+      return uniq(map(this.executions, this.filters.startTime.value));
     },
-    terminatedTimeOptions() {
-      return uniq(map(this.executions, 'terminatedAt'));
+    cancelTimeOptions() {
+      return uniq(map(this.executions, this.filters.cancelTime.value));
     },
     executionFilters() {
       this.updateFilterOptions();
@@ -76,14 +70,7 @@ export default {
   },
   methods: {
     applyFilters(appliedFilters) {
-      this.currentFilters = appliedFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
-    },
-    applyUserFilters(appliedUserFilters) {
-      this.currentUserFilters = appliedUserFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
+      this.$emit('applyFilters', appliedFilters);
     },
     quickSearch(input) {
       this.$emit('quickSearch', input);
@@ -91,11 +78,6 @@ export default {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
-    },
-    clearCustomFilter() {
-      this.$refs.userFilterExecutions.clearSelected();
-      this.$refs.startTimeFilter.clear();
-      this.$refs.terminatedTimeFilter.clear();
     },
   },
 };

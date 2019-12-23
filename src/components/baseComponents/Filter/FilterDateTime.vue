@@ -15,7 +15,7 @@
     >
       <template slot="append">
         <v-icon @click.stop="display = true">event</v-icon>
-        <v-icon @click="clear">close</v-icon>
+        <v-icon @click="clearSelected">close</v-icon>
       </template>
     </v-combobox>
     <v-dialog v-model="display" :width="dialogWidth">
@@ -185,7 +185,6 @@ export default {
       if (!isNil(newValue) && !isEqual(newValue, '')) {
         this.selectedDates.push(this.formattedDatetime);
       }
-      debugger;
       this.$emit('input', this.selectedDatetime);
     },
     clearHandler() {
@@ -204,7 +203,7 @@ export default {
     showTimePicker() {
       this.activeTab = 1;
     },
-    clear() {
+    clearSelected() {
       this.selectedDates = [];
     },
   },

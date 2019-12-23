@@ -6,18 +6,34 @@
     <v-card-text>
       <v-container>
         <v-layout justify-start>
-          <filter-combobox v-for="(filter, id) in filters" :key="id"
-                           ref="filterCombobox"
-                           :items="filter.filterOptions"
-                           :label="filter.label"
-                           :value="filter.value"
-                           @update="applyFilter($event)"
-                           v-if="isVisible(filter.requiresAdmin)"
-          >
-          </filter-combobox>
+          <v-flex v-for="(filter, id) in filters" :key="id">
+            <filter-combobox ref="filter"
+                             :items="filter.filterOptions"
+                             :label="filter.label"
+                             :value="filter.value"
+                             @update="applyFilter($event)"
+                             v-if="isVisible(filter.requiresAdmin) && (filter.type === 'basic')"
+            >
+            </filter-combobox>
+            <filter-users-combobox ref="filter"
+                                   :label="filter.label"
+                                   @update="applyFilter($event)"
+                                   v-else-if="(filter.type === 'user') &&
+                                   isVisible(filter.requiresAdmin)"
+            >
+            </filter-users-combobox>
+            <filter-date-time ref="filter"
+                              :label="filter.label"
+                              :value="filter.value"
+                              @update="applyFilter"
+                              v-else-if="(filter.type === 'dateTime') &&
+                              isVisible(filter.requiresAdmin)"
+            >
+            </filter-date-time>
+          </v-flex>
           <slot name="customFilter"></slot>
           <v-flex>
-            <v-btn class="m-2">
+            <v-btn class="m-2" @click="clearFilters">
               Clear all filters
             </v-btn>
           </v-flex>
@@ -43,11 +59,12 @@
 import { forEach, isNil } from 'lodash';
 import { mapGetters } from 'vuex';
 import FilterCombobox from './FilterCombobox';
-import DateTimeFilter from './FilterDateTime';
+import FilterDateTime from './FilterDateTime';
+import FilterUsersCombobox from './FilterUsersCombobox';
 
 export default {
   name: 'BaseFilterComponent',
-  components: { DateTimeFilter, FilterCombobox },
+  components: { FilterUsersCombobox, FilterDateTime, FilterCombobox },
   data() {
     return {
       searchString: '',
@@ -59,6 +76,7 @@ export default {
       label: String, // Label used for the combobox
       value: String, // Prop value that is filtered
       filterOptions: [], // filter options for the combobox
+      requiresAdmin: Boolean,
     },
   },
   computed: {
@@ -76,8 +94,8 @@ export default {
       }
     },
     clearFilters() {
-      if (!isNil(this.$refs.filterCombobox) && this.$refs.filterCombobox.length > 0) {
-        forEach(this.$refs.filterCombobox, box => box.clearSelected());
+      if (!isNil(this.$refs.filter) && this.$refs.filter.length > 0) {
+        forEach(this.$refs.filter, box => box.clearSelected());
       }
       this.selectedFilters = {};
       this.$emit('clearFilters');
