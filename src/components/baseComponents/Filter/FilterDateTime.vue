@@ -1,27 +1,47 @@
 <template>
   <div>
-    <v-combobox
-      v-bind="textFieldProps"
-      :disabled="disabled"
-      :loading="loading"
-      :label="label"
-      :items="items"
-      v-model="selectedDates"
-      outline
-      small-chips
-      multiple
-      attach
-      class="filter-combobox"
+    <v-text-field :label="label"
+                  :loading="loading"
+                  :value="selectedRangeText"
+                  outline
+                  class="filter-text-box"
     >
       <template slot="append">
         <v-icon @click.stop="display = true">event</v-icon>
         <v-icon @click="clearSelected">close</v-icon>
       </template>
-    </v-combobox>
+    </v-text-field>
     <v-dialog v-model="display" :width="dialogWidth">
       <v-card>
+        <v-card-title class="dialog-title text-muted">
+          Select range for {{ label }}
+        </v-card-title>
         <v-card-text class="px-0 py-0">
-          <v-tabs fixed-tabs v-model="activeTab">
+          <v-container v-if="!showDateTimeSelection">
+            <v-layout column>
+              <v-flex>
+               <v-text-field outline
+                             :value="getTimeStamp(selectedRange.startTime)"
+               >
+                 <template slot="append">
+                   <v-icon @click.stop="selectStartTime">event</v-icon>
+                   <v-icon @click="selectedRange.startTime = null">close</v-icon>
+                 </template>
+               </v-text-field>
+              </v-flex>
+              <v-flex>
+                <v-text-field outline
+                              :value="getTimeStamp(selectedRange.endTime)"
+                >
+                  <template slot="append">
+                    <v-icon @click.stop="selectEndTime">event</v-icon>
+                    <v-icon @click="selectedRange.endTime = null">close</v-icon>
+                  </template>
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+          <v-tabs v-else fixed-tabs v-model="activeTab">
             <v-tab key="calendar">
               <slot name="dateIcon">
                 <v-icon>event</v-icon>
@@ -54,8 +74,16 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <slot name="actions" :parent="this">
-            <v-btn color="grey lighten-1" text @click.native="clearHandler">{{ clearText }}</v-btn>
-            <v-btn color="green darken-1" text @click="okHandler">{{ okText }}</v-btn>
+            <div v-if="showDateTimeSelection">
+              <v-btn text @click.native="clearHandler">
+                {{ clearText }}
+              </v-btn>
+              <v-btn color="green" text @click="okHandler">{{ okText }}</v-btn>
+            </div>
+            <div v-else>
+              <v-btn @click="clearSelected">Clear all</v-btn>
+              <v-btn @click="applyFilters" dark style="background: var(--themeColor)">Apply</v-btn>
+            </div>
           </slot>
         </v-card-actions>
       </v-card>
@@ -66,13 +94,14 @@
 <script>
 import { format, parse } from 'date-fns';
 import { isNil, isEqual } from 'lodash';
+import TimeStampMixin from '../../../mixins/TimeStamp';
 
 const DEFAULT_DATE = '';
 const DEFAULT_TIME = '00:00:00';
 const DEFAULT_DATE_FORMAT = 'yyyy-MM-dd';
 const DEFAULT_TIME_FORMAT = 'HH:mm:ss';
 const DEFAULT_DIALOG_WIDTH = 340;
-const DEFAULT_CLEAR_TEXT = 'CLEAR';
+const DEFAULT_CLEAR_TEXT = 'Cancel';
 const DEFAULT_OK_TEXT = 'OK';
 
 export default {
@@ -81,8 +110,9 @@ export default {
     prop: 'datetime',
     event: 'input',
   },
+  mixins: [TimeStampMixin],
   props: {
-    items: {}, // combobox items
+    value: String,
     datetime: {
       type: [Date, String],
       default: null,
@@ -129,7 +159,13 @@ export default {
   },
   data() {
     return {
-      selectedDates: [],
+      selectedRange: {
+        startTime: null,
+        endTime: null,
+      },
+      showDateTimeSelection: false,
+      isStartTimeSelectionActive: false,
+      isEndTimeSelectionActive: false,
       display: false,
       activeTab: 0,
       date: DEFAULT_DATE,
@@ -162,6 +198,22 @@ export default {
     dateSelected() {
       return !this.date;
     },
+    selectedRangeText() {
+      let text;
+      const startTime = this.getTimeStamp(this.selectedRange.startTime);
+      const endTime = this.getTimeStamp(this.selectedRange.endTime);
+
+      if (isNil(startTime) && isNil(endTime)) {
+        text = 'No range selected';
+      } else if (!isNil(startTime) && isNil(endTime)) {
+        text = `from ${startTime}`;
+      } else if (!isNil(endTime) && isNil(startTime)) {
+        text = `until ${endTime}`;
+      } else {
+        text = `${startTime} - ${endTime}`;
+      }
+      return text;
+    },
   },
   methods: {
     init() {
@@ -180,31 +232,55 @@ export default {
     },
     okHandler() {
       this.resetPicker();
-      const newValue = this.formattedDatetime;
+      const newValue = this.selectedDatetime;
 
       if (!isNil(newValue) && !isEqual(newValue, '')) {
-        this.selectedDates.push(this.formattedDatetime);
+        if (this.isEndTimeSelectionActive) {
+          this.selectedRange.endTime = newValue;
+          this.isEndTimeSelectionActive = false;
+        } else if (this.isStartTimeSelectionActive) {
+          this.selectedRange.startTime = newValue;
+          this.isStartTimeSelectionActive = false;
+        }
       }
-      this.$emit('input', this.selectedDatetime);
+      this.showDateTimeSelection = false;
+    },
+    applyFilters() {
+      const appliedFilters = {};
+      appliedFilters[this.value] = { dateRange: this.selectedRange };
+      this.$emit('update', appliedFilters);
+      this.display = false;
     },
     clearHandler() {
       this.resetPicker();
       this.date = DEFAULT_DATE;
       this.time = DEFAULT_TIME;
-      this.$emit('input', null);
     },
     resetPicker() {
-      this.display = false;
       this.activeTab = 0;
       if (this.$refs.timer) {
         this.$refs.timer.selectingHour = true;
       }
     },
+    selectStartTime() {
+      this.showDateSelection();
+      this.isStartTimeSelectionActive = true;
+    },
+    selectEndTime() {
+      this.showDateSelection();
+      this.isEndTimeSelectionActive = true;
+    },
+    showDateSelection() {
+      this.showDateTimeSelection = true;
+      this.activeTab = 0;
+    },
     showTimePicker() {
       this.activeTab = 1;
     },
     clearSelected() {
-      this.selectedDates = [];
+      this.selectedRange.startTime = null;
+      this.selectedRange.endTime = null;
+      this.applyFilters();
     },
   },
   watch: {
@@ -216,9 +292,12 @@ export default {
 </script>
 
 <style scoped>
-  .filter-combobox {
+  .filter-text-box {
     min-width: 25vh;
     width: 30vh;
+  }
+  .dialog-title {
+    font-size: 14pt;
   }
 </style>
 

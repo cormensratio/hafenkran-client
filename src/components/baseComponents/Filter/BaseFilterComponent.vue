@@ -15,13 +15,6 @@
                              v-if="isVisible(filter.requiresAdmin) && (filter.type === 'basic')"
             >
             </filter-combobox>
-            <filter-users-combobox ref="filter"
-                                   :label="filter.label"
-                                   @update="applyFilter($event)"
-                                   v-else-if="(filter.type === 'user') &&
-                                   isVisible(filter.requiresAdmin)"
-            >
-            </filter-users-combobox>
             <filter-date-time ref="filter"
                               :label="filter.label"
                               :value="filter.value"
@@ -30,6 +23,13 @@
                               isVisible(filter.requiresAdmin)"
             >
             </filter-date-time>
+            <filter-users-combobox ref="filter"
+                                   :label="filter.label"
+                                   @update="applyFilter($event)"
+                                   v-else-if="(filter.type === 'user') &&
+                                   isVisible(filter.requiresAdmin)"
+            >
+            </filter-users-combobox>
           </v-flex>
           <slot name="customFilter"></slot>
           <v-flex>

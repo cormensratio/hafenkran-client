@@ -31,11 +31,6 @@ export default {
           type: 'basic',
           filterOptions: [],
         },
-        user: {
-          label: 'User',
-          value: '',
-          type: 'user',
-        },
         startTime: {
           label: 'Started at',
           value: 'startedAt',
@@ -45,6 +40,11 @@ export default {
           label: 'Canceled at',
           value: 'terminatedAt',
           type: 'dateTime',
+        },
+        user: {
+          label: 'User',
+          value: '',
+          type: 'user',
         },
       },
     };
