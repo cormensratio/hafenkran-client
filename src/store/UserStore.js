@@ -15,6 +15,7 @@ const UserStore = {
       name: '',
       isAdmin: '',
       email: '',
+      isAccepted: '',
     },
     userList: [
       {
@@ -22,6 +23,21 @@ const UserStore = {
         name: 'testuser',
         isAdmin: '',
         eMail: '',
+        isAccepted: true,
+      },
+      {
+        id: '2',
+        name: 'Jacky Chun',
+        isAdmin: '',
+        eMail: '',
+        isAccepted: '',
+      },
+      {
+        id: '3',
+        name: 'Geralt',
+        isAdmin: '',
+        eMail: '',
+        isAccepted: '',
       },
     ],
   },
@@ -37,6 +53,10 @@ const UserStore = {
     },
     updateUserList(state, userList) {
       state.userList = userList;
+    },
+    updateIsAccepted(state, index, bool) {
+      state.userList[2].isAccepted = bool;
+      console.log(state.userList[2].isAccepted);
     },
   },
   actions: {
