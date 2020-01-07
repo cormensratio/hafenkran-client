@@ -1,21 +1,31 @@
 <template>
   <base-filter-component @applyFilters="applyFilters($event)"
                          :filters="experimentFilters"
-                         @quickSearch="quickSeatch($event)"
+                         @quickSearch="quickSearch($event)"
+                         @clearFilters="clearCustomFilter()"
   >
+    <template slot="customFilter">
+      <filter-users-combobox ref="userFilterExperiments"
+                             @update="applyUserFilters($event)"
+      >
+      </filter-users-combobox>
+    </template>
   </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map } from 'lodash';
+import { uniq, map, extend } from 'lodash';
 import BaseFilterComponent from './BaseFilterComponent';
+import FilterUsersCombobox from './FilterUsersCombobox';
 
 export default {
   name: 'ExperimentFilters',
-  components: { BaseFilterComponent },
+  components: { FilterUsersCombobox, BaseFilterComponent },
   data() {
     return {
+      currentFilters: {},
+      currentUserFilters: {},
       filters: {
         name: {
           label: 'Name',
@@ -31,7 +41,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'experiments', 'userList']),
+    ...mapGetters(['user', 'experiments']),
     experimentFilters() {
       this.updateFilterOptions();
       return this.filters;
@@ -49,10 +59,20 @@ export default {
       this.filters.size.filterOptions = this.sizeOptions;
     },
     applyFilters(appliedFilters) {
-      this.$emit('applyFilters', appliedFilters);
+      this.currentFilters = appliedFilters;
+      const output = extend(this.currentFilters, this.currentUserFilters);
+      this.$emit('applyFilters', output);
+    },
+    applyUserFilters(appliedUserFilters) {
+      this.currentUserFilters = appliedUserFilters;
+      const output = extend(this.currentFilters, this.currentUserFilters);
+      this.$emit('applyFilters', output);
     },
     quickSearch(input) {
       this.$emit('quickSearch', input);
+    },
+    clearCustomFilter() {
+      this.$refs.userFilterExperiments.clearSelected();
     },
   },
 };

@@ -96,7 +96,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
@@ -143,6 +143,7 @@ export default {
     },
   },
   created() {
+    this.fetchUserList();
     this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;

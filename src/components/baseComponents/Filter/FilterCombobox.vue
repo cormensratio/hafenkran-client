@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-flex>
     <v-combobox multiple attach outline
                 :items="items"
                 :label="label"
@@ -9,7 +9,7 @@
                 class="filter-combobox"
     >
     </v-combobox>
-  </div>
+  </v-flex>
 </template>
 
 <script>
@@ -40,6 +40,6 @@ export default {
 
 <style scoped>
   .filter-combobox {
-    width: 30vh;
+    width: 25vh;
   }
 </style>
