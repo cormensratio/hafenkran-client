@@ -6,7 +6,7 @@
         <v-container>
           <v-layout justify-center>
             <div class="container">
-              <v-card max-width="700" class="mx-auto">
+              <v-card max-width="800" class="mx-auto mb-5">
                 <v-toolbar dark style="background: var(--themeColor)" class="mb-4">
                   <v-toolbar-title>
                     Users (unaccepted)
@@ -38,7 +38,9 @@
                   </v-list-tile>
                   <v-divider/>
                 </v-list>
-                <v-divider/>
+                <v-spacer/>
+              </v-card>
+              <v-card max-width="800" class="mx-auto">
                 <v-toolbar dark style="background: var(--themeColor)" class="mb-4">
                   <v-toolbar-title>
                     Users
@@ -87,9 +89,8 @@ export default {
   },
   methods: {
     ...mapMutations(['updateIsAccepted']),
-    setAccepted(index, bool) {
-      this.updateIsAccepted(index, bool);
-      console.log(bool);
+    setAccepted(index, choice) {
+      this.updateIsAccepted(index, choice);
       console.log(this.userList[index]);
     },
   },
