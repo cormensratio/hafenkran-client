@@ -10,6 +10,14 @@
                 <v-divider/>
                 <div class="input-size">
                   <v-text-field
+                    v-model="password"
+                    label="Current password"
+                    :type="show_password ? 'text' : 'password'"
+                    single-line
+                    outline
+                    :rules="[rules.min]"
+                  />
+                  <v-text-field
                     v-model="newPassword"
                     label="New password"
                     :type="show_password ? 'text' : 'password'"
@@ -33,6 +41,14 @@
                 <div class="input-size">
                   <v-text-field
                     class="mt-4"
+                    v-model="passwordEmailConfirm"
+                    label="Current password"
+                    :type="show_password ? 'text' : 'password'"
+                    single-line
+                    outline
+                    :rules="[rules.min]"
+                  />
+                  <v-text-field
                     v-model="email"
                     label="Current email"
                     single-line
@@ -54,16 +70,6 @@
               {{ snack }}
               <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
             </v-snackbar>
-            <v-dialog v-model="showConfirmDialog">
-              <div>Confirm changes with your password</div>
-              <v-text-field class="mt-4"
-                            v-model="password"
-                            label="Current password"
-                            :type="show_password ? 'text' : 'password'"
-                            single-line
-                            outline
-              />
-            </v-dialog>
           </v-container>
         </v-form>
       </template>
@@ -88,9 +94,9 @@ export default {
       newPassword: '',
       confirmNewPassword: '',
       password: '',
+      passwordEmailConfirm: '',
       username: '',
       show_password: false,
-      showConfirmDialog: false,
     };
   },
   computed: {
@@ -106,32 +112,40 @@ export default {
       return isEqual(this.email, this.newEmail);
     },
     async updatePassword() {
-      this.showConfirmDialog = true;
       if (this.arePasswordsEqual()) {
-        const updatedUser = this.createUpdatedUser(undefined, this.newPassword);
-        if (!isNil(updatedUser)) {
-          this.setSnack('Updated password.');
-          this.triggerSnack();
+        const newUserInformation = this.createUpdatedUser(this.password,
+          undefined, this.newPassword);
+        if (!isNil(newUserInformation)) {
+          const updatedUser = await this.updateUser(newUserInformation);
+          if (isNil(updatedUser)) {
+            this.setSnack('Failed to update password');
+          } else {
+            this.setSnack('Updated password.');
+          }
         }
+      } else {
+        this.setSnack('Passwords are not equal!');
       }
+      this.triggerSnack();
     },
     async updateEmail() {
-      this.showConfirmDialog = true;
       if (!this.areEmailsEqual()) {
-        const newUserInformation = this.createUpdatedUser(this.newEmail, this.password, undefined);
+        const newUserInformation = this.createUpdatedUser(this.passwordEmailConfirm,
+          this.newEmail, undefined);
         if (!isNil(newUserInformation)) {
-          const updatedUser = this.updateUser(newUserInformation);
+          const updatedUser = await this.updateUser(newUserInformation);
           if (isNil(updatedUser)) {
-            this.setSnack();
+            this.setSnack('Failed to update user info');
+          } else {
+            this.setSnack('Updated e-mail address.');
           }
-          this.setSnack('Updated e-mail address.');
         }
       } else {
         this.setSnack('Same e-mail address not allowed.');
       }
       this.triggerSnack();
     },
-    createUpdatedUser(email, password, newPassword) {
+    createUpdatedUser(password, email, newPassword) {
       return {
         email: email || this.user.email,
         password: password || '',

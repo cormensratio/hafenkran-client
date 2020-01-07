@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 import { isNil, isEqual } from 'lodash';
 import ApiService from '../service/ApiService';
 import AuthService from '../service/AuthService';
-import UserSettingsPage from '../components/views/UserSettingsPage';
 
 Vue.use(Vuex);
 
