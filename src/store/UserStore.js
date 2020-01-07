@@ -55,8 +55,7 @@ const UserStore = {
       state.userList = userList;
     },
     updateIsAccepted(state, index, bool) {
-      state.userList[2].isAccepted = bool;
-      console.log(state.userList[2].isAccepted);
+      state.userList[index].isAccepted = bool;
     },
   },
   actions: {

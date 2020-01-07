@@ -9,12 +9,12 @@
               <v-card max-width="700" class="mx-auto">
                 <v-toolbar dark style="background: var(--themeColor)" class="mb-4">
                   <v-toolbar-title>
-                    Users
+                    Users (unaccepted)
                   </v-toolbar-title>
                 </v-toolbar>
                 <v-list v-for="(user, index) in userList"
                         :key="user.name" two-line>
-                  <v-list-tile class="mt-n2">
+                  <v-list-tile class="mt-n2" v-if="!user.isAccepted">
                     <v-list-tile-avatar size="50" class="mr-2">
                       <v-avatar color="blue" size="50">
                         <span class="headline white--text">
@@ -26,17 +26,38 @@
                       {{ user.name }}
                     </v-list-tile-content>
                     <v-list-tile-action v-if="user.isAccepted===''">
-                      <v-btn round @click="setAccepted(index, true)">
-                        Accept
+                      <v-btn icon @click="setAccepted(index, true)">
+                        <v-icon style="color: limegreen">done</v-icon>
                       </v-btn>
                     </v-list-tile-action>
                     <v-list-tile-action v-if="user.isAccepted===''">
-                      <v-btn round @click="setAccepted(index, false)">
-                        Deny
+                      <v-btn icon @click="setAccepted(index, false)">
+                        <v-icon style="color: red">clear</v-icon>
                       </v-btn>
                     </v-list-tile-action>
                   </v-list-tile>
                   <v-divider/>
+                </v-list>
+                <v-divider/>
+                <v-toolbar dark style="background: var(--themeColor)" class="mb-4">
+                  <v-toolbar-title>
+                    Users
+                  </v-toolbar-title>
+                </v-toolbar>
+                <v-list v-for="(user) in userList"
+                        :key="user.name" two-line>
+                  <v-list-tile class="mt-n2" v-if="user.isAccepted">
+                    <v-list-tile-avatar size="50" class="mr-2">
+                      <v-avatar color="blue" size="50">
+                        <span class="headline white--text">
+                          {{ user.name.charAt(0).toUpperCase() }}
+                        </span>
+                      </v-avatar>
+                    </v-list-tile-avatar>
+                    <v-list-tile-content>
+                      {{ user.name }}
+                    </v-list-tile-content>
+                  </v-list-tile>
                 </v-list>
               </v-card>
             </div>
@@ -67,8 +88,8 @@ export default {
   methods: {
     ...mapMutations(['updateIsAccepted']),
     setAccepted(index, bool) {
-      console.log(bool);
       this.updateIsAccepted(index, bool);
+      console.log(bool);
       console.log(this.userList[index]);
     },
   },
