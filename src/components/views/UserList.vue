@@ -14,7 +14,7 @@
                 </v-toolbar>
                 <v-list v-for="(user, index) in userList"
                         :key="user.name" two-line>
-                  <v-list-tile class="mt-n2" v-if="!user.isAccepted">
+                  <v-list-tile class="mt-n2" v-if="user.isAccepted === ''">
                     <v-list-tile-avatar size="50" class="mr-2">
                       <v-avatar color="blue" size="50">
                         <span class="headline white--text">
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Footer from '../baseComponents/Footer';
 import Header from '../baseComponents/Header';
@@ -88,10 +88,16 @@ export default {
     ...mapGetters(['userList']),
   },
   methods: {
-    ...mapMutations(['updateIsAccepted']),
+    ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
+    ...mapActions(['triggerSnack']),
     setAccepted(index, choice) {
-      this.updateIsAccepted(index, choice);
-      console.log(this.userList[index]);
+      this.updateIsAccepted({ index, choice });
+      if (choice === true) {
+        this.setSnack(`${this.userList[index].name} has been accepted`);
+      } else {
+        this.setSnack(`${this.userList[index].name} has been declined`);
+      }
+      this.triggerSnack();
     },
   },
 };

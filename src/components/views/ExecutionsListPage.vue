@@ -50,17 +50,13 @@
                        @hideDialog="dialog = false"
                        :extern-execution="selectedExecution"
                        :extern-dialog="dialog"
-        ></delete-dialog>
+        />
         <v-progress-circular
           size="50"
           indeterminate
           color="#106ee0"
           v-if="loading"
         />
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </div>
     </template>
   </base-page>
@@ -99,11 +95,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions', 'user', 'snackShow', 'userList', 'snack']),
+    ...mapGetters(['executions', 'user', 'userList']),
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },

@@ -54,8 +54,7 @@ const UserStore = {
     updateUserList(state, userList) {
       state.userList = userList;
     },
-    updateIsAccepted(state, index, choice) {
-      console.log(choice);
+    updateIsAccepted(state, { index, choice }) {
       state.userList[index].isAccepted = choice;
     },
   },

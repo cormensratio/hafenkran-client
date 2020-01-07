@@ -99,10 +99,6 @@
             </div>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-container>
     </template>
   </base-page>
@@ -140,11 +136,11 @@ export default {
     executionId: String,
   },
   computed: {
-    ...mapGetters(['snack', 'snackShow', 'executions']),
+    ...mapGetters(['executions']),
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
       this.loadingLogs = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)

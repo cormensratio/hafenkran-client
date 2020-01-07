@@ -35,10 +35,6 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-container>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -55,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isNil, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
@@ -72,7 +68,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments', 'snack', 'snackShow', 'user', 'userList']),
+    ...mapGetters(['experiments', 'user', 'userList']),
   },
   data() {
     return {
@@ -97,6 +93,7 @@ export default {
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
+    ...mapMutations(['showSnack']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
