@@ -45,15 +45,11 @@
         </div>
       </v-card>
     </v-hover>
-    <v-snackbar v-model="snackShow" right>
-      {{ snack }}
-      <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-    </v-snackbar>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
@@ -69,11 +65,8 @@ export default {
       loading: false,
     };
   },
-  computed: {
-    ...mapGetters(['snack', 'snackShow']),
-  },
   methods: {
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     ...mapActions(['triggerSnack']),
     getFileName() {
       return this.$refs.file.files[0].name;
