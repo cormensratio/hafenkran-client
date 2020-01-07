@@ -10,14 +10,6 @@
                 <v-divider/>
                 <div class="input-size">
                   <v-text-field
-                    v-model="password"
-                    label="Current password"
-                    :type="show_password ? 'text' : 'password'"
-                    single-line
-                    outline
-                    :rules="[rules.min]"
-                  />
-                  <v-text-field
                     v-model="newPassword"
                     label="New password"
                     :type="show_password ? 'text' : 'password'"
@@ -40,15 +32,6 @@
                 <v-divider/>
                 <div class="input-size">
                   <v-text-field
-                    class="mt-4"
-                    v-model="passwordEmailConfirm"
-                    label="Current password"
-                    :type="show_password ? 'text' : 'password'"
-                    single-line
-                    outline
-                    :rules="[rules.min]"
-                  />
-                  <v-text-field
                     v-model="email"
                     label="Current email"
                     single-line
@@ -70,6 +53,28 @@
               {{ snack }}
               <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
             </v-snackbar>
+            <v-dialog v-model="showConfirmDialog" width="300">
+              <v-card>
+                <v-card-title>Type in your password to confirm update</v-card-title>
+                <v-card-text>
+                  <v-text-field
+                    v-model="password"
+                    label="Current password"
+                    :type="show_password ? 'text' : 'password'"
+                    single-line
+                    outline
+                    :rules="[rules.min]"
+                  />
+                </v-card-text>
+                <v-card-actions class="justify-center">
+                  <v-btn style="background: var(--themeColor)"
+                         @click="updateUserInfo">
+                    Confirm
+                  </v-btn>
+                  <v-btn @click="showConfirmDialog = false">Cancel</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-container>
         </v-form>
       </template>
@@ -94,9 +99,15 @@ export default {
       newPassword: '',
       confirmNewPassword: '',
       password: '',
-      passwordEmailConfirm: '',
       username: '',
       show_password: false,
+      showConfirmDialog: false,
+      newUserInformation: {
+        newPassword: '',
+        email: '',
+        isAdmin: false,
+        password: '',
+      },
     };
   },
   computed: {
@@ -111,47 +122,45 @@ export default {
     areEmailsEqual() {
       return isEqual(this.email, this.newEmail);
     },
+    async updateUserInfo() {
+      this.showConfirmDialog = true;
+      this.newUserInformation.password = this.password;
+
+      if (!isNil(this.newUserInformation)) {
+        const updatedUser = await this.updateUser(this.newUserInformation);
+
+        if (!isNil(updatedUser)) {
+          this.setSnack('Successfully updated user information');
+        } else {
+          this.setSnack('Failed to update user information!');
+        }
+
+        this.triggerSnack();
+      }
+      this.showConfirmDialog = false;
+    },
     async updatePassword() {
       if (this.arePasswordsEqual()) {
-        const newUserInformation = this.createUpdatedUser(this.password,
-          undefined, this.newPassword);
-        if (!isNil(newUserInformation)) {
-          const updatedUser = await this.updateUser(newUserInformation);
-          if (isNil(updatedUser)) {
-            this.setSnack('Failed to update password');
-          } else {
-            this.setSnack('Updated password.');
-          }
-        }
+        this.updateNewUserInfo(undefined, this.newPassword);
+        this.showConfirmDialog = true;
       } else {
         this.setSnack('Passwords are not equal!');
+        this.triggerSnack();
       }
-      this.triggerSnack();
     },
     async updateEmail() {
       if (!this.areEmailsEqual()) {
-        const newUserInformation = this.createUpdatedUser(this.passwordEmailConfirm,
-          this.newEmail, undefined);
-        if (!isNil(newUserInformation)) {
-          const updatedUser = await this.updateUser(newUserInformation);
-          if (isNil(updatedUser)) {
-            this.setSnack('Failed to update user info');
-          } else {
-            this.setSnack('Updated e-mail address.');
-          }
-        }
+        this.updateNewUserInfo(this.newEmail, undefined);
+        this.showConfirmDialog = true;
       } else {
         this.setSnack('Same e-mail address not allowed.');
+        this.triggerSnack();
       }
-      this.triggerSnack();
     },
-    createUpdatedUser(password, email, newPassword) {
-      return {
-        email: email || this.user.email,
-        password: password || '',
-        isAdmin: this.user.isAdmin,
-        newPassword: newPassword || '',
-      };
+    updateNewUserInfo(email, newPassword) {
+      this.newUserInformation.email = email || this.user.email;
+      this.newUserInformation.isAdmin = this.user.isAdmin;
+      this.newUserInformation.newPassword = newPassword || '';
     },
   },
 };
