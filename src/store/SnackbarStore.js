@@ -2,7 +2,6 @@ const SnackbarStore = {
   state: {
     snack: '',
     snackShow: false,
-    timer: '',
   },
   getters: {
     snack: state => state.snack,
@@ -18,14 +17,11 @@ const SnackbarStore = {
   },
   actions: {
     triggerSnack({ commit }) {
-      if (this.timer !== '') {
-        clearTimeout(this.timer);
-      }
       commit('showSnack', true);
-      this.timer = setTimeout(() => {
+      setTimeout(() => {
         commit('setSnack', '');
         commit('showSnack', false);
-      }, 3000);
+      }, 2500);
     },
   },
 };
