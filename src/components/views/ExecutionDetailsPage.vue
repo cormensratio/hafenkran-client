@@ -38,10 +38,13 @@
                   </v-btn>
                   <v-btn class="error right"
                          @click="setExecution()">Delete</v-btn>
-                  <v-btn class="right"
+                  <v-btn v-if="!hasTerminated(execution.status)" class="right"
                          @click="executionCancel(execution.id)">
                     Cancel execution
                     <v-icon right dark>cancel</v-icon>
+                  </v-btn>
+                  <v-btn v-else @click="showContextMenu($event, execution.experimentId)">
+                    Repeat
                   </v-btn>
                 </v-flex>
               </v-card-actions>
@@ -104,14 +107,25 @@
           <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
         </v-snackbar>
       </v-container>
+      <v-menu v-model="showMenu"
+              :position-x="menuPosX"
+              :position-y="menuPosY"
+              :close-on-content-click="false"
+              :close-on-click="false"
+      >
+        <StartExperimentMenu :experiment="execution.experimentId"
+                             @menuClosed="closeMenu">
+        </StartExperimentMenu>
+      </v-menu>
     </template>
   </base-page>
 </template>
 
 <script>
-import { isNil, forEach } from 'lodash';
+import { isNil, forEach, isEqual } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
+import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -122,7 +136,7 @@ import DeleteDialog from '../baseComponents/DeleteDialog';
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [TimeStampMixin],
-  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage },
+  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage, StartExperimentMenu },
   data() {
     return {
       userInput: '',
@@ -134,6 +148,9 @@ export default {
       loadingLogs: false,
       dialog: false,
       selectedExecution: {},
+      menuPosX: 0,
+      menuPosY: 0,
+      showMenu: false,
     };
   },
   props: {
@@ -240,6 +257,28 @@ export default {
         this.setSnack('Could\'t download results');
         this.triggerSnack();
       }
+    },
+    closeMenu() {
+      this.showMenu = false;
+    },
+    hasTerminated(status) {
+      if (!isNil(status)) {
+        if (isEqual(status, 'RUNNING')) {
+          return false;
+        } else if (isEqual(status, 'WAITING')) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    },
+    showContextMenu(event) {
+      this.showMenu = false;
+      this.menuPosX = event.clientX;
+      this.menuPosY = event.clientY;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
     },
   },
   created() {
