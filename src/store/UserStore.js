@@ -15,7 +15,6 @@ const UserStore = {
       name: '',
       isAdmin: '',
       email: '',
-      isAccepted: '',
     },
     userList: [
       {
@@ -23,69 +22,63 @@ const UserStore = {
         name: 'testuser',
         isAdmin: '',
         eMail: '',
-        isAccepted: true,
       },
       {
         id: '2',
         name: 'Jacky Chun',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
+    ],
+    pendingUsers: [
       {
         id: '3',
         name: 'Geralt',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '4',
         name: 'Mickey Mouse',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '5',
         name: 'Morty',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '6',
         name: 'Popeye',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '7',
         name: 'Sonic',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '8',
         name: 'Charlie',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
       {
         id: '9',
         name: 'Pikachu',
         isAdmin: '',
         eMail: '',
-        isAccepted: '',
       },
     ],
   },
   getters: {
     user: state => state.user,
     userList: state => state.userList,
+    pendingUsers: state => state.pendingUsers,
     isAuthenticated: state => !isEqual(state.user.name, '')
       && !isNil(localStorage.getItem('user')),
   },
@@ -96,8 +89,17 @@ const UserStore = {
     updateUserList(state, userList) {
       state.userList = userList;
     },
-    updateIsAccepted(state, { index, choice }) {
-      state.userList[index].isAccepted = choice;
+    acceptUser(state, user) {
+      const newUser = user;
+      newUser.id = state.userList.length;
+      state.userList.push(newUser);
+      state.pendingUsers.splice(state.pendingUsers.indexOf(user), 1);
+    },
+    denyUser(state, user) {
+      state.pendingUsers.splice(state.pendingUsers.indexOf(user), 1);
+    },
+    deleteUser(state, user) {
+      state.userList.splice(state.userList.indexOf(user), 1);
     },
   },
   actions: {
@@ -148,6 +150,15 @@ const UserStore = {
       };
 
       commit('updateUser', emptyStore.user);
+    },
+    acceptUser({ commit }, user) {
+      commit('acceptUser', user);
+    },
+    deleteUser({ commit }, user) {
+      commit('deleteUser', user);
+    },
+    denyUser({ commit }, user) {
+      commit('denyUser', user);
     },
   },
 };
