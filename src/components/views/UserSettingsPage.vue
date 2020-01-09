@@ -12,7 +12,7 @@
                   <v-text-field
                     v-model="newPassword"
                     label="New password"
-                    :type="show_password ? 'text' : 'password'"
+                    :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
                     :rules="[rules.min]"
@@ -20,7 +20,7 @@
                   <v-text-field
                     v-model="confirmNewPassword"
                     label="Confirm new password"
-                    :type="show_password ? 'text' : 'password'"
+                    :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
                     :rules="[rules.min]"
@@ -31,13 +31,6 @@
                 <span class="input-heading">Change your e-mail address</span>
                 <v-divider/>
                 <div class="input-size">
-                  <v-text-field
-                    v-model="email"
-                    label="Current email"
-                    single-line
-                    outline
-                    :rules="[rules.emailRules]"
-                  />
                   <v-text-field
                     v-model="newEmail"
                     label="New email"
@@ -60,7 +53,7 @@
                   <v-text-field
                     v-model="password"
                     label="Current password"
-                    :type="show_password ? 'text' : 'password'"
+                    :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
                   />
@@ -93,13 +86,12 @@ export default {
   mixins: [RulesMixin],
   data() {
     return {
-      email: '',
       newEmail: '',
       newPassword: '',
       confirmNewPassword: '',
       password: '',
       username: '',
-      show_password: false,
+      showPassword: false,
       showConfirmDialog: false,
       newUserInformation: {
         newPassword: '',
