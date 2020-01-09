@@ -41,7 +41,7 @@
         <v-layout column>
           <v-flex>
             <v-text-field append-icon="search"
-                          label="Search"
+                          label="Search by name"
                           single-line
                           @input="quickSearch()"
                           v-model="searchString"
