@@ -2,7 +2,7 @@
   <div class="hafen-header pb-1">
     <v-toolbar height="75vh" class="hafen-toolbar">
       <v-toolbar-title class="mr-5 pt-2" @click="navigateToStartPage()">
-        <img class="hafen-logo" src="../../assets/hafenkran.png">
+        <img alt="header" class="hafen-logo" src="../../assets/hafenkran.png">
         <span class="logo-title">HAFENKRAN</span>
       </v-toolbar-title>
       <v-toolbar-items v-if="isAuthenticated">
@@ -15,7 +15,7 @@
         <v-btn flat dark @click="logoutUser()">
           Logout
         </v-btn>
-        <v-avatar color="white" dark round>
+        <v-avatar color="white" dark round @click="navigateToSettings()" >
           <span class="headline">{{ user.name.charAt(0) }}</span>
         </v-avatar>
       </div>
@@ -40,6 +40,13 @@ export default {
       this.logout().then(() => {
         this.$router.push('/');
       });
+    },
+    navigateToSettings() {
+      if (this.isAuthenticated) {
+        this.$router.push('/settings');
+      } else {
+        this.$router.push('/login');
+      }
     },
     navigateToStartPage() {
       this.$router.push('/');
