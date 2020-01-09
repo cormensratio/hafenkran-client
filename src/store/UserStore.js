@@ -67,6 +67,20 @@ const UserStore = {
         eMail: '',
         isAccepted: '',
       },
+      {
+        id: '8',
+        name: 'Charlie',
+        isAdmin: '',
+        eMail: '',
+        isAccepted: '',
+      },
+      {
+        id: '9',
+        name: 'Pikachu',
+        isAdmin: '',
+        eMail: '',
+        isAccepted: '',
+      },
     ],
   },
   getters: {
