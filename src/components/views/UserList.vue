@@ -41,7 +41,7 @@
                 </v-list>
               </div>
             </v-card>
-            <v-card max-width="800" class="mx-auto" v-if="userList">
+            <v-card max-width="800" class="mx-auto">
               <v-toolbar dark style="background: var(--themeColor)" class="mb-1">
                 <v-toolbar-title>
                   Users
