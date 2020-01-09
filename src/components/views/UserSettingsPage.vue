@@ -63,7 +63,6 @@
                     :type="show_password ? 'text' : 'password'"
                     single-line
                     outline
-                    :rules="[rules.min]"
                   />
                 </v-card-text>
                 <v-card-actions class="justify-center">
@@ -130,8 +129,10 @@ export default {
         const updatedUser = await this.updateUser(this.newUserInformation);
 
         if (!isNil(updatedUser)) {
+          this.clearFields();
           this.setSnack('Successfully updated user information');
         } else {
+          this.password = '';
           this.setSnack('Failed to update user information!');
         }
 
@@ -161,6 +162,12 @@ export default {
       this.newUserInformation.email = email || this.user.email;
       this.newUserInformation.isAdmin = this.user.isAdmin;
       this.newUserInformation.newPassword = newPassword || '';
+    },
+    clearFields() {
+      this.newPassword = '';
+      this.password = '';
+      this.newEmail = '';
+      this.confirmNewPassword = '';
     },
   },
 };
