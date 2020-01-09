@@ -139,6 +139,7 @@ export default {
           this.previousHours = this.bookedHours;
           this.setSnack('Execution started successfully');
           this.$router.push('/executionlist');
+          this.closeMenu();
         } else {
           this.setSnack('Experiment could not be started');
         }
