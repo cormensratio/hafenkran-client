@@ -12,7 +12,8 @@
         <span> {{ data.item.name }}</span>
       </template>
       <template slot="selection" slot-scope="data">
-        <v-chip :small="true">{{data.item.name}}</v-chip>
+        <v-chip :small="true" v-if="data.item.name">{{data.item.name}}</v-chip>
+        <v-chip :small="true" v-else>{{data.item}}</v-chip>
       </template>
       <template slot="append">
         <v-icon @click="clearSelected">close</v-icon>

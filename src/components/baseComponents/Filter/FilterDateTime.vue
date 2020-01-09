@@ -4,6 +4,7 @@
                   :loading="loading"
                   :value="selectedRangeText"
                   outline
+                  readonly
                   class="filter-text-box"
     >
       <template slot="append">
@@ -20,7 +21,7 @@
           <v-container v-if="!showDateTimeSelection">
             <v-layout column>
               <v-flex>
-               <v-text-field outline
+               <v-text-field outline readonly
                              :value="getTimeStamp(selectedRange.startTime)"
                >
                  <template slot="append">
@@ -30,7 +31,7 @@
                </v-text-field>
               </v-flex>
               <v-flex>
-                <v-text-field outline
+                <v-text-field outline readonly
                               :value="getTimeStamp(selectedRange.endTime)"
                 >
                   <template slot="append">
@@ -252,9 +253,13 @@ export default {
       this.display = false;
     },
     clearHandler() {
-      this.resetPicker();
-      this.date = DEFAULT_DATE;
-      this.time = DEFAULT_TIME;
+      if (this.activeTab === 0) {
+        this.showDateTimeSelection = false;
+      } else {
+        this.resetPicker();
+        this.date = DEFAULT_DATE;
+        this.time = DEFAULT_TIME;
+      }
     },
     resetPicker() {
       this.activeTab = 0;
