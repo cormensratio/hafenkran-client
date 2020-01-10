@@ -55,4 +55,31 @@ describe('AuthService', () => {
       expect(returnValueNull).toBe(null);
     });
   });
+
+  describe('fetches refresh token', () => {
+    test('successfully', () => {
+
+    });
+    test('with error', () => {
+
+    });
+  });
+
+  describe('fetches new jwt', () => {
+    test('successfully', () => {
+
+    });
+    test('with error', () => {
+
+    });
+  });
+
+  describe('checks token validity', () => {
+    test('successfully', () => {
+
+    });
+    test('with error', () => {
+
+    });
+  });
 });

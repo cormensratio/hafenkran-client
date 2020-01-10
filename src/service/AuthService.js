@@ -79,7 +79,7 @@ export default class AuthService {
 
         const secondsUntilExpiry = moment.utc(moment().diff(expires)).seconds();
 
-        if (secondsUntilExpiry <= 60) {
+        if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
           this.fetchNewJWT();
         }
       }, 30000);
