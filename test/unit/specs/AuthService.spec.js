@@ -1,5 +1,4 @@
 import AuthService, { jwtToken } from '../../../src/service/AuthService';
-import ApiService from '../../../src/service/ApiService';
 
 const mockValidJwtToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjE1NzQzNjgzMzYsInVzZXIiOnsiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJuYW1lIjoiTW9ydGltZXIiLCJlbWFpbCI6IiIsImlzQWRtaW4iOnRydWV9LCJpYXQiOjE1NzQzNTAzMzZ9.9Y8eq2ygcdZunZxDY__V-jT-v1wy1NG9oF-W5A-kP5jGa0p7AT8v_fPQO6srdS9zd4s3yNCkEDWV8Df52ieamg';
 const mockInvalidJwtToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiC0wMDAwMDAwMDAwMDEiLCJuYW1lIjoiTW9ydGltZXIiLCJlbWFpbCI6IiIsImlzQWRtaW4iOnRydWV9LCJpYXQiOjE1NzQzNTAzMzZ9.9Y8eq2ygcdZunZxDY__V-jT-v1wy1NG9oF-W5A-kP5jGa0p7AT8v_fPQO6srdS9zd4s3yNCkEDWV8Df52ieamg';
@@ -31,10 +30,8 @@ describe('AuthService', () => {
       const returnValue = AuthService.extractTokenInfo(mockValidJwtToken);
 
       // assert
-      expect(returnValue).toBe(true);
-      expect(jwtToken.token).toBe(mockValidJwtToken);
-      expect(jwtToken.expires).toBe(1575373110);
-      expect(localStorage.user).toBe(mockValidJwtToken);
+      expect(returnValue.token).toBe(mockValidJwtToken);
+      expect(returnValue.expires).toBe(mockExtractedTokenInfo.exp);
     });
 
     test('token is invalid', () => {
@@ -45,9 +42,7 @@ describe('AuthService', () => {
       const returnValue = AuthService.extractTokenInfo(mockInvalidJwtToken);
 
       // assert
-      expect(returnValue).toBe(false);
-      expect(localStorage.user).toBe(undefined);
-      expect(jwtToken.token).toBe('');
+      expect(returnValue).toBe(null);
     });
 
     test('token is empty', () => {
@@ -56,39 +51,8 @@ describe('AuthService', () => {
       const returnValueNull = AuthService.extractTokenInfo(null);
 
       // assert
-      expect(returnValueEmptyString).toBe(false);
-      expect(returnValueNull).toBe(false);
-    });
-  });
-
-  describe('fetches token', () => {
-    const name = 'Rick';
-    const pw = 'test';
-
-    test('successfully', async () => {
-      // arrange
-      ApiService.doPost = jest.fn(() => ({ jwtToken: mockValidJwtToken }));
-
-      // act
-      const returnValue = await AuthService.fetchToken(name, pw);
-
-      // assert
-      expect(returnValue).toBe(mockValidJwtToken);
-      expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/authenticate`);
-    });
-
-    test('with error', async () => {
-      // arrange
-      ApiService.doPost = jest.fn(() => null);
-
-      // act
-      const returnValue = await AuthService.fetchToken(name, pw);
-
-      // assert
-      expect(returnValue).toBe(null);
-      expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/authenticate`);
+      expect(returnValueEmptyString).toBe(null);
+      expect(returnValueNull).toBe(null);
     });
   });
 });
