@@ -1,3 +1,4 @@
+import axios from 'axios';
 import AuthService, { jwtToken, refreshToken } from '../../../src/service/AuthService';
 import ApiService from '../../../src/service/ApiService';
 
@@ -104,11 +105,54 @@ describe('AuthService', () => {
   });
 
   describe('fetches new jwt', () => {
-    test('successfully', () => {
-
+    beforeEach(() => {
+      refreshToken.token = '';
+      refreshToken.expires = 0;
+      jwtToken.token = '';
+      jwtToken.expires = 0;
+      localStorage.clear();
     });
-    test('with error', () => {
 
+    test('successfully', async () => {
+      // arrange
+      const mockResponse = {
+        jwtToken: mockValidJwt,
+      };
+      const mockExtractedInfo = {
+        token: mockValidJwt,
+        expires: mockExtractedTokenInfo.exp,
+      };
+      axios.get = jest.fn(() => mockResponse);
+      AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
+      refreshToken.token = mockValidJwt;
+
+      // act
+      const returnValue = await AuthService.fetchNewJWT();
+
+      // assert
+      expect(returnValue).toBe(true);
+      expect(localStorage.user).toEqual(mockValidJwt);
+      expect(jwtToken.token).toEqual(mockValidJwt);
+      expect(jwtToken.expires).toEqual(mockExtractedTokenInfo.exp);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/refresh`);
+      expect(axios.get.mock.calls[0][1]).toEqual({ headers: refreshToken.token });
+    });
+    test('with error', async () => {
+      // arrange
+      axios.get = jest.fn(() => undefined);
+
+      // act
+      const returnValue = await AuthService.fetchNewJWT();
+
+      // assert
+      expect(returnValue).toBe(false);
+      expect(localStorage.getItem('user')).toEqual(null);
+      expect(jwtToken.token).toEqual('');
+      expect(jwtToken.expires).toEqual(0);
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/refresh`);
+      expect(axios.get.mock.calls[0][1]).toEqual({ headers: refreshToken.token });
     });
   });
 

@@ -61,6 +61,7 @@ export default class AuthService {
   static async fetchNewJWT() {
     const config = { headers: refreshToken.token };
     const response = await axios.get(`${process.env.USER_SERVICE_URL}/refresh`, config);
+
     if (!isNil(response) && !isNil(response.jwtToken)) {
       const tokenInfo = this.extractTokenInfo(response.jwtToken);
       jwtToken.token = tokenInfo.token;
