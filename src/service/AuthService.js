@@ -13,6 +13,8 @@ export const refreshToken = {
   expires: 0,
 };
 
+let jwtRequestLoopIntervalID;
+
 export default class AuthService {
   static extractTokenInfo(token) {
     if (!isNil(token) && !isEqual(token, '')) {
@@ -59,8 +61,11 @@ export default class AuthService {
   }
 
   static async fetchNewJWT() {
-    const config = { headers: refreshToken.token };
-    const response = await axios.get(`${process.env.USER_SERVICE_URL}/refresh`, config);
+    const config = { headers: {} };
+    config.headers.Authorization = `Bearer ${refreshToken.token}`;
+    const response = await axios.get(`${process.env.USER_SERVICE_URL}/refresh`, config).then(
+      resp => resp.data,
+    );
 
     if (!isNil(response) && !isNil(response.jwtToken)) {
       const tokenInfo = this.extractTokenInfo(response.jwtToken);
@@ -73,17 +78,20 @@ export default class AuthService {
     return false;
   }
 
-  static checkTokenValidityLoop() {
-    while (!isNil(localStorage.getItem('refresh-token'))) {
-      setTimeout(() => {
-        const expires = moment(jwtToken.expires);
+  static jwtRequestLoop() {
+    jwtRequestLoopIntervalID = window.setInterval(() => {
+      this.checkIfNewJWTRequired();
+    }, 30000);
+  }
 
-        const secondsUntilExpiry = moment.utc(moment().diff(expires)).seconds();
+  static checkIfNewJWTRequired() {
+    const expires = moment(jwtToken.expires * 1000);
 
-        if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
-          this.fetchNewJWT();
-        }
-      }, 30000);
+    const secondsUntilExpiry = moment.duration(moment().diff(expires)).asSeconds();
+    console.log(secondsUntilExpiry);
+
+    if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
+      this.fetchNewJWT();
     }
   }
 
@@ -93,7 +101,8 @@ export default class AuthService {
       fetchSuccessful = await this.fetchNewJWT();
 
       if (fetchSuccessful) {
-        this.checkTokenValidityLoop();
+        this.jwtRequestLoop();
+        return true;
       }
     }
     return false;
@@ -102,5 +111,6 @@ export default class AuthService {
   static logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('refresh-token');
+    window.clearInterval(jwtRequestLoopIntervalID);
   }
 }
