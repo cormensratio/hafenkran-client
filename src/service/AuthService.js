@@ -45,6 +45,27 @@ export default class AuthService {
     return output;
   }
 
+  static async initAuthentication() {
+    const existingRefreshJWT = localStorage.getItem('refresh-token');
+
+    if (!isNil(existingRefreshJWT)) {
+      const refreshTokenInfo = this.extractTokenInfo(existingRefreshJWT);
+
+      if (!isNil(refreshTokenInfo.expires) && !this.isTokenExpired(refreshTokenInfo.exp)) {
+        refreshToken.token = refreshTokenInfo.token;
+        refreshToken.expires = refreshTokenInfo.expires;
+        if (await this.fetchNewJWT()) {
+          this.jwtRequestLoop();
+          return true;
+        }
+      } else {
+        localStorage.removeItem('refresh-token');
+        localStorage.removeItem('user');
+      }
+    }
+    return false;
+  }
+
   static async fetchRefreshToken(name, password) {
     const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/authenticate`,
       { name, password });
@@ -86,11 +107,10 @@ export default class AuthService {
 
   static checkIfNewJWTRequired() {
     const expires = moment(jwtToken.expires * 1000);
-
     const secondsUntilExpiry = moment.duration(moment().diff(expires)).asSeconds();
-    console.log(secondsUntilExpiry);
 
     if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
+      console.log('About to fetch new JWT...');
       this.fetchNewJWT();
     }
   }
