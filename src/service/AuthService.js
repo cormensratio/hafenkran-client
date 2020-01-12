@@ -55,7 +55,7 @@ export default class AuthService {
         refreshToken.token = refreshTokenInfo.token;
         refreshToken.expires = refreshTokenInfo.expires;
         if (await this.fetchNewJWT()) {
-          this.jwtRequestLoop();
+          this.startJWTRequestLoop();
           return true;
         }
       } else {
@@ -99,7 +99,7 @@ export default class AuthService {
     return false;
   }
 
-  static jwtRequestLoop() {
+  static startJWTRequestLoop() {
     jwtRequestLoopIntervalID = window.setInterval(() => {
       this.checkIfNewJWTRequired();
     }, 30000);
@@ -121,7 +121,7 @@ export default class AuthService {
       fetchSuccessful = await this.fetchNewJWT();
 
       if (fetchSuccessful) {
-        this.jwtRequestLoop();
+        this.startJWTRequestLoop();
         return true;
       }
     }

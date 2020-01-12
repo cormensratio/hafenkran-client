@@ -15,6 +15,12 @@ const mockExtractedTokenInfo = {
   },
 };
 
+// mocks value returned from AuthService.extractTokenInfo()
+const mockExtractedInfo = {
+  token: mockValidJwt,
+  expires: mockExtractedTokenInfo.exp,
+};
+
 jest.mock('axios');
 
 describe('AuthService', () => {
@@ -73,10 +79,6 @@ describe('AuthService', () => {
       const mockResponse = {
         jwtToken: mockValidJwt,
       };
-      const mockExtractedInfo = {
-        token: mockValidJwt,
-        expires: mockExtractedTokenInfo.exp,
-      };
       ApiService.doPost = jest.fn(() => mockResponse);
       AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
 
@@ -124,10 +126,6 @@ describe('AuthService', () => {
           jwtToken: mockValidJwt,
         },
       };
-      const mockExtractedInfo = {
-        token: mockValidJwt,
-        expires: mockExtractedTokenInfo.exp,
-      };
       const mockRequestConfig = {
         headers: { Authorization: `Bearer ${refreshToken.token}` },
       };
@@ -174,12 +172,45 @@ describe('AuthService', () => {
     });
   });
 
-  describe('checks token validity', () => {
-    test('successfully', () => {
-
+  describe('checks authentication on init', () => {
+    beforeEach(() => {
+      localStorage.clear();
     });
-    test('with error', () => {
 
+    test('when non-expired tokens are saved in storage', async () => {
+      // arrange
+      localStorage.setItem('refresh-token', mockValidJwt);
+      AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
+      AuthService.isTokenExpired = jest.fn(() => false);
+      AuthService.startJWTRequestLoop = jest.fn();
+      AuthService.fetchNewJWT = jest.fn(() => true);
+
+      // act
+      const returnValue = await AuthService.initAuthentication();
+
+      // assert
+      expect(returnValue).toBe(true);
+      expect(refreshToken.token).toEqual(mockExtractedInfo.token);
+      expect(refreshToken.expires).toEqual(mockExtractedInfo.expires);
+      expect(AuthService.startJWTRequestLoop).toHaveBeenCalled();
+    });
+    test('when expired tokens are saved in storage', async () => {
+      // arrange
+      localStorage.setItem('refresh-token', mockValidJwt);
+      localStorage.setItem('user', mockValidJwt);
+      AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
+      AuthService.isTokenExpired = jest.fn(() => true);
+      AuthService.startJWTRequestLoop = jest.fn();
+      AuthService.fetchNewJWT = jest.fn(() => true);
+
+      // act
+      const returnValue = await AuthService.initAuthentication();
+
+      // assert
+      expect(returnValue).toBe(false);
+      expect(AuthService.startJWTRequestLoop).toHaveBeenCalledTimes(0);
+      expect(localStorage.getItem('user')).toBe(null);
+      expect(localStorage.getItem('refresh-token')).toBe(null);
     });
   });
 });
