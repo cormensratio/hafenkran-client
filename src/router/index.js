@@ -8,6 +8,7 @@ import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 import NewExperimentPage from '../components/views/NewExperimentPage';
 import UserList from '../components/views/UserList';
+import UserSettingsPage from '../components/views/UserSettingsPage';
 
 Vue.use(Router);
 
@@ -69,6 +70,14 @@ const router = new Router({
       component: UserList,
       meta: {
         requiresAUth: true,
+      },
+    },
+    {
+      path: '/settings',
+      name: 'UserSettings',
+      component: UserSettingsPage,
+      meta: {
+        requiresAuth: false,
       },
     },
   ],
