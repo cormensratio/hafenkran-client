@@ -15,6 +15,8 @@ const mockExtractedTokenInfo = {
   },
 };
 
+jest.mock('axios');
+
 describe('AuthService', () => {
   describe('extracts token info when', () => {
     beforeEach(() => {
@@ -105,26 +107,32 @@ describe('AuthService', () => {
   });
 
   describe('fetches new jwt', () => {
+    refreshToken.token = mockValidJwt;
+
     beforeEach(() => {
-      refreshToken.token = '';
-      refreshToken.expires = 0;
       jwtToken.token = '';
       jwtToken.expires = 0;
       localStorage.clear();
+      jest.clearAllMocks(); // reset calls on axios mock instance
     });
 
     test('successfully', async () => {
       // arrange
+      refreshToken.token = mockValidJwt;
       const mockResponse = {
-        jwtToken: mockValidJwt,
+        data: {
+          jwtToken: mockValidJwt,
+        },
       };
       const mockExtractedInfo = {
         token: mockValidJwt,
         expires: mockExtractedTokenInfo.exp,
       };
-      axios.get = jest.fn(() => mockResponse);
+      const mockRequestConfig = {
+        headers: { Authorization: `Bearer ${refreshToken.token}` },
+      };
+      axios.get.mockResolvedValue(mockResponse);
       AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
-      refreshToken.token = mockValidJwt;
 
       // act
       const returnValue = await AuthService.fetchNewJWT();
@@ -135,12 +143,21 @@ describe('AuthService', () => {
       expect(jwtToken.token).toEqual(mockValidJwt);
       expect(jwtToken.expires).toEqual(mockExtractedTokenInfo.exp);
       expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(axios.get.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/refresh`);
-      expect(axios.get.mock.calls[0][1]).toEqual({ headers: refreshToken.token });
+      expect(axios.get).toHaveBeenCalledWith(
+        `${process.env.USER_SERVICE_URL}/refresh`, mockRequestConfig,
+      );
     });
     test('with error', async () => {
       // arrange
-      axios.get = jest.fn(() => undefined);
+      const mockResponse = {
+        data: {
+          jwtToken: null,
+        },
+      };
+      const mockRequestConfig = {
+        headers: { Authorization: `Bearer ${refreshToken.token}` },
+      };
+      axios.get.mockResolvedValue(mockResponse);
 
       // act
       const returnValue = await AuthService.fetchNewJWT();
@@ -151,8 +168,9 @@ describe('AuthService', () => {
       expect(jwtToken.token).toEqual('');
       expect(jwtToken.expires).toEqual(0);
       expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(axios.get.mock.calls[0][0]).toBe(`${process.env.USER_SERVICE_URL}/refresh`);
-      expect(axios.get.mock.calls[0][1]).toEqual({ headers: refreshToken.token });
+      expect(axios.get).toHaveBeenCalledWith(
+        `${process.env.USER_SERVICE_URL}/refresh`, mockRequestConfig,
+      );
     });
   });
 
