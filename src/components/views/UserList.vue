@@ -48,7 +48,7 @@
                 </v-toolbar-title>
               </v-toolbar>
               <div mb-5>
-                <v-list class="listAccepted">
+                <v-list class="listAccepted" v-bind:style="{ maxHeight: maxHeight }">
                   <v-list-tile class="p-2 tile"
                                :key="user.name"
                                v-for="(user) in userList">
@@ -88,10 +88,19 @@ export default {
   name: 'UserList',
   components: { Header, Footer, BasePage },
   data() {
-    return {};
+    return {
+    };
   },
   computed: {
     ...mapGetters(['userList', 'pendingUsers']),
+    maxHeight() {
+      if (this.pendingUsers.length >= 2) {
+        return '39vh';
+      } else if (this.pendingUsers.length === 1) {
+        return '51vh';
+      }
+      return '69vh';
+    },
   },
   methods: {
     ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
@@ -118,11 +127,10 @@ export default {
 <style scoped>
   .listAccepted {
     overflow-y: scroll;
-    max-height: 500px;
   }
   .listPending {
     overflow-y: scroll;
-    max-height: 300px;
+    max-height: 200px;
   }
   .tile:hover {
     background-color: #dddddd;
