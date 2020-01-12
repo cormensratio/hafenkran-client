@@ -4,7 +4,7 @@
     <div class="page-container">
       <slot name="body"></slot>
     </div>
-    <v-snackbar v-model="snackShow" right>
+    <v-snackbar v-model="snackShow" :timeout="0" right>
       {{ snack }}
       <v-btn flat color="accent" @click=showSnack(false)>Close</v-btn>
     </v-snackbar>
