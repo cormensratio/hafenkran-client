@@ -90,7 +90,12 @@ import DeleteDialog from '../baseComponents/DeleteDialog';
 
 export default {
   name: 'ExecutionsListPage',
-  components: { DeleteDialog, ExecutionFilters, BaseListHeader, StatusCell, BasePage, StartExperimentMenu },
+  components: { DeleteDialog,
+    ExecutionFilters,
+    BaseListHeader,
+    StatusCell,
+    BasePage,
+    StartExperimentMenu },
   mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
