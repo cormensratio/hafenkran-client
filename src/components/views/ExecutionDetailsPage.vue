@@ -161,7 +161,7 @@ export default {
     ...mapGetters(['snack', 'snackShow', 'experiments']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
     ...mapMutations(['setSnack']),
 
     getLogs() {
