@@ -27,24 +27,27 @@
               />
               <v-card-actions>
                 <v-flex>
-                  <v-btn class="logs left" dark style="background-color: var(--themeColor)"
-                         @click="getLogs">
-                    Load Logs
-                  </v-btn>
-                  <v-btn dark style="background-color: var(--themeColor)"
-                         @click="downloadResults()" class="left">
-                    Download Results
-                    <v-icon right>cloud_download</v-icon>
-                  </v-btn>
                   <v-btn class="error right"
-                         @click="setExecution()">Delete</v-btn>
+                         @click="setExecution()">
+                    <v-icon>delete_forever</v-icon>
+                  </v-btn>
                   <v-btn v-if="!hasTerminated(execution.status)" class="right"
                          @click="executionCancel(execution.id)">
                     Cancel execution
                     <v-icon right dark>cancel</v-icon>
                   </v-btn>
-                  <v-btn v-else @click="showContextMenu($event, execution.experimentId)">
-                    Repeat
+                  <v-btn class="right" v-else
+                         @click="showContextMenu($event, execution.experimentId)">
+                    <v-icon>replay</v-icon>
+                  </v-btn>
+                  <v-btn dark style="background-color: var(--themeColor)"
+                         @click="downloadResults()" class="right">
+                    Download Results
+                    <v-icon right>cloud_download</v-icon>
+                  </v-btn>
+                  <v-btn class="logs right" dark style="background-color: var(--themeColor)"
+                  @click="getLogs">
+                    Load Logs
                   </v-btn>
                 </v-flex>
               </v-card-actions>
@@ -62,7 +65,7 @@
                   <v-icon>description</v-icon>
                 </v-tab>
                 <v-tab class="color-theme-blue" @click="activeTab=2">Statistics
-                  <v-icon>timeline</v-icon>
+                  <v-icon>insert_chart</v-icon>
                 </v-tab>
               </v-tabs>
             </v-card>
