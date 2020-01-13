@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     closeMenu() {
       this.$emit('menuClosed');
     },

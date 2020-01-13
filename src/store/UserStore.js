@@ -72,6 +72,23 @@ const UserStore = {
       }
       return false;
     },
+    async updateUser({ commit, state }, { email, password, newPassword, isAdmin }) {
+      const newUserInformation = {
+        id: state.user.id,
+        password,
+        email,
+        newPassword,
+        isAdmin,
+      };
+      const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update`, newUserInformation);
+
+      if (!isNil(updatedUser)) {
+        commit('updateUser', updatedUser);
+        console.log('Successfully updated user information.');
+        return updatedUser;
+      }
+      return null;
+    },
     logout({ dispatch }) {
       AuthService.logout();
       dispatch('clearStore');

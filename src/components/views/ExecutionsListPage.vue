@@ -23,7 +23,7 @@
                   {{ getUserNameOfExecution(props.item.ownerId) }}
                 </td>
                 <td class="text-xs-left">
-                {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
+                  {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
                 </td>
                 <td class="text-xs-left">
                   {{ getTimeStamp(props.item.terminatedAt) || 'Not terminated yet'}}
@@ -53,17 +53,13 @@
                        @hideDialog="dialog = false"
                        :extern-execution="selectedExecution"
                        :extern-dialog="dialog"
-        ></delete-dialog>
+        />
         <v-progress-circular
           size="50"
           indeterminate
           color="#106ee0"
           v-if="loading"
         />
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </div>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -94,12 +90,7 @@ import DeleteDialog from '../baseComponents/DeleteDialog';
 
 export default {
   name: 'ExecutionsListPage',
-  components: { DeleteDialog,
-    ExecutionFilters,
-    BaseListHeader,
-    StatusCell,
-    BasePage,
-    StartExperimentMenu },
+  components: { DeleteDialog, ExecutionFilters, BaseListHeader, StatusCell, BasePage, StartExperimentMenu },
   mixins: [TimeStampMixin, FilterMixin],
   data() {
     return {
@@ -122,12 +113,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions', 'snack', 'snackShow', 'experiments', 'user']),
+    ...mapGetters(['executions', 'user', 'userList', 'experiments']),
   },
-
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
     },
