@@ -126,7 +126,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack', 'getExperimentFromId']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
     ...mapMutations(['setSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
@@ -183,7 +183,6 @@ export default {
         this.showMenu = true;
       });
     },
-
     updateSelectedExperiment(experimentId) {
       this.selectedExperiment = find(this.experiments, exp => exp.id === experimentId);
     },
