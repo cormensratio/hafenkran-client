@@ -71,10 +71,9 @@ describe('ExperimentStore', () => {
 
       // assert
       expect(ApiService.doGet).toHaveBeenCalledTimes(1);
-      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments`);
+      expect(ApiService.doGet).toHaveBeenCalledWith(`${mockServiceUrl}/experiments`);
       expect(commit).toHaveBeenCalledTimes(1);
-      expect(commit.mock.calls[0][0]).toBe('updateExperiments');
-      expect(commit.mock.calls[0][1]).toBe(mockExperiments);
+      expect(commit).toHaveBeenCalledWith('updateExperiments', mockExperiments);
     });
 
     test('with error', async () => {
@@ -86,7 +85,7 @@ describe('ExperimentStore', () => {
 
       // assert
       expect(ApiService.doGet).toHaveBeenCalledTimes(1);
-      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments`);
+      expect(ApiService.doGet).toHaveBeenCalledWith(`${mockServiceUrl}/experiments`);
       expect(commit).toHaveBeenCalledTimes(0);
     });
   });
@@ -107,7 +106,7 @@ describe('ExperimentStore', () => {
       // assert
       expect(response).toBe(mockExecutions[0]);
       expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments/${mockExecutionDetails.experimentId}/execute`);
+      expect(ApiService.doPost).toHaveBeenCalledWith(`${mockServiceUrl}/experiments/${mockExecutionDetails.experimentId}/execute`, mockExecutionDetails);
     });
 
     test('with error', async () => {
