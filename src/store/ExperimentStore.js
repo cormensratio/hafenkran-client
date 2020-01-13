@@ -38,7 +38,6 @@ const ExperimentStore = {
       }
     },
     getExperimentFromId({ state }, id) {
-      debugger;
       const experiment = filter(state.experiments, e => e.id === id)[0];
       if (!isNil(experiment)) {
         return experiment;
