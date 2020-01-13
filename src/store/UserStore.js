@@ -85,6 +85,42 @@ const UserStore = {
         isAdmin: '',
         eMail: '',
       },
+      {
+        id: '12',
+        name: 'Angela',
+        isAdmin: '',
+        eMail: '',
+      },
+      {
+        id: '13',
+        name: 'Merkel',
+        isAdmin: '',
+        eMail: '',
+      },
+      {
+        id: '14',
+        name: 'A',
+        isAdmin: '',
+        eMail: '',
+      },
+      {
+        id: '15',
+        name: 'B',
+        isAdmin: '',
+        eMail: '',
+      },
+      {
+        id: '16',
+        name: 'C',
+        isAdmin: '',
+        eMail: '',
+      },
+      {
+        id: '17',
+        name: 'D',
+        isAdmin: '',
+        eMail: '',
+      },
     ],
   },
   getters: {
