@@ -113,7 +113,7 @@
               :close-on-content-click="false"
               :close-on-click="false"
       >
-        <StartExperimentMenu :experiment="execution.experimentId"
+        <StartExperimentMenu :experiment="selectedExperiment"
                              @menuClosed="closeMenu">
         </StartExperimentMenu>
       </v-menu>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { isNil, forEach, isEqual } from 'lodash';
+import { isNil, forEach, isEqual, find } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -151,16 +151,17 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
+      selectedExperiment: {},
     };
   },
   props: {
     executionId: String,
   },
   computed: {
-    ...mapGetters(['snack', 'snackShow']),
+    ...mapGetters(['snack', 'snackShow', 'experiments']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack']),
 
     getLogs() {
@@ -273,12 +274,16 @@ export default {
       return false;
     },
     showContextMenu(event) {
+      this.updateSelectedExperiment(this.execution.experimentId);
       this.showMenu = false;
       this.menuPosX = event.clientX;
       this.menuPosY = event.clientY;
       this.$nextTick(() => {
         this.showMenu = true;
       });
+    },
+    updateSelectedExperiment(experimentId) {
+      this.selectedExperiment = find(this.experiments, exp => exp.id === experimentId);
     },
   },
   created() {
