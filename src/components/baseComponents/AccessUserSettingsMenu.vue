@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
-    <v-menu offset-y offset-x>
+    <v-menu offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" fab small color="white">
           <span class="avatar-button">{{ user.name.charAt(0) }}</span>
@@ -20,16 +20,6 @@
             Logout
           </v-list-tile>
         </v-list>
-<!--        <div class="font-weight-bold">{{user.name}}</div>-->
-<!--        <v-divider></v-divider>-->
-<!--        <div @click="navigateToSettings" class="option">-->
-<!--          User settings-->
-<!--        </div>-->
-<!--        <v-divider></v-divider>-->
-<!--        <div @click="logoutUser" class="option">-->
-<!--          <v-icon>logout</v-icon>-->
-<!--          Logout-->
-<!--        </div>-->
       </v-card>
     </v-menu>
   </div>
