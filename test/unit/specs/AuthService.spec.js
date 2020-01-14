@@ -91,7 +91,7 @@ describe('AuthService', () => {
       expect(refreshToken.expires).toEqual(mockExtractedTokenInfo.exp);
       expect(localStorage.getItem('refresh-token')).toEqual(mockValidJwt);
       expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost).toHaveBeenCalledWith(`${process.env.USER_SERVICE_URL}/authenticate`);
+      expect(ApiService.doPost).toHaveBeenCalledWith(`${process.env.USER_SERVICE_URL}/authenticate`, { name: mockUserName, password: mockPassword });
     });
     test('with error', async () => {
       // arrange
@@ -104,7 +104,7 @@ describe('AuthService', () => {
       expect(returnValue).toBe(false);
       expect(localStorage.getItem('refresh-token')).toBe(null);
       expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost).toHaveBeenCalledWith(`${process.env.USER_SERVICE_URL}/authenticate`);
+      expect(ApiService.doPost).toHaveBeenCalledWith(`${process.env.USER_SERVICE_URL}/authenticate`, { name: mockUserName, password: mockPassword });
     });
   });
 
