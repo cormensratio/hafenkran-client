@@ -1,26 +1,34 @@
 import { isEqual, isNil } from 'lodash';
+import axios from 'axios';
+import moment from 'moment';
 import ApiService from './ApiService';
-import store from '../store/store';
 
 export const jwtToken = {
   token: '',
   expires: 0,
 };
 
+export const refreshToken = {
+  token: '',
+  expires: 0,
+};
+
+let jwtRequestLoopIntervalID;
+
 export default class AuthService {
   static extractTokenInfo(token) {
     if (!isNil(token) && !isEqual(token, '')) {
       const tokenInfo = this.getTokenPayload(token);
       if (!isNil(tokenInfo) && !this.isTokenExpired(tokenInfo.exp)) {
-        jwtToken.token = token;
-        jwtToken.expires = tokenInfo.exp;
-        localStorage.setItem('user', token);
+        const output = {};
+        output.token = token;
+        output.expires = tokenInfo.exp;
         console.log('Successfully extracted token information');
-        return true;
+        return output;
       }
     }
     console.log('Failed to extract token info');
-    return false;
+    return null;
   }
 
   static isTokenExpired(expiryTimeStamp) {
@@ -37,40 +45,92 @@ export default class AuthService {
     return output;
   }
 
-  static async checkTokenValidity() {
-    const valid = !isEqual(jwtToken.token, '')
-      && (jwtToken.expires > 0)
-      && !AuthService.isTokenExpired(jwtToken.expires);
+  static async initAuthentication() {
+    const existingRefreshJWT = localStorage.getItem('refresh-token');
 
-    if (!valid) {
-      console.log('Fetching new token');
-      const userInfo = store.getters.user;
-      const newToken = await this.fetchToken(userInfo.name, userInfo.password);
-      this.extractTokenInfo(newToken);
+    if (!isNil(existingRefreshJWT)) {
+      const refreshTokenInfo = this.extractTokenInfo(existingRefreshJWT);
+
+      if (!isNil(refreshTokenInfo.expires) && !this.isTokenExpired(refreshTokenInfo.exp)) {
+        refreshToken.token = refreshTokenInfo.token;
+        refreshToken.expires = refreshTokenInfo.expires;
+        if (await this.fetchNewJWT()) {
+          this.startJWTRequestLoop();
+          return true;
+        }
+      } else {
+        localStorage.removeItem('refresh-token');
+        localStorage.removeItem('user');
+      }
     }
+    return false;
   }
 
-  static async fetchToken(name, password) {
+  static async fetchRefreshToken(name, password) {
     const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/authenticate`,
       { name, password });
-    if (!isNil(response)) {
-      console.log('Received Token from User-Service');
-      return response.jwtToken;
+    if (!isNil(response) && !isNil(response.jwtToken)) {
+      const tokenInfo = this.extractTokenInfo(response.jwtToken);
+      refreshToken.token = tokenInfo.token;
+      refreshToken.expires = tokenInfo.expires;
+      localStorage.setItem('refresh-token', tokenInfo.token);
+      console.log('Received refresh token from User-Service');
+      return true;
+    }
+    console.log('Failed fetching initial JWT!');
+    return false;
+  }
+
+  static async fetchNewJWT() {
+    const config = { headers: {} };
+    config.headers.Authorization = `Bearer ${refreshToken.token}`;
+    const response = await axios.get(`${process.env.USER_SERVICE_URL}/refresh`, config).then(
+      resp => resp.data,
+    );
+
+    if (!isNil(response) && !isNil(response.jwtToken)) {
+      const tokenInfo = this.extractTokenInfo(response.jwtToken);
+      jwtToken.token = tokenInfo.token;
+      jwtToken.expires = tokenInfo.expires;
+      localStorage.setItem('user', jwtToken.token);
+      return true;
     }
     console.log('Failed fetching JWT!');
-    return null;
+    return false;
+  }
+
+  static startJWTRequestLoop() {
+    jwtRequestLoopIntervalID = window.setInterval(() => {
+      this.checkIfNewJWTRequired();
+    }, 30000);
+  }
+
+  static checkIfNewJWTRequired() {
+    const expires = moment(jwtToken.expires * 1000);
+    const secondsUntilExpiry = moment.duration(moment().diff(expires)).asSeconds();
+
+    if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
+      console.log('About to fetch new JWT...');
+      this.fetchNewJWT();
+    }
   }
 
   static async login(name, password) {
-    const token = await this.fetchToken(name, password);
-    if (!isNil(token) && !isEqual(token, '')) {
-      this.extractTokenInfo(token);
-      return true;
+    let fetchSuccessful = await this.fetchRefreshToken(name, password);
+    if (fetchSuccessful) {
+      fetchSuccessful = await this.fetchNewJWT();
+
+      if (fetchSuccessful) {
+        this.startJWTRequestLoop();
+        return true;
+      }
     }
     return false;
   }
 
   static logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('refresh-token');
+    window.clearInterval(jwtRequestLoopIntervalID);
   }
 }
