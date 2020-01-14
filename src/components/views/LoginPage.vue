@@ -6,14 +6,11 @@
           <v-flex md4>
             <v-card>
               <v-toolbar dark style="background: var(--themeColor)">
-                <v-toolbar-title color="white" v-if="isAuthenticated" class="justify-center">
-                  You are already logged in {{ user.name }}!
-                </v-toolbar-title>
-                <v-toolbar-title v-else color="white" class="justify-center">
+                <v-toolbar-title color="white" class="justify-center">
                   Login to Hafenkran:
                 </v-toolbar-title>
               </v-toolbar>
-              <v-card-text>
+              <v-card-text v-if="!isAuthenticated">
                 <v-form lazy-validation class="mt-3 mr-4">
                   <v-text-field v-model="userName" outline autofocus
                                 @keyup.enter="loginUser"
@@ -23,7 +20,10 @@
                                 label="Password" prepend-icon="lock"/>
                 </v-form>
               </v-card-text>
-              <v-card-actions class="justify-center">
+              <v-card-text v-else>
+                <div class="text-muted info-text">You are already logged in {{ user.name }}!</div>
+              </v-card-text>
+              <v-card-actions class="justify-center" v-if="!isAuthenticated">
                 <div class="mb-3">
                   <v-btn large dark style="background: var(--themeColor)"
                          @click="loginUser()" class="button">Login
@@ -90,5 +90,7 @@ export default {
 };
 </script>
 <style scoped>
-
+.info-text {
+  font-size: 14pt;
+}
 </style>

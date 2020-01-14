@@ -2,71 +2,75 @@
   <base-page>
     <template slot="body">
       <v-container>
-        <v-layout class="justify-center">
-          <v-card class="col p-0" max-width="650px" ref="form">
-            <v-toolbar dark class="toolbar">
-              <v-toolbar-title>
-                Sign Up
-              </v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-              <v-text-field
-                v-model="userName"
-                :rules="[rules.required]"
-                label="Username"
-                placeholder=""
-                autofocus
-                outline
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="userEmail"
-                :rules="[emailRules.required, emailRules.regex]"
-                label="Email"
-                placeholder=""
-                outline
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                :rules="[rules.required, rules.min, rules.matchWithConfirm]"
-                :type="show ? 'text' : 'password'"
-                label="Password"
-                placeholder=""
-                outline
-                hint="At least 8 characters"
-                counter
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="confirmPassword"
-                :rules="[rules.required, rules.min, rules.matchWithPassword]"
-                :type="show ? 'text' : 'password'"
-                label="Confirm Password"
-                outline
-                hint="At least 8 characters"
-                counter
-                required
-                placeholder=""
-              ></v-text-field>
-            </v-card-text>
-            <v-divider class="mt-3 p-0 m-0"></v-divider>
-            <v-card-actions>
-              <v-btn dark style="background-color: var(--themeColor);"
-                     class="signup-button"
-                     @click="register()">Sign Up</v-btn>
-            </v-card-actions>
-            <v-progress-circular
-              size="50"
-              indeterminate
-              color="#106ee0"
-              v-if="loading"
-            />
-            <v-snackbar v-model="snackShow" right>
-              {{ snack }}
-              <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-            </v-snackbar>
-          </v-card>
+        <v-layout justify-center>
+          <v-flex md4>
+            <v-card ref="form">
+              <v-toolbar dark class="toolbar">
+                <v-toolbar-title>
+                  Sign Up
+                </v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form class="m-3">
+                  <v-text-field
+                    v-model="userName"
+                    :rules="[rules.required]"
+                    label="Username"
+                    placeholder=""
+                    autofocus
+                    outline
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userEmail"
+                    :rules="[emailRules.required, emailRules.regex]"
+                    label="Email"
+                    placeholder=""
+                    outline
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="password"
+                    :rules="[rules.required, rules.min, rules.matchWithConfirm]"
+                    :type="show ? 'text' : 'password'"
+                    label="Password"
+                    placeholder=""
+                    outline
+                    hint="At least 8 characters"
+                    counter
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="confirmPassword"
+                    :rules="[rules.required, rules.min, rules.matchWithPassword]"
+                    :type="show ? 'text' : 'password'"
+                    label="Confirm Password"
+                    outline
+                    hint="At least 8 characters"
+                    counter
+                    required
+                    placeholder=""
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-divider class="mt-3 p-0 m-0"></v-divider>
+              <v-card-actions>
+                <v-btn dark style="background-color: var(--themeColor);"
+                       class="signup-button"
+                       @click="register()">Sign Up</v-btn>
+              </v-card-actions>
+              <v-progress-circular
+                size="50"
+                indeterminate
+                color="#106ee0"
+                v-if="loading"
+              />
+              <v-snackbar v-model="snackShow" right>
+                {{ snack }}
+                <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+              </v-snackbar>
+            </v-card>
+          </v-flex>
         </v-layout>
       </v-container>
     </template>
