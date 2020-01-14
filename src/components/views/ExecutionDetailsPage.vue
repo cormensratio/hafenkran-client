@@ -40,14 +40,14 @@
                          @click="showContextMenu($event, execution.experimentId)">
                     <v-icon>replay</v-icon>
                   </v-btn>
+                  <v-btn class="logs left" dark style="background-color: var(--themeColor)"
+                         @click="getLogs">
+                    Load Logs
+                  </v-btn>
                   <v-btn dark style="background-color: var(--themeColor)"
-                         @click="downloadResults()" class="right">
+                         @click="downloadResults()" class="left">
                     Download Results
                     <v-icon right>cloud_download</v-icon>
-                  </v-btn>
-                  <v-btn class="logs right" dark style="background-color: var(--themeColor)"
-                  @click="getLogs">
-                    Load Logs
                   </v-btn>
                 </v-flex>
               </v-card-actions>
