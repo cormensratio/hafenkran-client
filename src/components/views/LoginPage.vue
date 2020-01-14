@@ -38,10 +38,6 @@
                 color="#106ee0"
                 v-if="loading"
               />
-              <v-snackbar v-model="snackShow" right>
-                {{ snack }}
-                <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-              </v-snackbar>
             </v-card>
           </v-flex>
         </v-layout>
@@ -65,7 +61,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'isAuthenticated', 'snack', 'snackShow']),
+    ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),

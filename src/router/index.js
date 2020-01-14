@@ -7,6 +7,7 @@ import LoginPage from '../components/views/LoginPage';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 import NewExperimentPage from '../components/views/NewExperimentPage';
+import UserSettingsPage from '../components/views/UserSettingsPage';
 import SignUpPage from '../components/views/SignUpPage';
 
 Vue.use(Router);
@@ -67,6 +68,14 @@ const router = new Router({
       path: '/signup',
       name: 'SignUpPage',
       component: SignUpPage,
+      meta: {
+        requiresAuth: false,
+      },
+    },
+    {
+      path: '/settings',
+      name: 'UserSettings',
+      component: UserSettingsPage,
       meta: {
         requiresAuth: false,
       },

@@ -99,10 +99,6 @@
             </div>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-container>
     </template>
   </base-page>
@@ -140,11 +136,11 @@ export default {
     executionId: String,
   },
   computed: {
-    ...mapGetters(['snack', 'snackShow']),
+    ...mapGetters(['executions']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
+    ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
       this.loadingLogs = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
@@ -241,7 +237,10 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    if (!isNil(this.executions) && this.executions.length > 0) {
+      await this.fetchAllExecutionsOfUser();
+    }
     this.getExecutionById(this.executionId)
       .then((execution) => {
         if (!isNil(execution)) {
