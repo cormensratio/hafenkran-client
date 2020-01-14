@@ -10,7 +10,10 @@
                   Sign Up
                 </v-toolbar-title>
               </v-toolbar>
-              <v-card-text>
+              <v-card-text v-if="isAuthenticated">
+                <div class="text-muted info-text">You are already logged in!</div>
+              </v-card-text>
+              <v-card-text v-else>
                 <v-form class="m-3">
                   <v-text-field
                     v-model="userName"
@@ -29,7 +32,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="password"
-                    :rules="[rules.required, rules.min, rules.matchWithConfirm]"
+                    :rules="[rules.required, rules.min]"
                     :type="show ? 'text' : 'password'"
                     label="Password"
                     outline
@@ -39,7 +42,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="confirmPassword"
-                    :rules="[rules.required, rules.min, rules.matchWithPassword]"
+                    :rules="[rules.required, rules.min]"
                     :type="show ? 'text' : 'password'"
                     label="Confirm Password"
                     outline
@@ -49,8 +52,7 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-divider class="mt-3 p-0 m-0"></v-divider>
-              <v-card-actions>
+              <v-card-actions v-if="!isAuthenticated">
                 <v-btn dark style="background-color: var(--themeColor);"
                        class="signup-button"
                        @click="register()">Sign Up</v-btn>
@@ -77,7 +79,6 @@ import { isNil, isEqual } from 'lodash';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
-import UserService from '../../service/UserService';
 import RulesMixin from '../../mixins/Rules';
 
 export default {
@@ -86,34 +87,20 @@ export default {
   mixins: [RulesMixin],
   data() {
     return {
-      userName: null,
-      userEmail: null,
-      password: null,
-      confirmPassword: null,
+      userName: '',
+      userEmail: '',
+      password: '',
+      confirmPassword: '',
       show: false,
       loading: false,
     };
   },
   computed: {
-    ...mapGetters(['userList', 'snack', 'snackShow']),
+    ...mapGetters(['snack', 'snackShow', 'isAuthenticated']),
   },
   methods: {
     ...mapActions(['triggerSnack', 'registerUser']),
     ...mapMutations(['setSnack']),
-    validateForm() {
-      if (isNil(this.userName)) {
-        this.userName = '';
-      }
-      if (isNil(this.userEmail)) {
-        this.userEmail = '';
-      }
-      if (isNil(this.password)) {
-        this.password = '';
-      }
-      if (isNil(this.confirmPassword)) {
-        this.confirmPassword = '';
-      }
-    },
     arePasswordsEqual() {
       return isEqual(this.password, this.confirmPassword);
     },
@@ -146,26 +133,6 @@ export default {
       }
       this.triggerSnack();
     },
-    async submitForm() {
-      if (!isNil(this.userName) && !isNil(this.userEmail) && !isNil(this.password)
-          && !isNil(this.confirmPassword)
-          && this.password === this.confirmPassword) {
-        const created = await UserService.postUserRegistrateFormInput(this.userName,
-          this.userEmail,
-          this.password);
-        if (created) {
-          this.$router.push('/'); // successfully added user
-        } else {
-          this.setSnack('Username already taken.');
-        }
-        this.loading = false;
-        this.triggerSnack();
-      } else {
-        this.validateForm();
-        this.setSnack('Form not valid.');
-        this.triggerSnack();
-      }
-    },
   },
 };
 </script>
@@ -177,5 +144,8 @@ export default {
   .signup-button {
     padding: 0;
     margin: auto;
+  }
+  .info-text {
+    font-size: 14pt;
   }
 </style>

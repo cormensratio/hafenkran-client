@@ -28,7 +28,7 @@
             <v-btn
               style="background-color:  var(--themeColor)"
               dark
-              to="/signup"
+              @click="getStarted"
             >
               Get started
             </v-btn>
@@ -41,12 +41,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Header from '../baseComponents/Header';
 import Footer from '../baseComponents/Footer';
 
 export default {
   name: 'StartPage',
   components: { Footer, Header },
+  computed: {
+    ...mapGetters(['isAuthenticated']),
+  },
+  methods: {
+    getStarted() {
+      if (this.isAuthenticated) {
+        this.$router.push('/experimentlist');
+      } else {
+        this.$router.push('signup');
+      }
+    },
+  },
 };
 </script>
 

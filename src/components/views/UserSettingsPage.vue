@@ -15,6 +15,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
+                    counter
                     :rules="[rules.min]"
                   />
                   <v-text-field
@@ -23,6 +24,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
+                    counter
                     :rules="[rules.min]"
                   />
                 </div>

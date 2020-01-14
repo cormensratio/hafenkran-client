@@ -86,7 +86,7 @@ export default {
 };
 </script>
 <style scoped>
-.info-text {
-  font-size: 14pt;
-}
+  .info-text {
+    font-size: 14pt;
+  }
 </style>
