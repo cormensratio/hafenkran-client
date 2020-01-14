@@ -33,8 +33,7 @@
                   </v-btn>
                   <v-btn v-if="!hasTerminated(execution.status)" class="right"
                          @click="executionCancel(execution.id)">
-                    Cancel execution
-                    <v-icon right dark>cancel</v-icon>
+                    <v-icon right dark left>cancel</v-icon>
                   </v-btn>
                   <v-btn class="right" v-else
                          @click="showContextMenu($event, execution.experimentId)">
