@@ -18,6 +18,16 @@ export default {
   name: 'StatisticsComponent',
   props: {
     chartData: '',
+    encoding: {
+      x: {
+        field: '',
+        type: '',
+      },
+      y: {
+        field: '',
+        type: '',
+      },
+    },
   },
   data() {
     return {
@@ -57,8 +67,8 @@ export default {
 </style>
 
 <style>
-  .marks {
-    width: 100%;
-    height: 100% !important;
-  }
+  /*.marks {*/
+  /*  width: 100%;*/
+  /*  height: 100% !important;*/
+  /*}*/
 </style>

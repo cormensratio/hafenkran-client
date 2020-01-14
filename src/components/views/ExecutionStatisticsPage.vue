@@ -13,21 +13,32 @@
                 <v-icon v-if="getResultType(result.type) === ''">error</v-icon>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile @click="showResourceUsage = true">
+              <v-list-tile-title>Resource usage</v-list-tile-title>
+              <v-list-tile-content>
+                <v-icon>computer</v-icon>
+              </v-list-tile-content>
+            </v-list-tile>
           </v-list>
         </div>
         <div class="col-8 bg-white result-container">
-          <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
-                                :chart-data="chartData">
-          </statistics-component>
-          <div v-else-if="getResultType(selectedResult.type) === 'log'"
-               class="log-container">{{ logData }}
+          <div v-if="showResourceUsage">
+            <metric-statistics-view :execution-id="executionId"></metric-statistics-view>
           </div>
-          <div v-else-if="!selectedResult"
-               class="hint text-muted">
-            Select a Result
-          </div>
-          <div v-else class="hint text-muted">
-            Result has unsupported format!
+          <div v-else>
+            <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
+                                  :chart-data="chartData">
+            </statistics-component>
+            <div v-else-if="getResultType(selectedResult.type) === 'log'"
+                 class="log-container">{{ logData }}
+            </div>
+            <div v-else-if="!selectedResult"
+                 class="hint text-muted">
+              Select a Result
+            </div>
+            <div v-else class="hint text-muted">
+              Result has unsupported format!
+            </div>
           </div>
         </div>
       </div>
@@ -39,12 +50,14 @@ import { mapGetters, mapActions } from 'vuex';
 import { isNil, isEqual } from 'lodash';
 import ResultService from '../../service/ResultService';
 import StatisticsComponent from '../baseComponents/StatisticsComponent';
+import MetricStatisticsView from '../baseComponents/MetricStatisticsView';
 
 export default {
   name: 'ExecutionStatisticsPage',
-  components: { StatisticsComponent },
+  components: { MetricStatisticsView, StatisticsComponent },
   data() {
     return {
+      showResourceUsage: false,
       selectedResult: '',
       logData: '',
       chartData: [],
@@ -59,6 +72,7 @@ export default {
   methods: {
     ...mapActions(['fetchResultsByExecutionId']),
     loadResultContent(result) {
+      this.showResourceUsage = false;
       this.selectedResult = result;
       if (!isNil(result) && !isNil(result.file) && !isEqual(result.file, '')) {
         const file = ResultService.extractFileObjectFromBase64String(result.file, result.id);
