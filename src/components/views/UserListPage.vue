@@ -71,6 +71,11 @@
                 </v-list>
               </div>
             </v-card>
+            <v-progress-circular
+              indeterminate
+              color="#106ee0"
+              v-if="loading"
+            />
           </v-flex>
         </v-layout>
       </v-container>
@@ -80,15 +85,17 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import Footer from '../baseComponents/Footer';
 import Header from '../baseComponents/Header';
 
 export default {
-  name: 'UserList',
+  name: 'UserListPage',
   components: { Header, Footer, BasePage },
   data() {
     return {
+      loading: false,
     };
   },
   computed: {
@@ -115,9 +122,16 @@ export default {
       }
       this.triggerSnack();
     },
-    deleteUserFromList(user) {
-      this.deleteUser(user);
-      this.setSnack(`${user.name} has been deleted`);
+    async deleteUserFromList(user) {
+      this.loading = true;
+      const deletedUser = await this.deleteUser(user);
+      console.log(deletedUser);
+      if (!isNil(deletedUser)) {
+        this.setSnack(`${user.name} has been deleted`);
+      } else {
+        this.setSnack(`${user.name} could not be deleted`);
+      }
+      this.loading = false;
       this.triggerSnack();
     },
   },
@@ -128,10 +142,12 @@ export default {
   .listAccepted {
     overflow-y: scroll;
   }
+
   .listPending {
     overflow-y: scroll;
     max-height: 200px;
   }
+
   .tile:hover {
     background-color: #dddddd;
   }
