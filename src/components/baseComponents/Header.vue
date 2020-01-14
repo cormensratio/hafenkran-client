@@ -11,14 +11,7 @@
         <v-btn flat dark to="/newexperiment">Upload</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <div v-if="isAuthenticated">
-        <div class="user-options">
-          <v-btn flat dark @click="logoutUser()">
-            Logout
-          </v-btn>
-          <access-user-settings-menu></access-user-settings-menu>
-        </div>
-      </div>
+      <access-user-settings-menu v-if="isAuthenticated"></access-user-settings-menu>
       <div v-else>
         <v-btn flat dark class="m-3" to="/login"> Login </v-btn>
       </div>
@@ -27,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import AccessUserSettingsMenu from './AccessUserSettingsMenu';
 
 export default {
@@ -37,12 +30,6 @@ export default {
     ...mapGetters(['isAuthenticated', 'user']),
   },
   methods: {
-    ...mapActions(['logout']),
-    logoutUser() {
-      this.logout().then(() => {
-        this.$router.push('/');
-      });
-    },
     navigateToStartPage() {
       this.$router.push('/');
     },

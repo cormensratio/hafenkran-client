@@ -2,30 +2,41 @@
   <div>
     <v-menu offset-y offset-x>
       <template v-slot:activator="{ on }">
-        <v-btn @click="navigateToSettings()" v-on="on"
-               fab small color="white">
+        <v-btn v-on="on" fab small color="white">
           <span class="avatar-button">{{ user.name.charAt(0) }}</span>
         </v-btn>
       </template>
       <v-card>
-        <v-container>
-          <v-layout>
-            <v-flex>
-              <div class="font-weight-bold">{{user.name}}</div>
-              <v-divider></v-divider>
-              <div class="option">User settings</div>
-              <v-divider></v-divider>
-              <div class="option">Logout</div>
-            </v-flex>
-          </v-layout>
-        </v-container>
+        <v-list>
+          <v-list-tile>
+            <div class="list-title">{{user.name}}</div>
+          </v-list-tile>
+          <v-list-tile @click="navigateToSettings" class="option">
+            <v-icon class="mr-1">account_circle</v-icon>
+            User settings
+          </v-list-tile>
+          <v-list-tile @click="logoutUser" class="option">
+            <v-icon class="mr-1">logout</v-icon>
+            Logout
+          </v-list-tile>
+        </v-list>
+<!--        <div class="font-weight-bold">{{user.name}}</div>-->
+<!--        <v-divider></v-divider>-->
+<!--        <div @click="navigateToSettings" class="option">-->
+<!--          User settings-->
+<!--        </div>-->
+<!--        <v-divider></v-divider>-->
+<!--        <div @click="logoutUser" class="option">-->
+<!--          <v-icon>logout</v-icon>-->
+<!--          Logout-->
+<!--        </div>-->
       </v-card>
     </v-menu>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { isEqual } from 'lodash';
 
 export default {
@@ -34,6 +45,12 @@ export default {
     ...mapGetters(['user', 'isAuthenticated']),
   },
   methods: {
+    ...mapActions(['logout']),
+    logoutUser() {
+      this.logout().then(() => {
+        this.$router.push('/');
+      });
+    },
     navigateToSettings() {
       if (this.isAuthenticated) {
         if (!isEqual(this.$route.fullPath, '/settings')) {
@@ -53,5 +70,14 @@ export default {
   }
   .option {
     text-align: start;
+    font-size: 10pt;
+  }
+
+  .option:hover {
+    background-color: lightgray;
+  }
+  .list-title {
+    font-weight: bold;
+    font-size: 12pt;
   }
 </style>
