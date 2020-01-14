@@ -9,10 +9,9 @@ const RulesMixin = {
         matchWithConfirm: v => v === this.confirmPassword || 'Passwords must match',
         matchWithPassword: v => v === this.password || 'Passwords must match',
       },
-      emailRules: {
-        required: v => !!v || 'E-mail is required',
-        regex: v => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail must be valid',
-      },
+      emailRules:
+      // eslint-disable-next-line no-useless-escape
+        v => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
     };
   },
 };

@@ -16,16 +16,14 @@
                     v-model="userName"
                     :rules="[rules.required]"
                     label="Username"
-                    placeholder=""
                     autofocus
                     outline
                     required
                   ></v-text-field>
                   <v-text-field
                     v-model="userEmail"
-                    :rules="[emailRules.required, emailRules.regex]"
+                    :rules="[rules.emailRules]"
                     label="Email"
-                    placeholder=""
                     outline
                     required
                   ></v-text-field>
@@ -34,7 +32,6 @@
                     :rules="[rules.required, rules.min, rules.matchWithConfirm]"
                     :type="show ? 'text' : 'password'"
                     label="Password"
-                    placeholder=""
                     outline
                     hint="At least 8 characters"
                     counter
@@ -49,7 +46,6 @@
                     hint="At least 8 characters"
                     counter
                     required
-                    placeholder=""
                   ></v-text-field>
                 </v-form>
               </v-card-text>
@@ -77,7 +73,7 @@
   </base-page>
 </template>
 <script>
-import { isNil } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
@@ -118,23 +114,37 @@ export default {
         this.confirmPassword = '';
       }
     },
+    arePasswordsEqual() {
+      return isEqual(this.password, this.confirmPassword);
+    },
     async register() {
-      if (!isNil(this.userName) && !isNil(this.userEmail) && !isNil(this.password)
-        && !isNil(this.confirmPassword)) {
-        const response = await this.registerUser({
-          username: this.userName,
-          password: this.password,
-          email: this.userEmail,
-          isAdmin: false,
-        });
-
-        if (!isNil(response)) {
-          this.setSnack('Signup successful');
-          this.$router.push('/login');
-        } else {
-          this.setSnack('Signup failed');
-        }
+      if (isNil(this.userName) && isNil(this.userEmail) && isNil(this.password)
+        && isNil(this.confirmPassword)) {
+        this.setSnack('Please fill out all text fields!');
+        this.triggerSnack();
+        return;
       }
+
+      if (!this.arePasswordsEqual()) {
+        this.setSnack('Passwords are not equal!');
+        this.triggerSnack();
+        return;
+      }
+
+      const response = await this.registerUser({
+        username: this.userName,
+        password: this.password,
+        email: this.userEmail,
+        isAdmin: false,
+      });
+
+      if (!isNil(response)) {
+        this.setSnack('Signup successful. Please wait until the admin accepts your request.');
+        this.$router.push('/login');
+      } else {
+        this.setSnack('Signup failed');
+      }
+      this.triggerSnack();
     },
     async submitForm() {
       if (!isNil(this.userName) && !isNil(this.userEmail) && !isNil(this.password)
