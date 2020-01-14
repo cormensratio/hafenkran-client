@@ -182,7 +182,6 @@ describe('AuthService', () => {
       localStorage.setItem('refresh-token', mockValidJwt);
       AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
       AuthService.isTokenExpired = jest.fn(() => false);
-      AuthService.startJWTRequestLoop = jest.fn();
       AuthService.fetchNewJWT = jest.fn(() => true);
 
       // act
@@ -192,7 +191,6 @@ describe('AuthService', () => {
       expect(returnValue).toBe(true);
       expect(refreshToken.token).toEqual(mockExtractedInfo.token);
       expect(refreshToken.expires).toEqual(mockExtractedInfo.expires);
-      expect(AuthService.startJWTRequestLoop).toHaveBeenCalled();
     });
     test('when expired tokens are saved in storage', async () => {
       // arrange
@@ -200,7 +198,6 @@ describe('AuthService', () => {
       localStorage.setItem('user', mockValidJwt);
       AuthService.extractTokenInfo = jest.fn(() => mockExtractedInfo);
       AuthService.isTokenExpired = jest.fn(() => true);
-      AuthService.startJWTRequestLoop = jest.fn();
       AuthService.fetchNewJWT = jest.fn(() => true);
 
       // act
@@ -208,7 +205,6 @@ describe('AuthService', () => {
 
       // assert
       expect(returnValue).toBe(false);
-      expect(AuthService.startJWTRequestLoop).toHaveBeenCalledTimes(0);
       expect(localStorage.getItem('user')).toBe(null);
       expect(localStorage.getItem('refresh-token')).toBe(null);
     });
