@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, filter } from 'lodash';
-import store from './store';
+import { isNil, find } from 'lodash';
+import ExecutionStore from './ExecutionStore';
 import ApiService from '../service/ApiService';
 
 export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
@@ -37,12 +37,12 @@ const ExperimentStore = {
         commit('updateExperiments', newExperiments);
       }
     },
-    getExperimentFromId({ state }, id) {
-      const experiment = filter(state.experiments, e => e.id === id)[0];
+    async getExperimentNameFromId({ state }, id) {
+      const experiment = find(state.experiments, ['experimentId', id]);
       if (!isNil(experiment)) {
-        return experiment;
+        return experiment.name;
       }
-      return null;
+      return 'No name Found';
     },
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
@@ -50,7 +50,7 @@ const ExperimentStore = {
           `${serviceUrl}/experiments/${executionDetails.experimentId}/execute`, executionDetails);
 
         if (!isNil(response)) {
-          await store.dispatch('fetchAllExecutionsOfUser');
+          await ExecutionStore.dispatch('fetchAllExecutionsOfUser');
           return response;
         }
       }
