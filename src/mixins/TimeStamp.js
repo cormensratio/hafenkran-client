@@ -5,7 +5,7 @@ const TimeStampMixin = {
   methods: {
     getTimeStamp(utcTime) {
       if (!isNil(utcTime)) {
-        return moment(utcTime).format('dddd, MMMM Do YYYY, h:mm:ss a');
+        return moment(utcTime).format('YYYY-MM-DD, HH:mm:ss');
       }
       return null;
     },

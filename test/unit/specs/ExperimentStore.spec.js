@@ -1,5 +1,7 @@
 import ExperimentStore from '../../../src/store/ExperimentStore';
 import ApiService from '../../../src/service/ApiService';
+import store from '../../../src/store/store';
+import ExecutionStore from "../../../src/store/ExecutionStore";
 
 const mockServiceUrl = process.env.CLUSTER_SERVICE_URL;
 
@@ -60,6 +62,7 @@ describe('ExperimentStore', () => {
   describe('fetch Experiments', () => {
     beforeEach(() => {
       commit = jest.fn();
+      dispatch = jest.fn();
     });
 
     test('successfully', async () => {
@@ -71,10 +74,9 @@ describe('ExperimentStore', () => {
 
       // assert
       expect(ApiService.doGet).toHaveBeenCalledTimes(1);
-      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments`);
+      expect(ApiService.doGet).toHaveBeenCalledWith(`${mockServiceUrl}/experiments`);
       expect(commit).toHaveBeenCalledTimes(1);
-      expect(commit.mock.calls[0][0]).toBe('updateExperiments');
-      expect(commit.mock.calls[0][1]).toBe(mockExperiments);
+      expect(commit).toHaveBeenCalledWith('updateExperiments', mockExperiments);
     });
 
     test('with error', async () => {
@@ -86,19 +88,20 @@ describe('ExperimentStore', () => {
 
       // assert
       expect(ApiService.doGet).toHaveBeenCalledTimes(1);
-      expect(ApiService.doGet.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments`);
+      expect(ApiService.doGet).toHaveBeenCalledWith(`${mockServiceUrl}/experiments`);
       expect(commit).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('starts an execution', () => {
     beforeEach(() => {
-      dispatch = jest.fn();
+      store.dispatch = jest.fn();
     });
 
     test('successfully', async () => {
       // arrange
       ApiService.doPost = jest.fn(() => mockExecutions[0]);
+      ExecutionStore.dispatch = jest.fn();
 
       // act
       const response = await ExperimentStore.actions.runExecution(
@@ -107,7 +110,7 @@ describe('ExperimentStore', () => {
       // assert
       expect(response).toBe(mockExecutions[0]);
       expect(ApiService.doPost).toHaveBeenCalledTimes(1);
-      expect(ApiService.doPost.mock.calls[0][0]).toBe(`${mockServiceUrl}/experiments/${mockExecutionDetails.experimentId}/execute`);
+      expect(ApiService.doPost).toHaveBeenCalledWith(`${mockServiceUrl}/experiments/${mockExecutionDetails.experimentId}/execute`, mockExecutionDetails);
     });
 
     test('with error', async () => {
