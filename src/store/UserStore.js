@@ -44,9 +44,10 @@ const UserStore = {
       if (!getters.isAuthenticated) {
         const success = await AuthService.login(name, password);
         if (success) {
-          if (dispatch('fetchUser')) {
-            dispatch('fetchUserList');
-          }
+          dispatch('fetchUser');
+          // if (dispatch('fetchUser')) {
+          //   dispatch('fetchUserList');
+          // }
           return true;
         }
       }

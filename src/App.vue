@@ -9,7 +9,6 @@
 <script>
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import { isNil } from 'lodash';
 import store from './store/store';
 import AuthService from './service/AuthService';
 
@@ -19,7 +18,7 @@ Vue.use(Vuetify, {
 
 export default {
   name: 'App',
-  created() {
+  async created() {
     console.log('Initiating Hafenkran client application...');
 
     if (process.env.USE_TEST_TOKEN) {
@@ -31,13 +30,9 @@ export default {
         isAdmin: true,
         email: 'test.rick@pickle.com',
       });
-    } else {
-      const token = localStorage.getItem('user');
-      if (!isNil(token)) {
-        AuthService.extractTokenInfo(token);
-        store.dispatch('fetchUser');
-        store.dispatch('fetchUserList');
-      }
+    } else if (await AuthService.initAuthentication()) {
+      store.dispatch('fetchUser');
+      store.dispatch('fetchUserList');
     }
   },
 };
