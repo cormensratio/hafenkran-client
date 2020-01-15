@@ -146,9 +146,6 @@ const UserStore = {
     denyUser(state, user) {
       state.pendingUsers.splice(state.pendingUsers.indexOf(user), 1);
     },
-    deleteUser(state, user) {
-      state.userList.splice(state.userList.indexOf(user), 1);
-    },
   },
   actions: {
     async login({ dispatch, getters }, { name, password }) {
@@ -219,11 +216,11 @@ const UserStore = {
     acceptUser({ commit }, user) {
       commit('acceptUser', user);
     },
-    async deleteUser({ commit }, user) {
-      const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/delete`, user);
+    async deleteUser({ dispatch }, userid) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete`, userid);
+      console.log(response);
       if (!isNil(response)) {
-        commit('deleteUser', user);
-        console.log(response);
+        dispatch('fetchUserList');
         return response;
       }
       return null;
