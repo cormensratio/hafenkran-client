@@ -216,8 +216,9 @@ const UserStore = {
     acceptUser({ commit }, user) {
       commit('acceptUser', user);
     },
-    async deleteUser({ dispatch }, userid) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/delete`, userid);
+    async deleteUser({ dispatch }, id) {
+      debugger;
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete`, id);
       console.log(response);
       if (!isNil(response)) {
         dispatch('fetchUserList');
