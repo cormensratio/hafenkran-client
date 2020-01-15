@@ -107,8 +107,7 @@ export default {
       previousMinutes: 0,
     };
   },
-  props: { experiment: {},
-  },
+  props: { experiment: {} },
   computed: {
     ...mapGetters(['snackShow']),
     bookedTime() {
