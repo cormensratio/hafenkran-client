@@ -31,14 +31,19 @@
                          @click="setExecution()">
                     <v-icon>delete_forever</v-icon>
                   </v-btn>
-                  <v-btn v-if="!hasTerminated(execution.status)" class="right"
-                         @click="executionCancel(execution.id)">
-                    <v-icon right dark left>cancel</v-icon>
-                  </v-btn>
-                  <v-btn class="right" v-else
-                         @click="showContextMenu($event, execution.experimentId)">
-                    <v-icon>replay</v-icon>
-                  </v-btn>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-if="!hasTerminated(execution.status)" class="right"
+                             @click="executionCancel(execution.id)" v-on="on">
+                        <v-icon right dark left>cancel</v-icon>
+                      </v-btn>
+                      <v-btn class="right" v-else
+                             @click="showContextMenu($event, execution.experimentId)" v-on="on">
+                        <v-icon>replay</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Repeat this execution</span>
+                  </v-tooltip>
                   <v-btn class="logs left" dark style="background-color: var(--themeColor)"
                          @click="getLogs">
                     Load Logs
