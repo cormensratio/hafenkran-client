@@ -37,7 +37,7 @@
                              @click="executionCancel(execution.id)" v-on="on">
                         <v-icon right dark left>cancel</v-icon>
                       </v-btn>
-                      <v-btn class="right" v-else
+                      <v-btn class="right replay" v-else
                              @click="showContextMenu($event, execution.experimentId)" v-on="on">
                         <v-icon>replay</v-icon>
                       </v-btn>
@@ -321,5 +321,8 @@ export default {
   }
   .color-theme-blue {
     background: var(--themeColor);
+  }
+  .replay {
+    margin-right: 10px;
   }
 </style>
