@@ -33,7 +33,7 @@
                   </v-btn>
                   <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                      <v-btn v-if="!hasTerminated(execution.status)" class="right"
+                      <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
                              @click="executionCancel(execution.id)" v-on="on">
                         <v-icon right dark left>cancel</v-icon>
                       </v-btn>
@@ -42,7 +42,8 @@
                         <v-icon>replay</v-icon>
                       </v-btn>
                     </template>
-                    <span>Repeat this execution</span>
+                    <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
+                    <span v-else>Repeat this execution</span>
                   </v-tooltip>
                   <v-btn class="logs left" dark style="background-color: var(--themeColor)"
                          @click="getLogs">
