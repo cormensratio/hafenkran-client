@@ -124,8 +124,7 @@ export default {
     },
     async deleteUserFromList(user) {
       this.loading = true;
-      const deletedUser = await this.deleteUser(user);
-      console.log(deletedUser);
+      const deletedUser = await this.deleteUser(user.id);
       if (!isNil(deletedUser)) {
         this.setSnack(`${user.name} has been deleted`);
       } else {
