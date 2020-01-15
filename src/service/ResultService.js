@@ -38,7 +38,8 @@ export default class ResultService {
     if (!isNil(metrics) && metrics.length > 0 && !isNil(metrics[0][key])) {
       const metricChartData = [];
       forEach(metrics, (metric) => {
-        metricChartData.push({ x: metric.timeStamp, y: metric[key] });
+        const dateTime = metric.timeStamp * 1000; // times 1000 to convert it to milliseconds
+        metricChartData.push({ timestamp: dateTime, y: metric[key] });
       });
 
       return metricChartData;

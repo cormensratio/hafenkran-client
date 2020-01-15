@@ -1,10 +1,14 @@
 <template>
   <div class="metrics-statistics-container">
     <div class="metric-container">
-      <statistics-component :chart-data="cpuChartData"></statistics-component>
+      <statistics-component :chart-data="cpuChartData"
+                            :encoding="cpuEncoding"
+      ></statistics-component>
     </div>
     <div class="metric-container">
-      <statistics-component :chart-data="ramChartData"></statistics-component>
+      <statistics-component :chart-data="ramChartData"
+                            :encoding="ramEncoding"
+      ></statistics-component>
     </div>
 <!--    <v-container>-->
 <!--      <v-layout>-->
@@ -32,6 +36,28 @@ export default {
     return {
       cpuChartData: [],
       ramChartData: [],
+      ramEncoding: {
+        x: {
+          field: 'timestamp',
+          type: 'temporal',
+          timeUnit: 'utcyearmonthdatehoursminutesseconds',
+        },
+        y: {
+          field: 'RAM',
+          type: 'quantitative',
+        },
+      },
+      cpuEncoding: {
+        x: {
+          field: 'timestamp',
+          type: 'temporal',
+          timeUnit: 'utcyearmonthdatehoursminutesseconds',
+        },
+        y: {
+          field: 'CPU Cores',
+          type: 'quantitative',
+        },
+      },
     };
   },
   props: {
