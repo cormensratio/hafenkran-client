@@ -1,48 +1,50 @@
 <template>
-  <v-container class="result-container">
-      <div class="row">
-        <div class="col-4">
-          <v-list class="result-list">
-            <v-list-tile v-for="(result, index) in resultList.resultList"
-                         :key="index"
-                         @click="loadResultContent(result)">
-              <v-list-tile-title>{{result.name}}</v-list-tile-title>
-              <v-list-tile-content>
-                <v-icon v-if="getResultType(result.type) === 'log'">description</v-icon>
-                <v-icon v-if="getResultType(result.type) === 'csv'">timeline</v-icon>
-                <v-icon v-if="getResultType(result.type) === ''">error</v-icon>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile @click="showResourceUsage = true">
-              <v-list-tile-title>Resource usage</v-list-tile-title>
-              <v-list-tile-content>
-                <v-icon>computer</v-icon>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
+  <div class="row m-1">
+    <div class="col-3">
+      <v-list class="result-list">
+        <v-list-tile>
+          <div class="list-title">Execution results</div>
+        </v-list-tile>
+        <v-list-tile @click="showResourceUsage = true" class="option">
+          <v-list-tile-title>Resource usage</v-list-tile-title>
+          <v-list-tile-content>
+            <v-icon>computer</v-icon>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-for="(result, index) in resultList.resultList"
+                     :key="index" class="option"
+                     @click="loadResultContent(result)">
+          <v-list-tile-title>{{result.name}}</v-list-tile-title>
+          <v-list-tile-content>
+            <v-icon v-if="getResultType(result.type) === 'log'">description</v-icon>
+            <v-icon v-if="getResultType(result.type) === 'csv'">timeline</v-icon>
+            <v-icon v-if="getResultType(result.type) === ''">error</v-icon>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </div>
+    <div class="col-9 bg-white result-container">
+      <metric-statistics-view v-if="showResourceUsage"
+                              :execution-id="executionId"
+      >
+      </metric-statistics-view>
+      <div v-else class="result-statistics-container">
+        <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
+                              :chart-data="chartData">
+        </statistics-component>
+        <div v-else-if="getResultType(selectedResult.type) === 'log'"
+             class="log-container">{{ logData }}
         </div>
-        <div class="col-8 bg-white result-container">
-          <div v-if="showResourceUsage">
-            <metric-statistics-view :execution-id="executionId"></metric-statistics-view>
-          </div>
-          <div v-else>
-            <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
-                                  :chart-data="chartData">
-            </statistics-component>
-            <div v-else-if="getResultType(selectedResult.type) === 'log'"
-                 class="log-container">{{ logData }}
-            </div>
-            <div v-else-if="!selectedResult"
-                 class="hint text-muted">
-              Select a Result
-            </div>
-            <div v-else class="hint text-muted">
-              Result has unsupported format!
-            </div>
-          </div>
+        <div v-else-if="!selectedResult"
+             class="hint text-muted">
+          Select a Result
+        </div>
+        <div v-else class="hint text-muted">
+          Result has unsupported format!
         </div>
       </div>
-  </v-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -109,6 +111,13 @@ export default {
 </script>
 
 <style scoped>
+  .list-title {
+    justify-content: center;
+    font-weight: bold;
+  }
+  .option:hover {
+    background-color: lightgray;
+  }
   .hint {
     font-size: 14pt;
     margin-top: 2%;
@@ -122,12 +131,16 @@ export default {
   }
   .result-list {
     overflow-y: scroll;
-    max-height: 38vh;
   }
   .result-list::-webkit-scrollbar {
     display: none;
   }
   .result-container {
-    max-height: 38vh;
+    max-height: 42vh;
+    /*height: 100%;*/
+    /*width: 100%;*/
+  }
+  .result-statistics-container {
+    height: 100%;
   }
 </style>

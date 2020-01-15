@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <v-container>
-      <v-layout>
-        <v-flex>
-          <statistics-component :chart-data="cpuChartData"></statistics-component>
-        </v-flex>
-        <v-flex>
-          <statistics-component :chart-data="ramChartData"></statistics-component>
-        </v-flex>
-      </v-layout>
-    </v-container>
+  <div class="metrics-statistics-container">
+    <div class="metric-container">
+      <statistics-component :chart-data="cpuChartData"></statistics-component>
+    </div>
+    <div class="metric-container">
+      <statistics-component :chart-data="ramChartData"></statistics-component>
+    </div>
+<!--    <v-container>-->
+<!--      <v-layout>-->
+<!--        <v-flex>-->
+<!--          <statistics-component :chart-data="cpuChartData"></statistics-component>-->
+<!--        </v-flex>-->
+<!--        <v-flex>-->
+<!--          <statistics-component :chart-data="ramChartData"></statistics-component>-->
+<!--        </v-flex>-->
+<!--      </v-layout>-->
+<!--    </v-container>-->
   </div>
 </template>
 
@@ -50,7 +56,7 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
     // if (!isNil(this.executionId)) {
     //   const metrics = this.fetchMetricsByExecutionId(this.executionId);
     //   if (isNil(metrics)) {
@@ -68,5 +74,17 @@ export default {
 </script>
 
 <style scoped>
-
+  .metrics-statistics-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+    margin-top: 1%;
+    padding-bottom: 10px;
+  }
+  .metric-container {
+    height: 100%;
+    width: 100%;
+  }
 </style>

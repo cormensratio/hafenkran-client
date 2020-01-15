@@ -271,4 +271,9 @@ export default {
   .color-theme-blue {
     background: var(--themeColor);
   }
+
+  .statistics-page {
+    height: 100%;
+    width: 100%;
+  }
 </style>

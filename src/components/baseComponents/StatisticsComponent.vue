@@ -39,7 +39,7 @@ export default {
           },
           values: [],
           encoding: {
-            x: { field: 'x', type: 'ordinal' },
+            x: { field: 'x', type: 'quantitative' },
             y: { field: 'y', type: 'quantitative' },
           },
         },
@@ -67,8 +67,8 @@ export default {
 </style>
 
 <style>
-  /*.marks {*/
-  /*  width: 100%;*/
-  /*  height: 100% !important;*/
-  /*}*/
+  .marks {
+    width: 100%;
+    height: 100% !important;
+  }
 </style>

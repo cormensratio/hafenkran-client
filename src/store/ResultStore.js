@@ -12,19 +12,19 @@ const ResultStore = {
     resultList: {
       executionId: '',
       updatedAt: '',
-      results: [
+      resultList: [
         {
-          id: '',
-          name: '',
-          type: '',
-          file: '',
+          id: '1',
+          name: 'testParabola',
+          type: 'csv',
+          file: 'eDt5CjA7MAoxOzIKMjs0CjM7OAo0OzE2CjU7MzIKNjs2NAo3OzEyOAo4OzI1Ngo5OzUxMgoK',
         },
       ],
     },
     metrics: [
       {
         ram: 1,
-        cpu: 4,
+        cpu: 1,
         timeStamp: 1,
       },
       {
@@ -33,12 +33,52 @@ const ResultStore = {
         timeStamp: 2,
       },
       {
-        ram: 1,
+        ram: 3,
         cpu: 6,
         timeStamp: 3,
       },
       {
-        ram: 3,
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
+        cpu: 5,
+        timeStamp: 4,
+      },
+      {
+        ram: 4,
         cpu: 5,
         timeStamp: 4,
       },
