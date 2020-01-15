@@ -219,8 +219,14 @@ const UserStore = {
     acceptUser({ commit }, user) {
       commit('acceptUser', user);
     },
-    deleteUser({ commit }, user) {
-      commit('deleteUser', user);
+    async deleteUser({ commit }, user) {
+      const response = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/delete`, user);
+      if (!isNil(response)) {
+        commit('deleteUser', user);
+        console.log(response);
+        return response;
+      }
+      return null;
     },
     denyUser({ commit }, user) {
       commit('denyUser', user);

@@ -35,7 +35,4 @@ export default {
     height: 100%;
     margin-top: 10px;
   }
-  .page-container {
-    margin-bottom: 120px;
-  }
 </style>
