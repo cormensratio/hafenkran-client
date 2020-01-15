@@ -1,58 +1,11 @@
 <template>
-<!--  <v-container>-->
-<!--    <v-layout>-->
-<!--      <v-flex md3>-->
-<!--        <v-list class="result-list">-->
-<!--          <v-list-tile>-->
-<!--            <div class="list-title">Execution results</div>-->
-<!--          </v-list-tile>-->
-<!--          <v-list-tile @click="showResourceUsage = true" class="option">-->
-<!--            <v-list-tile-title>Resource usage</v-list-tile-title>-->
-<!--            <v-list-tile-content>-->
-<!--              <v-icon>computer</v-icon>-->
-<!--            </v-list-tile-content>-->
-<!--          </v-list-tile>-->
-<!--          <v-list-tile v-for="(result, index) in resultList.resultList"-->
-<!--                       :key="index" class="option"-->
-<!--                       @click="loadResultContent(result)">-->
-<!--            <v-list-tile-title>{{result.name}}</v-list-tile-title>-->
-<!--            <v-list-tile-content>-->
-<!--              <v-icon v-if="getResultType(result.type) === 'log'">description</v-icon>-->
-<!--              <v-icon v-if="getResultType(result.type) === 'csv'">timeline</v-icon>-->
-<!--              <v-icon v-if="getResultType(result.type) === ''">error</v-icon>-->
-<!--            </v-list-tile-content>-->
-<!--          </v-list-tile>-->
-<!--        </v-list>-->
-<!--      </v-flex>-->
-<!--      <v-flex md8>-->
-<!--        <metric-statistics-view v-if="showResourceUsage"-->
-<!--                                :execution-id="executionId"-->
-<!--        >-->
-<!--        </metric-statistics-view>-->
-<!--        <div v-else class="result-statistics-container">-->
-<!--          <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"-->
-<!--                                :chart-data="chartData">-->
-<!--          </statistics-component>-->
-<!--          <div v-else-if="getResultType(selectedResult.type) === 'log'"-->
-<!--               class="log-container">{{ logData }}-->
-<!--          </div>-->
-<!--          <div v-else-if="!selectedResult"-->
-<!--               class="hint text-muted">-->
-<!--            Select a Result-->
-<!--          </div>-->
-<!--          <div v-else class="hint text-muted">-->
-<!--            Result has unsupported format!-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </v-flex>-->
-<!--    </v-layout>-->
-<!--  </v-container>-->
-  <div class="row m-1">
+  <div class="row page-container">
     <div class="col-3">
       <v-list class="result-list">
         <v-list-tile>
           <div class="list-title">Execution results</div>
         </v-list-tile>
+        <v-divider class="list-divider"></v-divider>
         <v-list-tile @click="showResourceUsage = true" class="option">
           <v-list-tile-title>Resource usage</v-list-tile-title>
           <v-list-tile-content>
@@ -61,7 +14,8 @@
         </v-list-tile>
         <v-list-tile v-for="(result, index) in resultList.resultList"
                      :key="index" class="option"
-                     @click="loadResultContent(result)">
+                     @click="loadResultContent(result)"
+        >
           <v-list-tile-title>{{result.name}}</v-list-tile-title>
           <v-list-tile-content>
             <v-icon v-if="getResultType(result.type) === 'log'">description</v-icon>
@@ -85,7 +39,7 @@
         </div>
         <div v-else-if="!selectedResult"
              class="hint text-muted">
-          Select a Result
+          Select a result
         </div>
         <div v-else class="hint text-muted">
           Result has unsupported format!
@@ -162,6 +116,7 @@ export default {
   .list-title {
     justify-content: center;
     font-weight: bold;
+    margin-top: -3%;
   }
   .option:hover {
     background-color: lightgray;
@@ -179,16 +134,22 @@ export default {
   }
   .result-list {
     overflow-y: scroll;
+    max-height: 60vh;
+    border: 1.5px solid lightgray;
   }
   .result-list::-webkit-scrollbar {
     display: none;
   }
   .result-container {
-    max-height: 42vh;
-    /*height: 100%;*/
-    /*width: 100%;*/
+    max-height: 60vh;
   }
   .result-statistics-container {
     height: 100%;
+  }
+  .list-divider {
+    margin-top: -1%;
+  }
+  .page-container {
+    margin: 10px;
   }
 </style>

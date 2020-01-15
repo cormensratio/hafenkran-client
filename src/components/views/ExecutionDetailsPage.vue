@@ -7,7 +7,7 @@
             <v-toolbar-title color="white" class="justify-center">
               {{ execution.name }}
             </v-toolbar-title>
-            <v-toolbar-items class="ml-4">
+            <v-toolbar-items class="ml-5">
               <v-btn flat dark @click="activeTab = 1">
                 <v-icon class="mr-1">info</v-icon>
                 Execution Information
@@ -94,7 +94,7 @@
               />
             </div>
           </div>
-          <div v-if="activeTab === 2" class="mt-2">
+          <div v-if="activeTab === 2" class="mt-2 p-2">
             <execution-statistics-page :execution-id="execution.id">
             </execution-statistics-page>
           </div>
