@@ -1,5 +1,7 @@
 import ExperimentStore from '../../../src/store/ExperimentStore';
 import ApiService from '../../../src/service/ApiService';
+import store from '../../../src/store/store';
+import ExecutionStore from "../../../src/store/ExecutionStore";
 
 const mockServiceUrl = process.env.CLUSTER_SERVICE_URL;
 
@@ -60,6 +62,7 @@ describe('ExperimentStore', () => {
   describe('fetch Experiments', () => {
     beforeEach(() => {
       commit = jest.fn();
+      dispatch = jest.fn();
     });
 
     test('successfully', async () => {
@@ -92,12 +95,13 @@ describe('ExperimentStore', () => {
 
   describe('starts an execution', () => {
     beforeEach(() => {
-      dispatch = jest.fn();
+      store.dispatch = jest.fn();
     });
 
     test('successfully', async () => {
       // arrange
       ApiService.doPost = jest.fn(() => mockExecutions[0]);
+      ExecutionStore.dispatch = jest.fn();
 
       // act
       const response = await ExperimentStore.actions.runExecution(

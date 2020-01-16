@@ -1,21 +1,14 @@
 <template>
   <base-filter-component @applyFilters="applyFilters($event)"
-                         :filters="experimentFilters"
                          @quickSearch="quickSearch($event)"
-                         @clearFilters="clearCustomFilter()"
+                         :filters="experimentFilters"
   >
-    <template slot="customFilter">
-      <filter-users-combobox ref="userFilterExperiments"
-                             @update="applyUserFilters($event)"
-      >
-      </filter-users-combobox>
-    </template>
   </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map, extend } from 'lodash';
+import { uniq, map } from 'lodash';
 import BaseFilterComponent from './BaseFilterComponent';
 import FilterUsersCombobox from './FilterUsersCombobox';
 
@@ -24,18 +17,28 @@ export default {
   components: { FilterUsersCombobox, BaseFilterComponent },
   data() {
     return {
-      currentFilters: {},
-      currentUserFilters: {},
       filters: {
         name: {
           label: 'Name',
           value: 'name',
+          type: 'basic',
           filterOptions: [],
         },
         size: {
           label: 'Size',
           value: 'size',
+          type: 'basic',
           filterOptions: [],
+        },
+        createdAt: {
+          label: 'Created at',
+          value: 'createdAt',
+          type: 'dateTime',
+        },
+        user: {
+          label: 'User',
+          value: '',
+          type: 'user',
         },
       },
     };
@@ -59,20 +62,10 @@ export default {
       this.filters.size.filterOptions = this.sizeOptions;
     },
     applyFilters(appliedFilters) {
-      this.currentFilters = appliedFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
-    },
-    applyUserFilters(appliedUserFilters) {
-      this.currentUserFilters = appliedUserFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
+      this.$emit('applyFilters', appliedFilters);
     },
     quickSearch(input) {
       this.$emit('quickSearch', input);
-    },
-    clearCustomFilter() {
-      this.$refs.userFilterExperiments.clearSelected();
     },
   },
 };

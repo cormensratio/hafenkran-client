@@ -15,6 +15,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
+                    counter
                     :rules="[rules.min]"
                   />
                   <v-text-field
@@ -23,6 +24,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     single-line
                     outline
+                    counter
                     :rules="[rules.min]"
                   />
                 </div>
@@ -110,9 +112,6 @@ export default {
     arePasswordsEqual() {
       return isEqual(this.newPassword, this.confirmNewPassword);
     },
-    areEmailsEqual() {
-      return isEqual(this.email, this.newEmail);
-    },
     async updateUserInfo() {
       this.showConfirmDialog = true;
       this.newUserInformation.password = this.password;
@@ -142,7 +141,7 @@ export default {
       }
     },
     async updateEmail() {
-      if (!this.areEmailsEqual()) {
+      if (!isEqual(this.newEmail, '')) {
         this.updateNewUserInfo(this.newEmail, undefined);
         this.showConfirmDialog = true;
       } else {
@@ -158,8 +157,8 @@ export default {
     clearFields() {
       this.newPassword = '';
       this.password = '';
-      this.newEmail = '';
       this.confirmNewPassword = '';
+      this.newEmail = '';
     },
   },
 };

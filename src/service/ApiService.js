@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { isNil, forOwn } from 'lodash';
-import { jwtToken } from './AuthService';
+import AuthService, { jwtToken } from './AuthService';
 
 export default class ApiService {
   static async doGet(url, config) {
@@ -53,9 +53,7 @@ export default class ApiService {
     const loggedIn = !isNil(localStorage.getItem('user'));
     const headers = {};
     if (loggedIn) {
-      // TODO enable refetching of token if it expires soon
-      // check if token is still valid, if not, fetch new one
-      // await AuthService.checkTokenValidity();
+      await AuthService.checkIfNewJWTRequired();
       headers.Authorization = `Bearer ${jwtToken.token}`;
     }
 
