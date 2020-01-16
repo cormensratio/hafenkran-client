@@ -36,7 +36,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
-                          min="0"
+                          min="1"
                           @change="checkMinutes"
             >
             </v-text-field>
@@ -100,8 +100,8 @@ export default {
       experimentId: '',
       ram: 2,
       cpu: 4,
-      bookedHours: 0,
-      bookedMinutes: 0,
+      bookedHours: 1,
+      bookedMinutes: 30,
       loading: false,
       previousRam: 0,
       previousCpu: 0,
