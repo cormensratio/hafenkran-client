@@ -196,143 +196,147 @@ const ResultStore = {
 
       ],
     },
-    metrics: [
-      {
-        memory: 1,
-        cpu: 1,
-        timeStamp: '2020-01-14T21:01:12.771+0000',
-      },
-      {
-        memory: 2,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:02:12.771+0000',
-      },
-      {
-        memory: 3,
-        cpu: 6,
-        timeStamp: '2020-01-14T21:03:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:04:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:05:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:06:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:07:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:08:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:09:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:10:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:11:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:12:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:13:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:14:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:15:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:16:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:17:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:18:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:19:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:20:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:21:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:22:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:23:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:24:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:25:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:26:12.771+0000',
-      },
-      {
-        memory: 4,
-        cpu: 5,
-        timeStamp: '2020-01-14T21:27:12.771+0000',
-      },
-    ],
+    metrics: {
+      cpuUnit: 'MilliCore',
+      ramUnit: 'KibiByte',
+      metricList: [
+        {
+          memory: 16844,
+          cpu: 1,
+          timeStamp: '2020-01-14T21:01:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:02:12.771+0000',
+        },
+        {
+          memory: 16900,
+          cpu: 6,
+          timeStamp: '2020-01-14T21:03:12.771+0000',
+        },
+        {
+          memory: 16950,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:04:12.771+0000',
+        },
+        {
+          memory: 16950,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:05:12.771+0000',
+        },
+        {
+          memory: 16890,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:06:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:07:12.771+0000',
+        },
+        {
+          memory: 16830,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:08:12.771+0000',
+        },
+        {
+          memory: 16800,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:09:12.771+0000',
+        },
+        {
+          memory: 15990,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:10:12.771+0000',
+        },
+        {
+          memory: 15888,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:11:12.771+0000',
+        },
+        {
+          memory: 14844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:12:12.771+0000',
+        },
+        {
+          memory: 15844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:13:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:14:12.771+0000',
+        },
+        {
+          memory: 17844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:15:12.771+0000',
+        },
+        {
+          memory: 18844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:16:12.771+0000',
+        },
+        {
+          memory: 19844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:17:12.771+0000',
+        },
+        {
+          memory: 20333,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:18:12.771+0000',
+        },
+        {
+          memory: 20991,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:19:12.771+0000',
+        },
+        {
+          memory: 21000,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:20:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:21:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:22:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:23:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:24:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:25:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:26:12.771+0000',
+        },
+        {
+          memory: 16844,
+          cpu: 5,
+          timeStamp: '2020-01-14T21:27:12.771+0000',
+        },
+      ],
+    },
   },
   getters: {
     resultList: state => state.resultList,

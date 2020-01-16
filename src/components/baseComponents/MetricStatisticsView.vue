@@ -18,13 +18,13 @@
     </div>
     <div class="metrics-statistics-container">
       <div class="metric-container">
-        <div>CPU Cores</div>
+        <div>CPU Cores (in: {{metrics.cpuUnit}})</div>
         <statistics-component :chart-data="cpuChartData"
                               :encoding="cpuEncoding"
         ></statistics-component>
       </div>
       <div class="metric-container">
-        <div>RAM Usage</div>
+        <div>RAM Usage (in: {{metrics.ramUnit}})</div>
         <statistics-component :chart-data="ramChartData"
                               :encoding="ramEncoding"
         ></statistics-component>
@@ -111,10 +111,10 @@ export default {
     selectionFrameChanged(selection) {
       if (!isNil(selection)) {
         if (isNaN(selection)) {
-          this.displayedMetrics = this.metrics;
+          this.displayedMetrics = this.metrics.metricList;
         } else {
-          const numberOfMetrics = this.metrics.length;
-          this.displayedMetrics = this.metrics.slice(numberOfMetrics - (selection + 1),
+          const numberOfMetrics = this.metrics.metricList.length;
+          this.displayedMetrics = this.metrics.metricList.slice(numberOfMetrics - (selection + 1),
             numberOfMetrics - 1);
         }
         this.getCpuChartData();
@@ -128,7 +128,7 @@ export default {
           this.setSnack('Failed fetching resource usage data');
           this.triggerSnack();
         } else {
-          this.displayedMetrics = this.metrics;
+          this.displayedMetrics = this.metrics.metricList;
           this.getCpuChartData();
           this.getRamChartData();
         }
@@ -137,7 +137,7 @@ export default {
   },
   mounted() {
     // await this.fetchMetrics();
-    this.displayedMetrics = this.metrics;
+    this.displayedMetrics = this.metrics.metricList;
     this.getCpuChartData();
     this.getRamChartData();
   },
