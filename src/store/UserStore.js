@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, filter } from 'lodash';
 import ApiService from '../service/ApiService';
 import AuthService from '../service/AuthService';
 
@@ -16,18 +16,13 @@ const UserStore = {
       isAdmin: '',
       email: '',
     },
-    userList: [
-      {
-        id: '',
-        name: '',
-        isAdmin: '',
-        eMail: '',
-      },
-    ],
+    userList: [],
+    pendingUsers: [],
   },
   getters: {
     user: state => state.user,
     userList: state => state.userList,
+    pendingUsers: state => state.pendingUsers,
     isAuthenticated: state => !isEqual(state.user.name, '')
       && !isNil(localStorage.getItem('user')),
   },
@@ -37,6 +32,9 @@ const UserStore = {
     },
     updateUserList(state, userList) {
       state.userList = userList;
+    },
+    updatePendingUserList(state, userList) {
+      state.pendingUsers = userList;
     },
   },
   actions: {
@@ -65,9 +63,14 @@ const UserStore = {
       return false;
     },
     async fetchUserList({ commit }) {
-      const userList = await ApiService.doGet(`${serviceUrl}/users`);
+      const rawUserList = await ApiService.doGet(`${serviceUrl}/users`);
+      let userList;
+      let pendingUserList;
+      if (!isNil(rawUserList)) {
+        userList = filter(rawUserList, user => user.status === 'ACTIVE');
+        pendingUserList = filter(rawUserList, user => user.status === 'INACTIVE');
 
-      if (!isNil(userList)) {
+        commit('updatePendingUserList', pendingUserList);
         commit('updateUserList', userList);
         return true;
       }
@@ -95,7 +98,6 @@ const UserStore = {
         isAdmin,
       };
       const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update`, newUserInformation);
-
       if (!isNil(updatedUser)) {
         commit('updateUser', updatedUser);
         console.log('Successfully updated user information.');
@@ -116,8 +118,32 @@ const UserStore = {
           isAdmin: '',
         },
       };
-
       commit('updateUser', emptyStore.user);
+    },
+    async acceptUser({ dispatch }, user) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
+      if (!isNil(response)) {
+        dispatch('fetchUserList');
+        return response;
+      }
+      return null;
+    },
+    async deleteUser({ dispatch }, id) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${id}`);
+      console.log(response);
+      if (!isNil(response)) {
+        dispatch('fetchUserList');
+        return response;
+      }
+      return null;
+    },
+    async denyUser({ dispatch }, user) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${user.id}`);
+      if (!isNil(response)) {
+        dispatch('fetchUserList');
+        return response;
+      }
+      return null;
     },
   },
 };
