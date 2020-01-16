@@ -7,6 +7,10 @@
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
           <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
           <div class="mt-2"><file-size-cell :size="experiment.size"></file-size-cell></div>
+          <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
+          <div v-if="previousRam > 0" class="mt-2">
+            <b>Previously run for: </b>{{ previousHours }} Hours {{ previousMinutes }} Minutes
+            <b>with</b> {{ previousRam }} Ram and {{ previousCpu }} Cpu</div>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -88,7 +92,6 @@ import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
 import FileSizeCell from './FileSizeCell';
 
-
 export default {
   name: 'StartExperimentMenu',
   components: { FileSizeCell },
@@ -101,6 +104,10 @@ export default {
       bookedHours: 0,
       bookedMinutes: 0,
       loading: false,
+      previousRam: 0,
+      previousCpu: 0,
+      previousHours: 0,
+      previousMinutes: 0,
     };
   },
   props: { experiment: {} },
@@ -112,7 +119,7 @@ export default {
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     closeMenu() {
       this.$emit('menuClosed');
     },
@@ -128,7 +135,13 @@ export default {
         this.loading = false;
         if (!isNil(startedExecution)) {
           this.setSnack('Experiment started successfully');
+          this.previousRam = startedExecution.ram;
+          this.previousCpu = startedExecution.cpu;
+          this.previousMinutes = this.bookedMinutes;
+          this.previousHours = this.bookedHours;
+          this.setSnack('Execution started successfully');
           this.$router.push('/executionlist');
+          this.closeMenu();
         } else {
           this.setSnack('Experiment could not be started');
         }

@@ -2,7 +2,7 @@
   <div class="hafen-header pb-1">
     <v-toolbar height="75vh" class="hafen-toolbar">
       <v-toolbar-title class="mr-5 pt-2" @click="navigateToStartPage()">
-        <img class="hafen-logo" src="../../assets/hafenkran.png">
+        <img alt="header" class="hafen-logo" src="../../assets/hafenkran.png">
         <span class="logo-title">HAFENKRAN</span>
       </v-toolbar-title>
       <v-toolbar-items v-if="isAuthenticated">
@@ -11,14 +11,7 @@
         <v-btn flat dark to="/newexperiment">Upload</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <div v-if="isAuthenticated">
-        <v-btn flat dark @click="logoutUser()">
-          Logout
-        </v-btn>
-        <v-avatar color="white" dark round>
-          <span class="headline">{{ user.name.charAt(0) }}</span>
-        </v-avatar>
-      </div>
+      <access-user-settings-menu v-if="isAuthenticated"></access-user-settings-menu>
       <div v-else>
         <v-btn flat dark class="m-3" to="/login"> Login </v-btn>
       </div>
@@ -27,20 +20,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import AccessUserSettingsMenu from './AccessUserSettingsMenu';
 
 export default {
   name: 'Header',
+  components: { AccessUserSettingsMenu },
   computed: {
     ...mapGetters(['isAuthenticated', 'user']),
   },
   methods: {
-    ...mapActions(['logout']),
-    logoutUser() {
-      this.logout().then(() => {
-        this.$router.push('/');
-      });
-    },
     navigateToStartPage() {
       this.$router.push('/');
     },
@@ -64,5 +53,8 @@ export default {
   }
   .hafen-toolbar {
     background: var(--themeColor);
+  }
+  .user-options {
+    display: flex;
   }
 </style>
