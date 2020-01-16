@@ -151,7 +151,10 @@ export default {
       this.items = this.experiments;
     });
     if (this.user.isAdmin) {
-      this.headers.push(this.ownerColumn);
+      this.headers.splice(-2, 0, {
+        text: 'Owner',
+        value: 'name',
+        sortable: true });
     }
   },
 };

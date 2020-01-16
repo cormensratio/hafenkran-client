@@ -107,10 +107,6 @@ export default {
       loading: false,
       dialog: false,
       selectedExecution: {},
-      ownerColumn: {
-        text: 'Owner',
-        value: 'name',
-        sortable: true },
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
         { text: 'Started at', sortable: true, value: 'createdAt' },
@@ -216,8 +212,10 @@ export default {
       this.items = this.executions;
     });
     if (this.user.isAdmin) {
-
-      this.headers.push(this.ownerColumn);
+      this.headers.splice(-4, 0, {
+        text: 'Owner',
+        value: 'name',
+        sortable: true });
     }
   },
 };
