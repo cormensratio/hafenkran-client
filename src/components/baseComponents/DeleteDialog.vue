@@ -3,13 +3,13 @@
     <v-dialog
       v-model="dialog"
       width="500">
-      <v-card>
+      <v-card class="pb-3">
         <v-card-title>
           <h2>
             Are you sure you want to delete this Execution?
           </h2>
         </v-card-title>
-        <v-card-actions>
+        <v-card-actions class="justify-center">
           <v-btn class="error" @click="deleteClicked">
             Yes, I want to delete</v-btn>
           <v-btn @click="hideDialog">No, I'm not sure</v-btn>

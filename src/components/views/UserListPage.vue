@@ -3,11 +3,11 @@
     <template slot="body">
       <v-container class="top">
         <v-dialog v-model="dialog" max-width="500px">
-          <v-card>
-            <v-card-title>
+          <v-card class="pb-3">
+            <v-card-title class="justify-center">
               <h2>Are you sure you want to delete {{ userToDeleteName }}?</h2>
             </v-card-title>
-            <v-card-actions>
+            <v-card-actions class="justify-center">
               <v-btn class="error" @click="deleteUserFromList(userToDelete)">
                 <span>Yes, I want to delete {{ userToDeleteName }}</span>
               </v-btn>
