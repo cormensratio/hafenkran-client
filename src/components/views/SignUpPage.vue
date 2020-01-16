@@ -18,6 +18,7 @@
                   <v-text-field
                     v-model="userName"
                     :rules="[rules.required]"
+                    @keyup.enter="register"
                     label="Username"
                     autofocus
                     outline
@@ -26,6 +27,7 @@
                   <v-text-field
                     v-model="userEmail"
                     :rules="[rules.emailRules]"
+                    @keyup.enter="register"
                     label="Email"
                     outline
                     required
@@ -34,6 +36,7 @@
                     v-model="password"
                     :rules="[rules.required, rules.min]"
                     :type="show ? 'text' : 'password'"
+                    @keyup.enter="register"
                     label="Password"
                     outline
                     hint="At least 8 characters"
@@ -44,6 +47,7 @@
                     v-model="confirmPassword"
                     :rules="[rules.required, rules.min]"
                     :type="show ? 'text' : 'password'"
+                    @keyup.enter="register()"
                     label="Confirm Password"
                     outline
                     hint="At least 8 characters"
