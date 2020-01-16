@@ -1,7 +1,8 @@
 <template slot="body">
-  <div class="container dropzone"
-       v-bind:style="{ borderWidth: width }">
-    <v-hover v-slot:default="{ hover }">
+  <div class="container">
+    <v-hover v-slot:default="{ hover }" class="dropzone"
+             v-bind:style="{ borderWidth: borderWidth,
+                             backgroundColor: backgroundColor }">
       <v-card :elevation="hover ? 12 : 2" class="p-2">
         <div class="input-group"
              @drop.prevent="getFileDropped"
@@ -11,6 +12,7 @@
             <label>
               <v-icon class="uploadicon" size="150">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
+              <p style="color: #7f7f7f">Click or Drag and Drop to Upload your file!</p>
             </label>
           </div>
         </div>
@@ -71,11 +73,17 @@ export default {
     };
   },
   computed: {
-    width() {
+    borderWidth() {
       if (this.fileOver) {
         return '5px';
       }
       return '0px';
+    },
+    backgroundColor() {
+      if (this.fileOver) {
+        return '#f5f5ff';
+      }
+      return '#ffffff';
     },
   },
   methods: {
