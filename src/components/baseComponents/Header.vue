@@ -9,6 +9,7 @@
         <v-btn flat dark to="/experimentlist">Experiments</v-btn>
         <v-btn flat dark to="/executionlist">Executions</v-btn>
         <v-btn flat dark to="/newexperiment">Upload</v-btn>
+        <v-btn v-if="user.isAdmin" flat dark to="/users">Users</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <access-user-settings-menu v-if="isAuthenticated"></access-user-settings-menu>

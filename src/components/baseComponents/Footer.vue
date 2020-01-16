@@ -70,6 +70,7 @@ export default {
   }
   .hafen-footer {
     background-color: #e8ebed;
+    margin: -10px;
   }
   .ref-links {
     margin-top: -1%;

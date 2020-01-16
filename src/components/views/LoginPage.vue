@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'showSnack']),
     loginUser() {
       this.loading = true;
       if (!this.isAuthenticated) {

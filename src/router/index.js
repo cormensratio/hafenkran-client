@@ -7,6 +7,7 @@ import LoginPage from '../components/views/LoginPage';
 import ExecutionsListPage from '../components/views/ExecutionsListPage';
 import ExecutionDetailsPage from '../components/views/ExecutionDetailsPage';
 import NewExperimentPage from '../components/views/NewExperimentPage';
+import UserListPage from '../components/views/UserListPage';
 import UserSettingsPage from '../components/views/UserSettingsPage';
 import SignUpPage from '../components/views/SignUpPage';
 
@@ -60,6 +61,14 @@ const router = new Router({
       name: 'ExecutionDetails',
       component: ExecutionDetailsPage,
       props: true,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/users',
+      name: 'UserListPage',
+      component: UserListPage,
       meta: {
         requiresAuth: true,
       },
