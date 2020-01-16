@@ -127,7 +127,7 @@ describe('ExecutionStore', () => {
     });
   });
 
-  describe('terminates an execution', () => {
+  describe('cancels an execution', () => {
     beforeEach(() => {
       dispatch = jest.fn();
     });
@@ -138,7 +138,7 @@ describe('ExecutionStore', () => {
       ApiService.doPost = jest.fn(() => mockExecutions[0]);
 
       // act
-      const returnValue = await ExecutionStore.actions.terminateExecution(
+      const returnValue = await ExecutionStore.actions.cancelExecution(
         { dispatch }, executionId);
 
       // assert
@@ -155,7 +155,7 @@ describe('ExecutionStore', () => {
       ApiService.doPost = jest.fn(() => null);
 
       // act
-      const returnValue = await ExecutionStore.actions.terminateExecution(
+      const returnValue = await ExecutionStore.actions.cancelExecution(
         { dispatch }, executionId);
 
       // assert

@@ -161,7 +161,7 @@ export default {
     ...mapGetters(['snack', 'snackShow', 'executions', 'experiments']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
+    ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
       this.loadingLogs = true;
@@ -183,7 +183,7 @@ export default {
     },
     async executionCancel(id) {
       this.loading = true;
-      const canceledExecution = await this.terminateExecution(id);
+      const canceledExecution = await this.cancelExecution(id);
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
       } else {
