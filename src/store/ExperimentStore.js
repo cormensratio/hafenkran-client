@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { isNil, find } from 'lodash';
-import ExecutionStore from './ExecutionStore';
+import store from './store';
 import ApiService from '../service/ApiService';
 
 export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
@@ -50,7 +50,7 @@ const ExperimentStore = {
           `${serviceUrl}/experiments/${executionDetails.experimentId}/execute`, executionDetails);
 
         if (!isNil(response)) {
-          await ExecutionStore.dispatch('fetchAllExecutionsOfUser');
+          await store.dispatch('fetchAllExecutionsOfUser');
           return response;
         }
       }
