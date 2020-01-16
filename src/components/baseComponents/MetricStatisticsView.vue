@@ -4,8 +4,20 @@
       <v-select outline
                 label="Choose which info should be displayed"
                 class="time-select mb-3"
-                :items="timeOptions"
+                :items="timeFrameOptions"
+                v-model="selectedTimeFrame"
                 @change="selectionFrameChanged"
+      >
+        <template slot="selection" slot-scope="data" @click="fetchMetrics">
+          <span v-if="data">{{data.item.text}}</span>
+        </template>
+      </v-select>
+      <v-select outline
+                label="Choose which info should be displayed"
+                class="time-select mb-3"
+                :items="timeFormatOptions"
+                v-model="selectedTimeFormat"
+                @change="selectedFormatChanged"
       >
         <template slot="selection" slot-scope="data" @click="fetchMetrics">
           <span v-if="data">{{data.item.text}}</span>
@@ -45,9 +57,7 @@ export default {
   data() {
     return {
       displayedMetrics: [],
-      timeEncodingHours: 'utchoursminutesseconds',
-      timeEncodingDate: 'utcdatehoursminutesseconds',
-      timeOptions: [
+      timeFrameOptions: [
         {
           text: 'Complete timeline',
           value: 'all',
@@ -61,6 +71,26 @@ export default {
           value: 5,
         },
       ],
+      timeFormatOptions: [
+        {
+          text: 'mmdd, yyyy hh:ss',
+          value: 'utcyearmonthdatehoursminutes',
+        },
+        {
+          text: 'hh:mm:ss',
+          value: 'utchoursminutesseconds',
+        },
+        {
+          text: 'mm:ss',
+          value: 'utcminutesseconds',
+        },
+        {
+          text: 'ss',
+          value: 'utcseconds',
+        },
+      ],
+      selectedTimeFrame: {},
+      selectedTimeFormat: {},
       cpuChartData: [],
       ramChartData: [],
       ramEncoding: {
@@ -121,6 +151,10 @@ export default {
         this.getRamChartData();
       }
     },
+    selectedFormatChanged(selection) {
+      this.cpuEncoding.x.timeUnit = selection;
+      this.ramEncoding.x.timeUnit = selection;
+    },
     async fetchMetrics() {
       if (!isNil(this.executionId)) {
         const metrics = await this.fetchMetricsByExecutionId(this.executionId);
@@ -138,6 +172,8 @@ export default {
   mounted() {
     // await this.fetchMetrics();
     this.displayedMetrics = this.metrics.metricList;
+    this.selectedTimeFormat = this.timeFormatOptions[1];
+    this.selectedTimeFrame = this.timeFrameOptions[0];
     this.getCpuChartData();
     this.getRamChartData();
   },
@@ -153,6 +189,7 @@ export default {
     width: 100%;
     margin-top: 1%;
     padding-bottom: 10px;
+    overflow: auto;
   }
   .metric-container {
     height: 100%;
