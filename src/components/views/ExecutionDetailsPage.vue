@@ -14,6 +14,8 @@
             <span class="mb-3">
               Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
             </span>
+                <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
+                  Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </span>
                 <span class="mb-3">Runtime: {{runtime}}</span>
                 <div class="status">
                   <span>Status:</span>
@@ -165,7 +167,7 @@ export default {
     ...mapGetters(['snack', 'snackShow', 'executions', 'experiments']),
   },
   methods: {
-    ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
+    ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
       this.loadingLogs = true;
@@ -187,7 +189,7 @@ export default {
     },
     async executionCancel(id) {
       this.loading = true;
-      const canceledExecution = await this.terminateExecution(id);
+      const canceledExecution = await this.cancelExecution(id);
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
       } else {

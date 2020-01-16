@@ -13,11 +13,11 @@ const ExperimentStore = {
   state: {
     experiments: [
       {
-        id: '1',
-        name: 'TestDockerfile',
-        createdAt: '01.01.20',
-        size: '500',
-        ownerId: '1',
+        id: '',
+        name: '',
+        createdAt: '',
+        size: '',
+        ownerId: '',
       },
     ],
   },
