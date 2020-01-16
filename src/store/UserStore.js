@@ -189,7 +189,6 @@ const UserStore = {
         isAdmin,
       };
       const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update`, newUserInformation);
-
       if (!isNil(updatedUser)) {
         commit('updateUser', updatedUser);
         console.log('Successfully updated user information.');
@@ -217,8 +216,7 @@ const UserStore = {
       commit('acceptUser', user);
     },
     async deleteUser({ dispatch }, id) {
-      debugger;
-      const response = await ApiService.doPost(`${serviceUrl}/users/delete`, id);
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${id}`);
       console.log(response);
       if (!isNil(response)) {
         dispatch('fetchUserList');
