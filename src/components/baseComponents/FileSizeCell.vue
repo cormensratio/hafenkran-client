@@ -34,10 +34,6 @@ export default {
       return `${Number(newSize).toFixed(2)} ${unit}`;
     },
   },
-  watch: {
-    size() {
-    },
-  },
 };
 </script>
 
