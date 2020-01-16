@@ -96,8 +96,8 @@ export default {
       experimentId: '',
       ram: 2,
       cpu: 4,
-      bookedHours: 0,
-      bookedMinutes: 0,
+      bookedHours: 1,
+      bookedMinutes: 30,
       loading: false,
     };
   },
