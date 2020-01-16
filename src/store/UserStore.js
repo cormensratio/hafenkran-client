@@ -16,112 +16,8 @@ const UserStore = {
       isAdmin: '',
       email: '',
     },
-    userList: [
-      {
-        id: '',
-        name: '',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '2',
-        name: 'Jacky Chun',
-        isAdmin: '',
-        eMail: '',
-      },
-    ],
-    pendingUsers: [
-      {
-        id: '3',
-        name: 'Geralt',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '4',
-        name: 'Mickey Mouse',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '5',
-        name: 'Morty',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '6',
-        name: 'Popeye',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '7',
-        name: 'Sonic',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '8',
-        name: 'Charlie',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '9',
-        name: 'Pikachu',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '10',
-        name: 'Yamchu',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '11',
-        name: 'Dumbo',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '12',
-        name: 'Angela',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '13',
-        name: 'Merkel',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '14',
-        name: 'A',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '15',
-        name: 'B',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '16',
-        name: 'C',
-        isAdmin: '',
-        eMail: '',
-      },
-      {
-        id: '17',
-        name: 'D',
-        isAdmin: '',
-        eMail: '',
-      },
-    ],
+    userList: [],
+    pendingUsers: [],
   },
   getters: {
     user: state => state.user,
@@ -139,15 +35,6 @@ const UserStore = {
     },
     updatePendingUserList(state, userList) {
       state.pendingUsers = userList;
-    },
-    acceptUser(state, user) {
-      const newUser = user;
-      newUser.id = state.userList.length;
-      state.userList.push(newUser);
-      state.pendingUsers.splice(state.pendingUsers.indexOf(user), 1);
-    },
-    denyUser(state, user) {
-      state.pendingUsers.splice(state.pendingUsers.indexOf(user), 1);
     },
   },
   actions: {

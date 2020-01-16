@@ -70,7 +70,7 @@ const router = new Router({
       name: 'UserListPage',
       component: UserListPage,
       meta: {
-        requiresAUth: true,
+        requiresAuth: true,
       },
     },
     {

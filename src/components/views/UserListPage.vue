@@ -161,8 +161,8 @@ export default {
       this.loading = false;
       this.triggerSnack();
     },
-    created() {
-      this.fetchUserList();
+    async created() {
+      await this.fetchUserList();
     },
   },
 };
