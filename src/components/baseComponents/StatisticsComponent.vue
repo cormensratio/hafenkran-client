@@ -1,6 +1,6 @@
 <template>
   <div v-if="chartData.length > 0" class="chart-container">
-    <vega-lite :data="spec.data.values"
+    <vega-lite :data="chartData"
                :mark="spec.mark"
                :encoding="encoding"
                :spec="spec"
@@ -15,7 +15,6 @@
 <script>
 import VueVega from 'vue-vega';
 import Vue from 'vue';
-import { isNil } from 'lodash';
 
 Vue.use(VueVega);
 
@@ -46,14 +45,6 @@ export default {
     chartData() {
       this.spec.data.values = this.chartData;
     },
-    encoding() {
-      this.spec.data.encoding = this.encoding;
-    },
-  },
-  created() {
-    if (!isNil(this.encoding)) {
-      this.spec.encoding = this.encoding;
-    }
   },
 };
 </script>
@@ -67,8 +58,4 @@ export default {
     width: 100%;
     height: 100%;
   }
-</style>
-
-<style>
-
 </style>
