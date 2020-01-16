@@ -109,7 +109,6 @@ export default {
       selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
-        { text: 'Owner', value: 'name', sortable: true },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
@@ -212,6 +211,12 @@ export default {
     this.$nextTick(() => {
       this.items = this.executions;
     });
+    if (this.user.isAdmin) {
+      this.headers.splice(-4, 0, {
+        text: 'Owner',
+        value: 'name',
+        sortable: true });
+    }
   },
 };
 </script>
