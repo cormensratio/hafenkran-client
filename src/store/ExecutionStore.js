@@ -50,7 +50,7 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
-    async terminateExecution({ dispatch }, executionId) {
+    async cancelExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {
