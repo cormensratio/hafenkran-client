@@ -120,7 +120,7 @@ export default {
     ...mapGetters(['executions', 'user', 'userList', 'experiments']),
   },
   methods: {
-    ...mapActions(['fetchAllExecutionsOfUser', 'terminateExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
+    ...mapActions(['fetchAllExecutionsOfUser', 'cancelExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
     ...mapMutations(['setSnack', 'showSnack']),
     navigateToDetails(id) {
       this.$router.push(`/execution/${id}`);
@@ -131,7 +131,7 @@ export default {
     },
     async executionCancel(id) {
       this.loading = true;
-      const canceledExecution = await this.terminateExecution(id);
+      const canceledExecution = await this.cancelExecution(id);
       if (canceledExecution !== null) {
         this.setSnack(`${canceledExecution.name} has been canceled`);
       } else {
@@ -205,9 +205,9 @@ export default {
       this.items = this.executions;
     },
   },
-  created() {
-    this.fetchAllExecutionsOfUser();
-    this.fetchUserList();
+  async created() {
+    await this.fetchAllExecutionsOfUser();
+    await this.fetchUserList();
     this.$nextTick(() => {
       this.items = this.executions;
     });

@@ -43,15 +43,31 @@ export default class AuthService {
     return output;
   }
 
+  /**
+   * Checks if tokens (refresh-token and user token) already exist in localstorage
+   * and if they are expired.
+   * If the refresh token is expired, localstorage is cleared.
+   * If just the user jwt is invalid, a new token is fetched.
+   * @returns {Promise<boolean|Promise<boolean>>}
+   */
   static async initAuthentication() {
     const existingRefreshJWT = localStorage.getItem('refresh-token');
+    const existingJWT = localStorage.getItem('user');
 
     if (!isNil(existingRefreshJWT)) {
       const refreshTokenInfo = this.extractTokenInfo(existingRefreshJWT);
 
-      if (!isNil(refreshTokenInfo.expires) && !this.isTokenExpired(refreshTokenInfo.exp)) {
+      if (!isNil(refreshTokenInfo) && !this.isTokenExpired(refreshTokenInfo.exp)) {
         refreshToken.token = refreshTokenInfo.token;
         refreshToken.expires = refreshTokenInfo.expires;
+
+        const tokenInfo = this.extractTokenInfo(existingJWT);
+        if (!isNil(tokenInfo) && !this.isTokenExpired(tokenInfo.exp)) {
+          jwtToken.token = tokenInfo.token;
+          jwtToken.expires = tokenInfo.expires;
+          return true;
+        }
+
         return this.fetchNewJWT();
       }
       localStorage.removeItem('refresh-token');
