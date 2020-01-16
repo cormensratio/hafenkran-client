@@ -78,7 +78,7 @@ export default {
         x: {
           field: 'timestamp',
           type: 'temporal',
-          timeUnit: 'utcyearmonthdatehoursminutesseconds',
+          timeUnit: 'utchoursminutesseconds',
         },
         y: {
           field: 'cpu',
