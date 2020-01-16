@@ -1,7 +1,8 @@
 <template slot="body">
   <div class="container">
     <v-hover v-slot:default="{ hover }">
-      <v-card :elevation="hover ? 12 : 2" class="p-2">
+      <v-card :elevation="hover ? 12 : 2" class="p-2"
+              @drop.prevent="getFileDropped" @dragover.prevent>
         <div class="input-group">
           <div class="input-group-prepend m-auto">
             <label>
@@ -68,13 +69,18 @@ export default {
   methods: {
     ...mapMutations(['setSnack', 'showSnack']),
     ...mapActions(['triggerSnack']),
-    getFileName() {
-      return this.$refs.file.files[0].name;
-    },
     getFile() {
       this.file = this.$refs.file.files[0];
       if (this.file !== null) {
-        this.fileName = this.getFileName();
+        this.fileName = this.file.name;
+        this.correctFileType = UploadService.checkFileType(this.file);
+        this.timestamp = UploadService.getTimeStamp();
+      }
+    },
+    getFileDropped(e) {
+      this.file = e.dataTransfer.files[0];
+      if (this.file !== null) {
+        this.fileName = this.file.name;
         this.correctFileType = UploadService.checkFileType(this.file);
         this.timestamp = UploadService.getTimeStamp();
       }
