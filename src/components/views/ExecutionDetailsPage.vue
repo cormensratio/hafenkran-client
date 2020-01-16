@@ -8,11 +8,13 @@
               {{ execution.name }}
             </v-toolbar-title>
             <v-toolbar-items class="ml-5">
-              <v-btn flat dark @click="activeTab = 1">
+              <v-btn flat dark @click="activeTab = 1"
+                     v-bind:class="{ 'active': (activeTab === 1)}">
                 <v-icon class="mr-1">info</v-icon>
                 Execution Information
               </v-btn>
-              <v-btn flat dark @click="activeTab = 2">
+              <v-btn flat dark @click="activeTab = 2"
+                     v-bind:class="{ 'active': (activeTab === 2)}">
                 <v-icon class="mr-1">insert_chart</v-icon>
                 Statistics
               </v-btn>
@@ -324,5 +326,8 @@ export default {
   .statistics-page {
     height: 100%;
     width: 100%;
+  }
+  .active {
+    background-color: #307dea;
   }
 </style>

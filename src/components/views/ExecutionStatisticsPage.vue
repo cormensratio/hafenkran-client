@@ -17,6 +17,7 @@
         <v-list-tile v-for="(result, index) in resultList.resultList"
                      :key="index" class="option"
                      v-bind:class="{ 'active': (result === selectedResult)}"
+                     ripple
                      @click="loadResultContent(result, index)"
         >
           <v-list-tile-title>{{result.name}}</v-list-tile-title>
