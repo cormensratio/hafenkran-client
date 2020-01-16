@@ -6,7 +6,7 @@
         <v-flex class="text-left">
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
           <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
-          <div class="mt-2"><b>Size: </b> {{ experiment.size }} Byte</div>
+          <div class="mt-2"><file-size-cell :size="experiment.size"></file-size-cell></div>
           <div v-if="previousRam > 0" class="mt-2">
             <b>Previously run for: </b>{{ previousHours }} Hours {{ previousMinutes }} Minutes
             <b>with</b> {{ previousRam }} Ram and {{ previousCpu }} Cpu</div>
@@ -89,9 +89,11 @@ import { isNil } from 'lodash';
 import { mapActions, mapMutations, mapGetters } from 'vuex';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
+import FileSizeCell from './FileSizeCell';
 
 export default {
   name: 'StartExperimentMenu',
+  components: { FileSizeCell },
   mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
