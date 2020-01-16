@@ -14,7 +14,6 @@ export default {
   },
   computed: {
     fileSizeText() {
-      debugger;
       let newSize = this.size;
       let unit = 'Bytes';
 
@@ -37,7 +36,6 @@ export default {
   },
   watch: {
     size() {
-      debugger;
     },
   },
 };
