@@ -139,9 +139,9 @@ export default {
       this.items = this.experiments;
     },
   },
-  created() {
-    this.fetchUserList();
-    this.fetchExperiments();
+  async created() {
+    await this.fetchUserList();
+    await this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;
     });
