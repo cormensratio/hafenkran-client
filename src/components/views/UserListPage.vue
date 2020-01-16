@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
-    ...mapActions(['triggerSnack', 'deleteUser', 'denyUser', 'acceptUser']),
+    ...mapActions(['triggerSnack', 'deleteUser', 'denyUser', 'acceptUser', 'fetchUserList']),
     selectUserToDelete(user) {
       this.dialog = true;
       this.userToDelete = user;
@@ -160,6 +160,9 @@ export default {
       }
       this.loading = false;
       this.triggerSnack();
+    },
+    created() {
+      this.fetchUserList();
     },
   },
 };

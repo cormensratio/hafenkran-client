@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEqual, filter } from 'lodash';
 import ApiService from '../service/ApiService';
 import AuthService from '../service/AuthService';
 
@@ -137,6 +137,9 @@ const UserStore = {
     updateUserList(state, userList) {
       state.userList = userList;
     },
+    updatePendingUserList(state, userList) {
+      state.pendingUsers = userList;
+    },
     acceptUser(state, user) {
       const newUser = user;
       newUser.id = state.userList.length;
@@ -173,9 +176,14 @@ const UserStore = {
       return false;
     },
     async fetchUserList({ commit }) {
-      const userList = await ApiService.doGet(`${serviceUrl}/users`);
+      const rawUserList = await ApiService.doGet(`${serviceUrl}/users`);
+      let userList;
+      let pendingUserList;
+      if (!isNil(rawUserList)) {
+        userList = filter(rawUserList, user => user.status === 'ACTIVE');
+        pendingUserList = filter(rawUserList, user => user.status === 'INACTIVE');
 
-      if (!isNil(userList)) {
+        commit('updatePendingUserList', pendingUserList);
         commit('updateUserList', userList);
         return true;
       }
@@ -223,11 +231,15 @@ const UserStore = {
           isAdmin: '',
         },
       };
-
       commit('updateUser', emptyStore.user);
     },
-    acceptUser({ commit }, user) {
-      commit('acceptUser', user);
+    async acceptUser({ dispatch }, user) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
+      if (!isNil(response)) {
+        dispatch('fetchUserList');
+        return response;
+      }
+      return null;
     },
     async deleteUser({ dispatch }, id) {
       const response = await ApiService.doPost(`${serviceUrl}/users/delete/${id}`);
@@ -238,8 +250,13 @@ const UserStore = {
       }
       return null;
     },
-    denyUser({ commit }, user) {
-      commit('denyUser', user);
+    async denyUser({ dispatch }, user) {
+      const response = await ApiService.doPost(`${serviceUrl}/users/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'INACTIVE', isAdmin: '' });
+      if (!isNil(response)) {
+        dispatch('fetchUserList');
+        return response;
+      }
+      return null;
     },
   },
 };
