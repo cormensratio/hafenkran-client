@@ -1,9 +1,12 @@
 <template slot="body">
-  <div class="container">
+  <div class="container dropzone"
+       v-bind:style="{ borderWidth: width }">
     <v-hover v-slot:default="{ hover }">
-      <v-card :elevation="hover ? 12 : 2" class="p-2"
-              @drop.prevent="getFileDropped" @dragover.prevent>
-        <div class="input-group">
+      <v-card :elevation="hover ? 12 : 2" class="p-2">
+        <div class="input-group"
+             @drop.prevent="getFileDropped"
+             @dragover.prevent="fileOver = true"
+             @dragleave.prevent="fileOver = false">
           <div class="input-group-prepend m-auto">
             <label>
               <v-icon class="uploadicon" size="150">file_upload</v-icon>
@@ -64,7 +67,16 @@ export default {
       fileName: null,
       correctFileType: false,
       loading: false,
+      fileOver: false,
     };
+  },
+  computed: {
+    width() {
+      if (this.fileOver) {
+        return '5px';
+      }
+      return '0px';
+    },
   },
   methods: {
     ...mapMutations(['setSnack', 'showSnack']),
@@ -83,6 +95,7 @@ export default {
         this.fileName = this.file.name;
         this.correctFileType = UploadService.checkFileType(this.file);
         this.timestamp = UploadService.getTimeStamp();
+        this.fileOver = false;
       }
     },
     async submitFile() {
@@ -102,6 +115,10 @@ export default {
 </script>
 
 <style scoped>
+  .dropzone {
+    border-style: solid;
+    border-color: var(--themeColor);
+  }
   .uploadicon:hover {
     color: var(--themeColor);
   }
