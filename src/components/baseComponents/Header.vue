@@ -12,14 +12,7 @@
         <v-btn v-if="user.isAdmin" flat dark to="/users">Users</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <div v-if="isAuthenticated">
-        <v-btn flat dark @click="logoutUser()">
-          Logout
-        </v-btn>
-        <v-avatar color="white" dark round @click="navigateToSettings()" >
-          <span class="headline">{{ user.name.charAt(0) }}</span>
-        </v-avatar>
-      </div>
+      <access-user-settings-menu v-if="isAuthenticated"></access-user-settings-menu>
       <div v-else>
         <v-btn flat dark class="m-3" to="/login"> Login </v-btn>
       </div>
@@ -28,27 +21,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import AccessUserSettingsMenu from './AccessUserSettingsMenu';
 
 export default {
   name: 'Header',
+  components: { AccessUserSettingsMenu },
   computed: {
     ...mapGetters(['isAuthenticated', 'user']),
   },
   methods: {
-    ...mapActions(['logout']),
-    logoutUser() {
-      this.logout().then(() => {
-        this.$router.push('/');
-      });
-    },
-    navigateToSettings() {
-      if (this.isAuthenticated) {
-        this.$router.push('/settings');
-      } else {
-        this.$router.push('/login');
-      }
-    },
     navigateToStartPage() {
       this.$router.push('/');
     },
@@ -72,5 +54,8 @@ export default {
   }
   .hafen-toolbar {
     background: var(--themeColor);
+  }
+  .user-options {
+    display: flex;
   }
 </style>
