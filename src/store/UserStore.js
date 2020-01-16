@@ -74,7 +74,7 @@ const UserStore = {
       return false;
     },
     async registerUser({ getters }, { username, password, email, isAdmin }) {
-      if (getters.isAuthenticated) {
+      if (!getters.isAuthenticated) {
         if (!isNil(username) && !isNil(password) && !isNil(email) && !isNil(isAdmin)) {
           const response = await ApiService.doPost(`${serviceUrl}/users/create`,
             { name: username, password, email, isAdmin });

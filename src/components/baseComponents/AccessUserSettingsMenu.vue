@@ -3,7 +3,7 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" fab small color="white">
-          <span class="avatar-button">{{ user.name.charAt(0) }}</span>
+          <span class="headline">{{ user.name.charAt(0) }}</span>
         </v-btn>
       </template>
       <v-card>
@@ -55,9 +55,6 @@ export default {
 </script>
 
 <style scoped>
-  .avatar-button {
-    font-size: 18pt;
-  }
   .option {
     text-align: start;
     font-size: 10pt;
