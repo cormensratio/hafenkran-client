@@ -12,7 +12,11 @@
         <span> {{ data.item.name }}</span>
       </template>
       <template slot="selection" slot-scope="data">
-        <v-chip :small="true">{{data.item.name}}</v-chip>
+        <v-chip :small="true" v-if="data.item.name">{{data.item.name}}</v-chip>
+        <v-chip :small="true" v-else>{{data.item}}</v-chip>
+      </template>
+      <template slot="append">
+        <v-icon @click="clearSelected">close</v-icon>
       </template>
     </v-combobox>
   </v-flex>
@@ -34,7 +38,7 @@ export default {
   },
   methods: {
     updateFilters() {
-      const updatedFilters = {};
+      const updatedFilters = { ownerId: [] };
 
       if (!isNil(this.selectedItems) && this.selectedItems.length > 0) {
         updatedFilters.ownerId = map(this.selectedItems, user => user.id);
@@ -43,7 +47,7 @@ export default {
     },
     clearSelected() {
       this.selectedItems = [];
-      this.$emit('update', this.selectedItems);
+      this.updateFilters();
     },
   },
 };
@@ -51,6 +55,6 @@ export default {
 
 <style scoped>
   .filter-combobox {
-    width: 25vh;
-  }
+    min-width: 20vh;
+    width: 25vh;  }
 </style>

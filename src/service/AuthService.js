@@ -13,8 +13,6 @@ export const refreshToken = {
   expires: 0,
 };
 
-let jwtRequestLoopIntervalID;
-
 export default class AuthService {
   static extractTokenInfo(token) {
     if (!isNil(token) && !isEqual(token, '')) {
@@ -54,14 +52,10 @@ export default class AuthService {
       if (!isNil(refreshTokenInfo.expires) && !this.isTokenExpired(refreshTokenInfo.exp)) {
         refreshToken.token = refreshTokenInfo.token;
         refreshToken.expires = refreshTokenInfo.expires;
-        if (await this.fetchNewJWT()) {
-          this.startJWTRequestLoop();
-          return true;
-        }
-      } else {
-        localStorage.removeItem('refresh-token');
-        localStorage.removeItem('user');
+        return this.fetchNewJWT();
       }
+      localStorage.removeItem('refresh-token');
+      localStorage.removeItem('user');
     }
     return false;
   }
@@ -99,38 +93,27 @@ export default class AuthService {
     return false;
   }
 
-  static startJWTRequestLoop() {
-    jwtRequestLoopIntervalID = window.setInterval(() => {
-      this.checkIfNewJWTRequired();
-    }, 30000);
-  }
-
-  static checkIfNewJWTRequired() {
+  static async checkIfNewJWTRequired() {
     const expires = moment(jwtToken.expires * 1000);
     const secondsUntilExpiry = moment.duration(moment().diff(expires)).asSeconds();
 
     if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
       console.log('About to fetch new JWT...');
-      this.fetchNewJWT();
+      return this.fetchNewJWT();
     }
+    return false;
   }
 
   static async login(name, password) {
     let fetchSuccessful = await this.fetchRefreshToken(name, password);
     if (fetchSuccessful) {
       fetchSuccessful = await this.fetchNewJWT();
-
-      if (fetchSuccessful) {
-        this.startJWTRequestLoop();
-        return true;
-      }
     }
-    return false;
+    return fetchSuccessful;
   }
 
   static logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('refresh-token');
-    window.clearInterval(jwtRequestLoopIntervalID);
   }
 }
