@@ -6,7 +6,9 @@
           <div class="list-title">Execution results</div>
         </v-list-tile>
         <v-divider class="list-divider"></v-divider>
-        <v-list-tile @click="showResourceUsage = true" class="option">
+        <v-list-tile @click="setShowResourceUsage"
+                     v-bind:class="{ 'active': (showResourceUsage === true)}"
+                     class="option">
           <v-list-tile-title>Resource usage</v-list-tile-title>
           <v-list-tile-content>
             <v-icon>computer</v-icon>
@@ -14,7 +16,8 @@
         </v-list-tile>
         <v-list-tile v-for="(result, index) in resultList.resultList"
                      :key="index" class="option"
-                     @click="loadResultContent(result)"
+                     v-bind:class="{ 'active': (result === selectedResult)}"
+                     @click="loadResultContent(result, index)"
         >
           <v-list-tile-title>{{result.name}}</v-list-tile-title>
           <v-list-tile-content>
@@ -82,6 +85,10 @@ export default {
   },
   methods: {
     ...mapActions(['fetchResultsByExecutionId']),
+    setShowResourceUsage() {
+      this.showResourceUsage = true;
+      this.selectedResult = '';
+    },
     loadResultContent(result) {
       this.showResourceUsage = false;
       this.selectedResult = result;
@@ -164,5 +171,8 @@ export default {
     font-weight: bold;
     margin-top: 2%;
     margin-bottom: 1%;
+  }
+  .active {
+    background-color: #bbbbbb;
   }
 </style>
