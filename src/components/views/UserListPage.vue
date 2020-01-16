@@ -2,6 +2,23 @@
   <base-page>
     <template slot="body">
       <v-container class="top">
+        <v-dialog v-model="dialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <h2>Are you sure you want to delete {{ userToDeleteName }}?</h2>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn class="error" @click="deleteUserFromList(userToDelete)">
+                <span>Yes, I want to delete {{ userToDeleteName }}</span>
+              </v-btn>
+              <v-btn @click="dialog = false">
+            <span>
+              No, I'm not sure
+            </span>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-layout column>
           <v-flex>
             <v-card max-width="800"
@@ -63,7 +80,7 @@
                       {{ user.name }}
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-btn icon @click="deleteUserFromList(user)">
+                      <v-btn icon @click="selectUserToDelete(user)">
                         <v-icon>delete</v-icon>
                       </v-btn>
                     </v-list-tile-action>
@@ -96,6 +113,9 @@ export default {
   data() {
     return {
       loading: false,
+      dialog: false,
+      userToDelete: null,
+      userToDeleteName: '',
     };
   },
   computed: {
@@ -112,6 +132,11 @@ export default {
   methods: {
     ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
     ...mapActions(['triggerSnack', 'deleteUser', 'denyUser', 'acceptUser']),
+    selectUserToDelete(user) {
+      this.dialog = true;
+      this.userToDelete = user;
+      this.userToDeleteName = user.name;
+    },
     setAccepted(user, choice) {
       if (choice === true) {
         this.acceptUser(user);
@@ -123,6 +148,7 @@ export default {
       this.triggerSnack();
     },
     async deleteUserFromList(user) {
+      this.dialog = false;
       this.loading = true;
       const deletedUser = await this.deleteUser(user.id);
       if (!isNil(deletedUser)) {

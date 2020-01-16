@@ -5,7 +5,9 @@
       width="500">
       <v-card>
         <v-card-title>
-          Are you sure you want to delete this Execution?
+          <h2>
+            Are you sure you want to delete this Execution?
+          </h2>
         </v-card-title>
         <v-card-actions>
           <v-btn class="error" @click="deleteClicked">
