@@ -6,7 +6,7 @@
         <v-flex class="text-left">
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
           <div class="mt-2"><b>Uploaded:</b> {{ getTimeStamp(experiment.createdAt) }}</div>
-          <div class="mt-2"><file-size-cell>{{ experiment.size }}</file-size-cell></div>
+          <div class="mt-2"><file-size-cell :size="experiment.size"></file-size-cell></div>
         </v-flex>
       </v-layout>
     </v-card-text>
