@@ -27,6 +27,24 @@
               />
               <v-card-actions>
                 <v-flex>
+                  <v-btn class="error right"
+                         @click="setExecution()">
+                    <v-icon>delete_forever</v-icon>
+                  </v-btn>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
+                             @click="executionCancel(execution.id)" v-on="on">
+                        <v-icon right dark left>cancel</v-icon>
+                      </v-btn>
+                      <v-btn class="right replay" v-else
+                             @click="showContextMenu($event, execution.experimentId)" v-on="on">
+                        <v-icon>replay</v-icon>
+                      </v-btn>
+                    </template>
+                    <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
+                    <span v-else>Repeat this execution</span>
+                  </v-tooltip>
                   <v-btn class="logs left" dark style="background-color: var(--themeColor)"
                          @click="getLogs">
                     Load Logs
@@ -35,13 +53,6 @@
                          @click="downloadResults()" class="left">
                     Download Results
                     <v-icon right>cloud_download</v-icon>
-                  </v-btn>
-                  <v-btn class="error right"
-                         @click="setExecution()">Delete</v-btn>
-                  <v-btn class="right"
-                         @click="executionCancel(execution.id)">
-                    Cancel execution
-                    <v-icon right dark>cancel</v-icon>
                   </v-btn>
                 </v-flex>
               </v-card-actions>
@@ -59,7 +70,7 @@
                   <v-icon>description</v-icon>
                 </v-tab>
                 <v-tab class="color-theme-blue" @click="activeTab=2">Statistics
-                  <v-icon>timeline</v-icon>
+                  <v-icon>insert_chart</v-icon>
                 </v-tab>
               </v-tabs>
             </v-card>
@@ -100,14 +111,25 @@
           </v-flex>
         </v-layout>
       </v-container>
+      <v-menu v-model="showMenu"
+              :position-x="menuPosX"
+              :position-y="menuPosY"
+              :close-on-content-click="false"
+              :close-on-click="false"
+      >
+        <StartExperimentMenu :experiment="selectedExperiment"
+                             @menuClosed="closeMenu">
+        </StartExperimentMenu>
+      </v-menu>
     </template>
   </base-page>
 </template>
 
 <script>
-import { isNil, forEach } from 'lodash';
+import { isNil, forEach, isEqual, find } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
+import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -118,7 +140,7 @@ import DeleteDialog from '../baseComponents/DeleteDialog';
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [TimeStampMixin],
-  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage },
+  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage, StartExperimentMenu },
   data() {
     return {
       userInput: '',
@@ -130,13 +152,17 @@ export default {
       loadingLogs: false,
       dialog: false,
       selectedExecution: {},
+      menuPosX: 0,
+      menuPosY: 0,
+      showMenu: false,
+      selectedExperiment: {},
     };
   },
   props: {
     executionId: String,
   },
   computed: {
-    ...mapGetters(['executions']),
+    ...mapGetters(['snack', 'snackShow', 'executions', 'experiments']),
   },
   methods: {
     ...mapActions(['getExecutionById', 'terminateExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
@@ -192,7 +218,7 @@ export default {
         case 'RUNNING':
           this.runtime = this.msToTime(moment(now.diff(startedAt)));
           break;
-        case 'TERMINATED':
+        case 'FINISHED':
         case 'FAILED':
         case 'ABORTED':
         case 'CANCELED':
@@ -236,6 +262,32 @@ export default {
         this.triggerSnack();
       }
     },
+    closeMenu() {
+      this.showMenu = false;
+    },
+    hasTerminated(status) {
+      if (!isNil(status)) {
+        if (isEqual(status, 'RUNNING')) {
+          return false;
+        } else if (isEqual(status, 'WAITING')) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    },
+    showContextMenu(event) {
+      this.updateSelectedExperiment(this.execution.experimentId);
+      this.showMenu = false;
+      this.menuPosX = event.clientX;
+      this.menuPosY = event.clientY;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
+    },
+    updateSelectedExperiment(experimentId) {
+      this.selectedExperiment = find(this.experiments, exp => exp.id === experimentId);
+    },
   },
   async created() {
     if (!isNil(this.executions) && this.executions.length > 0) {
@@ -270,5 +322,8 @@ export default {
   }
   .color-theme-blue {
     background: var(--themeColor);
+  }
+  .replay {
+    margin-right: 10px;
   }
 </style>

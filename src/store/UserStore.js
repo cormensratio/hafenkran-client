@@ -152,9 +152,10 @@ const UserStore = {
       if (!getters.isAuthenticated) {
         const success = await AuthService.login(name, password);
         if (success) {
-          if (dispatch('fetchUser')) {
-            dispatch('fetchUserList');
-          }
+          dispatch('fetchUser');
+          // if (dispatch('fetchUser')) {
+          //   dispatch('fetchUserList');
+          // }
           return true;
         }
       }
@@ -179,6 +180,19 @@ const UserStore = {
         return true;
       }
       return false;
+    },
+    async registerUser({ getters }, { username, password, email, isAdmin }) {
+      if (getters.isAuthenticated) {
+        if (!isNil(username) && !isNil(password) && !isNil(email) && !isNil(isAdmin)) {
+          const response = await ApiService.doPost(`${serviceUrl}/users/create`,
+            { name: username, password, email, isAdmin });
+
+          if (!isNil(response)) {
+            return response;
+          }
+        }
+      }
+      return null;
     },
     async updateUser({ commit, state }, { email, password, newPassword, isAdmin }) {
       const newUserInformation = {

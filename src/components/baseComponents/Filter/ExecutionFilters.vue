@@ -2,38 +2,49 @@
   <base-filter-component @applyFilters="applyFilters($event)"
                          @quickSearch="quickSearch($event)"
                           :filters="executionFilters"
-                         @clearFilters="clearCustomFilter()"
   >
-    <template slot="customFilter">
-      <filter-users-combobox ref="userFilterExecutions"
-                             @update="applyUserFilters($event)"
-      >
-      </filter-users-combobox>
-    </template>
   </base-filter-component>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map, extend } from 'lodash';
+import { uniq, map } from 'lodash';
 import FilterUsersCombobox from './FilterUsersCombobox';
 import BaseFilterComponent from './BaseFilterComponent';
+import FilterDateTime from './FilterDateTime';
 
 export default {
   name: 'ExecutionFilters',
-  components: { BaseFilterComponent, FilterUsersCombobox },
+  components: { FilterDateTime, BaseFilterComponent, FilterUsersCombobox },
   data() {
     return {
       filters: {
         name: {
           label: 'Name',
           value: 'name',
+          type: 'basic',
           filterOptions: [],
         },
         status: {
           label: 'Status',
           value: 'status',
+          type: 'basic',
           filterOptions: [],
+        },
+        startTime: {
+          label: 'Started at',
+          value: 'startedAt',
+          type: 'dateTime',
+        },
+        cancelTime: {
+          label: 'Canceled at',
+          value: 'terminatedAt',
+          type: 'dateTime',
+        },
+        user: {
+          label: 'User',
+          value: '',
+          type: 'user',
         },
       },
     };
@@ -46,6 +57,12 @@ export default {
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
     },
+    startTimeOptions() {
+      return uniq(map(this.executions, this.filters.startTime.value));
+    },
+    cancelTimeOptions() {
+      return uniq(map(this.executions, this.filters.cancelTime.value));
+    },
     executionFilters() {
       this.updateFilterOptions();
       return this.filters;
@@ -53,14 +70,7 @@ export default {
   },
   methods: {
     applyFilters(appliedFilters) {
-      this.currentFilters = appliedFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
-    },
-    applyUserFilters(appliedUserFilters) {
-      this.currentUserFilters = appliedUserFilters;
-      const output = extend(this.currentFilters, this.currentUserFilters);
-      this.$emit('applyFilters', output);
+      this.$emit('applyFilters', appliedFilters);
     },
     quickSearch(input) {
       this.$emit('quickSearch', input);
@@ -68,9 +78,6 @@ export default {
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
-    },
-    clearCustomFilter() {
-      this.$refs.userFilterExecutions.clearSelected();
     },
   },
 };
