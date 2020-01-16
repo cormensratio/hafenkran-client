@@ -1,12 +1,18 @@
 <template slot="body">
   <div class="container">
-    <v-hover v-slot:default="{ hover }">
+    <v-hover v-slot:default="{ hover }" class="dropzone"
+             v-bind:style="{ borderWidth: borderWidth,
+                             backgroundColor: backgroundColor }">
       <v-card :elevation="hover ? 12 : 2" class="p-2">
-        <div class="input-group">
+        <div class="input-group"
+             @drop.prevent="getFileDropped"
+             @dragover.prevent="fileOver = true"
+             @dragleave.prevent="fileOver = false">
           <div class="input-group-prepend m-auto">
             <label>
               <v-icon class="uploadicon" size="150">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
+              <p style="color: #7f7f7f">Click or Drag and Drop to Upload your file!</p>
             </label>
           </div>
         </div>
@@ -63,20 +69,41 @@ export default {
       fileName: null,
       correctFileType: false,
       loading: false,
+      fileOver: false,
     };
+  },
+  computed: {
+    borderWidth() {
+      if (this.fileOver) {
+        return '5px';
+      }
+      return '0px';
+    },
+    backgroundColor() {
+      if (this.fileOver) {
+        return '#f5f5ff';
+      }
+      return '#ffffff';
+    },
   },
   methods: {
     ...mapMutations(['setSnack', 'showSnack']),
     ...mapActions(['triggerSnack']),
-    getFileName() {
-      return this.$refs.file.files[0].name;
-    },
     getFile() {
       this.file = this.$refs.file.files[0];
       if (this.file !== null) {
-        this.fileName = this.getFileName();
+        this.fileName = this.file.name;
         this.correctFileType = UploadService.checkFileType(this.file);
         this.timestamp = UploadService.getTimeStamp();
+      }
+    },
+    getFileDropped(e) {
+      this.file = e.dataTransfer.files[0];
+      if (this.file !== null) {
+        this.fileName = this.file.name;
+        this.correctFileType = UploadService.checkFileType(this.file);
+        this.timestamp = UploadService.getTimeStamp();
+        this.fileOver = false;
       }
     },
     async submitFile() {
@@ -96,6 +123,10 @@ export default {
 </script>
 
 <style scoped>
+  .dropzone {
+    border-style: solid;
+    border-color: var(--themeColor);
+  }
   .uploadicon:hover {
     color: var(--themeColor);
   }
