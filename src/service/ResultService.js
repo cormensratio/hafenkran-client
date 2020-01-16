@@ -1,6 +1,17 @@
 import { isNil, forEach } from 'lodash';
 import csv2json from 'csvjson-csv2json';
 
+const basicEncoding = {
+  field: '',
+  type: 'quantitative',
+};
+
+const temporalEncoding = {
+  field: 'timestamp',
+  type: 'temporal',
+  timeUnit: 'utcyearmonthdatehoursminutesseconds',
+};
+
 export default class ResultService {
   static extractFileObjectFromBase64String(fileString, fileName) {
     if (!isNil(fileString) && !isNil(fileName) && fileString !== '') {
@@ -38,11 +49,30 @@ export default class ResultService {
     if (!isNil(metrics) && metrics.length > 0 && !isNil(metrics[0][key])) {
       const metricChartData = [];
       forEach(metrics, (metric) => {
-        const dateTime = metric.timeStamp * 1000; // times 1000 to convert it to milliseconds
-        metricChartData.push({ timestamp: dateTime, y: metric[key] });
+        const dateTime = metric.timeStamp; // times 1000 to convert it to milliseconds
+        const valueY = metric[key];
+        const listItem = { timestamp: dateTime };
+        listItem[key] = valueY;
+        metricChartData.push(listItem);
       });
 
       return metricChartData;
+    }
+    return null;
+  }
+
+  static getChartDataFieldEncoding(chartData) {
+    if (!isNil(chartData) && chartData.length > 0) {
+      const fields = Object.keys(chartData[0]);
+
+      if (!isNil(fields) && fields.length >= 2) {
+        const outPut = { x: fields[0], y: fields[1] };
+
+        if (!isNil(fields[2])) {
+          outPut.c = fields[2];
+        }
+        return outPut;
+      }
     }
     return null;
   }

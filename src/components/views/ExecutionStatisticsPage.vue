@@ -25,24 +25,27 @@
         </v-list-tile>
       </v-list>
     </div>
-    <div class="col-9 bg-white result-container">
+    <div class="col-9 bg-white">
       <metric-statistics-view v-if="showResourceUsage"
                               :execution-id="executionId"
       >
       </metric-statistics-view>
-      <div v-else class="result-statistics-container">
-        <statistics-component v-if="getResultType(selectedResult.type ) === 'csv'"
-                              :chart-data="chartData">
-        </statistics-component>
-        <div v-else-if="getResultType(selectedResult.type) === 'log'"
-             class="log-container">{{ logData }}
-        </div>
-        <div v-else-if="!selectedResult"
-             class="hint text-muted">
-          Select a result
-        </div>
-        <div v-else class="hint text-muted">
-          Result has unsupported format!
+      <div v-else>
+        <div>
+          <div class="title">{{selectedResult.name}}</div>
+          <statistics-component v-if="getResultType(selectedResult.type) === 'csv'"
+                                :chart-data="chartData" :encoding="chartEncoding">
+          </statistics-component>
+          <div v-else-if="getResultType(selectedResult.type) === 'log'"
+               class="log-container">{{ logData }}
+          </div>
+          <div v-else-if="!selectedResult"
+               class="hint text-muted">
+            Select a result
+          </div>
+          <div v-else class="hint text-muted">
+            Result has unsupported format!
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +68,10 @@ export default {
       selectedResult: '',
       logData: '',
       chartData: [],
+      chartEncoding: {
+        x: { field: 'x', type: 'quantitative' },
+        y: { field: 'y', type: 'quantitative' },
+      },
     };
   },
   props: {
@@ -94,7 +101,13 @@ export default {
     },
     showResultCsv(fileContent) {
       const csvJson = ResultService.convertCsVToJson(fileContent);
-      this.chartData = csvJson;
+      const chartFieldEncoding = ResultService.getChartDataFieldEncoding(csvJson);
+
+      if (!isNil(chartFieldEncoding)) {
+        this.chartEncoding.x.field = chartFieldEncoding.x;
+        this.chartEncoding.y.field = chartFieldEncoding.y;
+        this.chartData = csvJson;
+      }
     },
     showResultLog(fileContent) {
       this.logData = fileContent;
@@ -140,16 +153,16 @@ export default {
   .result-list::-webkit-scrollbar {
     display: none;
   }
-  .result-container {
-    max-height: 60vh;
-  }
-  .result-statistics-container {
-    height: 100%;
-  }
   .list-divider {
     margin-top: -1%;
   }
   .page-container {
     margin: 10px;
+  }
+  .title {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 2%;
+    margin-bottom: 1%;
   }
 </style>

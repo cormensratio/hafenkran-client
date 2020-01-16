@@ -2,7 +2,8 @@
   <div v-if="chartData.length > 0" class="chart-container">
     <vega-lite :data="spec.data.values"
                :mark="spec.mark"
-               :encoding="spec.data.encoding"
+               :encoding="encoding"
+               :spec="spec"
                class="chart"
     ></vega-lite>
   </div>
@@ -33,12 +34,11 @@ export default {
             type: 'json',
           },
           values: [],
-          encoding: {
-            x: { field: 'x', type: 'quantitative' },
-            y: { field: 'y', type: 'quantitative' },
-          },
         },
         mark: 'line',
+        autosize: 'fit',
+        height: 400,
+        width: 600,
       },
     };
   },
@@ -70,9 +70,5 @@ export default {
 </style>
 
 <style>
-  /*override vega style to display bigger charts*/
-  .marks {
-    width: 100%;
-    height: 100% !important;
-  }
+
 </style>

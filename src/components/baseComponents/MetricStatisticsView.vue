@@ -1,25 +1,27 @@
 <template>
-  <div class="metrics-statistics-container">
-    <div class="metric-container">
-      <statistics-component :chart-data="cpuChartData"
-                            :encoding="cpuEncoding"
-      ></statistics-component>
+  <div>
+    <div>
+      <div class="title mb-3">Resource usage information</div>
+      <div>
+        <v-select outline
+                  label="Choose which info should be displayed"
+                  class="time-select"
+        >
+        </v-select>
+      </div>
     </div>
-    <div class="metric-container">
-      <statistics-component :chart-data="ramChartData"
-                            :encoding="ramEncoding"
-      ></statistics-component>
+    <div class="metrics-statistics-container">
+      <div class="metric-container">
+        <statistics-component :chart-data="cpuChartData"
+                              :encoding="cpuEncoding"
+        ></statistics-component>
+      </div>
+      <div class="metric-container">
+        <statistics-component :chart-data="ramChartData"
+                              :encoding="ramEncoding"
+        ></statistics-component>
+      </div>
     </div>
-<!--    <v-container>-->
-<!--      <v-layout>-->
-<!--        <v-flex>-->
-<!--          <statistics-component :chart-data="cpuChartData"></statistics-component>-->
-<!--        </v-flex>-->
-<!--        <v-flex>-->
-<!--          <statistics-component :chart-data="ramChartData"></statistics-component>-->
-<!--        </v-flex>-->
-<!--      </v-layout>-->
-<!--    </v-container>-->
   </div>
 </template>
 
@@ -43,7 +45,7 @@ export default {
           timeUnit: 'utcyearmonthdatehoursminutesseconds',
         },
         y: {
-          field: 'RAM',
+          field: 'ram',
           type: 'quantitative',
         },
       },
@@ -54,7 +56,7 @@ export default {
           timeUnit: 'utcyearmonthdatehoursminutesseconds',
         },
         y: {
-          field: 'CPU Cores',
+          field: 'cpu',
           type: 'quantitative',
         },
       },
@@ -112,5 +114,12 @@ export default {
   .metric-container {
     height: 100%;
     width: 100%;
+  }
+  .title {
+    font-size: 14pt;
+    font-weight: bold;
+  }
+  .time-select {
+    max-width: 400px;
   }
 </style>
