@@ -80,7 +80,8 @@
                       {{ user.name }}
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-btn icon @click="selectUserToDelete(user)">
+                      <v-btn icon @click="selectUserToDelete(user)"
+                             v-if="user.id !== currentUser.id">
                         <v-icon>delete</v-icon>
                       </v-btn>
                     </v-list-tile-action>
@@ -120,6 +121,7 @@ export default {
   },
   computed: {
     ...mapGetters(['userList', 'pendingUsers']),
+    ...mapGetters({ currentUser: 'user' }),
     maxHeight() {
       if (this.pendingUsers.length >= 2) {
         return '39vh';
