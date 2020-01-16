@@ -251,7 +251,7 @@ const UserStore = {
       return null;
     },
     async denyUser({ dispatch }, user) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'INACTIVE', isAdmin: '' });
+      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${user.id}`);
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
