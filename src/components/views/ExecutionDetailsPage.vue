@@ -14,6 +14,8 @@
             <span class="mb-3">
               Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
             </span>
+                <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
+                  Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </span>
                 <span class="mb-3">Runtime: {{runtime}}</span>
                 <div class="status">
                   <span>Status:</span>

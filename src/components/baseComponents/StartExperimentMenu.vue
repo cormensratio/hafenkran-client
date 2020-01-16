@@ -33,7 +33,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
-                          min="0"
+                          min="1"
                           @change="checkMinutes"
             >
             </v-text-field>
