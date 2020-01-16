@@ -18,8 +18,8 @@ const UserStore = {
     },
     userList: [
       {
-        id: '1',
-        name: 'testuser',
+        id: '',
+        name: '',
         isAdmin: '',
         eMail: '',
       },
