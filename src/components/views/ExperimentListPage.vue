@@ -78,6 +78,11 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
+      ownerColumn: {
+        text: 'Owner',
+        value: 'ownerId',
+        sortable: true,
+      },
       headers: [
         {
           text: 'Dockerfile Name',
@@ -85,7 +90,7 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Owner', value: 'ownerId', sortable: true },
+
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
@@ -145,6 +150,9 @@ export default {
     this.$nextTick(() => {
       this.items = this.experiments;
     });
+    if (this.user.isAdmin) {
+      this.headers.push(this.ownerColumn);
+    }
   },
 };
 </script>

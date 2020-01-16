@@ -107,9 +107,12 @@ export default {
       loading: false,
       dialog: false,
       selectedExecution: {},
+      ownerColumn: {
+        text: 'Owner',
+        value: 'name',
+        sortable: true },
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
-        { text: 'Owner', value: 'name', sortable: true },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
@@ -212,6 +215,10 @@ export default {
     this.$nextTick(() => {
       this.items = this.executions;
     });
+    if (this.user.isAdmin) {
+
+      this.headers.push(this.ownerColumn);
+    }
   },
 };
 </script>
