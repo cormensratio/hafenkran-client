@@ -1,17 +1,6 @@
 import { isNil, forEach } from 'lodash';
 import csv2json from 'csvjson-csv2json';
 
-const basicEncoding = {
-  field: '',
-  type: 'quantitative',
-};
-
-const temporalEncoding = {
-  field: 'timestamp',
-  type: 'temporal',
-  timeUnit: 'utcyearmonthdatehoursminutesseconds',
-};
-
 export default class ResultService {
   static extractFileObjectFromBase64String(fileString, fileName) {
     if (!isNil(fileString) && !isNil(fileName) && fileString !== '') {
