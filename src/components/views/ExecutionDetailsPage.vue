@@ -286,17 +286,25 @@ export default {
     updateSelectedExperiment(experimentId) {
       this.selectedExperiment = find(this.experiments, exp => exp.id === experimentId);
     },
+    updateExecution() {
+      this.getExecutionById(this.executionId)
+        .then((execution) => {
+          if (!isNil(execution)) {
+            this.execution = execution;
+          }
+        });
+    },
+  },
+  watch: {
+    executions() {
+      this.updateExecution();
+    },
   },
   async created() {
     if (!isNil(this.executions) && this.executions.length > 0) {
       await this.fetchAllExecutionsOfUser();
     }
-    this.getExecutionById(this.executionId)
-      .then((execution) => {
-        if (!isNil(execution)) {
-          this.execution = execution;
-        }
-      });
+    this.updateExecution();
     setInterval(() => {
       this.calculateRuntime();
     }, 1000);
