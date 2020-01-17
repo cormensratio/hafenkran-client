@@ -113,7 +113,7 @@ export default class AuthService {
     const expires = moment(jwtToken.expires * 1000);
     const secondsUntilExpiry = moment.duration(moment().diff(expires)).asSeconds();
 
-    if (secondsUntilExpiry <= 60 && secondsUntilExpiry > 0) {
+    if (secondsUntilExpiry <= 60) {
       console.log('About to fetch new JWT...');
       return this.fetchNewJWT();
     }

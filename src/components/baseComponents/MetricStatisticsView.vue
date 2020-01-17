@@ -23,7 +23,7 @@
           <span v-if="data">{{data.item.text}}</span>
         </template>
       </v-select>
-      <v-btn class="reload-button">
+      <v-btn class="reload-button" @click="fetchMetrics">
         <v-icon>replay</v-icon>
         Reload Metrics
       </v-btn>
@@ -169,13 +169,10 @@ export default {
       }
     },
   },
-  mounted() {
-    // await this.fetchMetrics();
-    this.displayedMetrics = this.metrics.metricList;
+  async mounted() {
+    await this.fetchMetrics();
     this.selectedTimeFormat = this.timeFormatOptions[1];
     this.selectedTimeFrame = this.timeFrameOptions[0];
-    this.getCpuChartData();
-    this.getRamChartData();
   },
 };
 </script>
