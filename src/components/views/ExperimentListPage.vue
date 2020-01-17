@@ -35,10 +35,6 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-snackbar v-model="snackShow" right>
-          {{ snack }}
-          <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-container>
       <v-menu v-model="showMenu"
               :position-x="menuPosX"
@@ -55,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isNil, filter } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
@@ -72,7 +68,7 @@ export default {
   mixins: [TimeStampMixin, FilterMixin],
 
   computed: {
-    ...mapGetters(['experiments', 'snack', 'snackShow', 'user', 'userList']),
+    ...mapGetters(['experiments', 'user', 'userList']),
   },
   data() {
     return {
@@ -82,6 +78,11 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
+      ownerColumn: {
+        text: 'Owner',
+        value: 'ownerId',
+        sortable: true,
+      },
       headers: [
         {
           text: 'Dockerfile Name',
@@ -89,7 +90,7 @@ export default {
           sortable: true,
           value: 'name',
         },
-        { text: 'Owner', value: 'ownerId', sortable: true },
+
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
@@ -97,6 +98,7 @@ export default {
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
+    ...mapMutations(['showSnack']),
     async showExecutions(experiment) {
       const experimentId = experiment.id;
 
@@ -142,12 +144,18 @@ export default {
       this.items = this.experiments;
     },
   },
-  created() {
-    this.fetchUserList();
-    this.fetchExperiments();
+  async created() {
+    await this.fetchUserList();
+    await this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;
     });
+    if (this.user.isAdmin) {
+      this.headers.splice(-2, 0, {
+        text: 'Owner',
+        value: 'name',
+        sortable: true });
+    }
   },
 };
 </script>

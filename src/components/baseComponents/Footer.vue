@@ -1,5 +1,5 @@
 <template>
-  <v-footer fixed class="hafen-footer">
+  <v-footer height="100" fixed class="hafen-footer">
     <v-container>
       <v-layout align-center row>
         <v-flex grow>
@@ -69,8 +69,8 @@ export default {
     margin-right: 30px;
   }
   .hafen-footer {
-    height: 120px !important;
     background-color: #e8ebed;
+    margin: -10px;
   }
   .ref-links {
     margin-top: -1%;

@@ -18,7 +18,6 @@ describe('ApiService', () => {
 
     // act
     ApiService.doGet().then((data) => {
-
       // assert
       expect(data).toEqual(response.data);
     });
@@ -30,7 +29,6 @@ describe('ApiService', () => {
 
     // act
     ApiService.doPost().then((data) => {
-
       // assert
       expect(data).toEqual(response.data);
     });

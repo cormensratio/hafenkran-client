@@ -11,17 +11,17 @@ const ExecutionStore = {
   state: {
     executions: [
       {
-        id: '1',
-        experimentId: '1',
-        name: 'Test Execution',
-        createdAt: new Date(),
-        startedAt: new Date(),
-        terminatedAt: new Date(),
-        status: 'RUNNING',
+        id: '',
+        experimentId: '',
+        name: '',
+        createdAt: 0,
+        startedAt: 0,
+        terminatedAt: 0,
+        status: '',
         ram: '',
         cpu: '',
         bookedTime: '',
-        ownerId: '1',
+        ownerId: '',
       },
     ],
   },
@@ -50,7 +50,7 @@ const ExecutionStore = {
         commit('updateExecutions', executions);
       }
     },
-    async terminateExecution({ dispatch }, executionId) {
+    async cancelExecution({ dispatch }, executionId) {
       if (!isNil(executionId)) {
         const response = await ApiService.doPost(`${serviceUrl}/executions/${executionId}/cancel`);
         if (!isNil(response)) {

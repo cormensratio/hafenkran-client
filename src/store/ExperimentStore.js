@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { isNil, find } from 'lodash';
+import store from './store';
 import ApiService from '../service/ApiService';
 
 export const serviceUrl = process.env.CLUSTER_SERVICE_URL;
@@ -12,11 +13,11 @@ const ExperimentStore = {
   state: {
     experiments: [
       {
-        id: '1',
-        name: 'TestDockerfile',
-        createdAt: '01.01.20',
-        size: '500',
-        ownerId: '1',
+        id: '',
+        name: '',
+        createdAt: '',
+        size: '',
+        ownerId: '',
       },
     ],
   },
@@ -49,6 +50,7 @@ const ExperimentStore = {
           `${serviceUrl}/experiments/${executionDetails.experimentId}/execute`, executionDetails);
 
         if (!isNil(response)) {
+          await store.dispatch('fetchAllExecutionsOfUser');
           return response;
         }
       }
