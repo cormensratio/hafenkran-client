@@ -81,7 +81,7 @@ export default {
     },
     backgroundColor() {
       if (this.fileOver) {
-        return '#f5f5ff';
+        return '#d0defd';
       }
       return '#ffffff';
     },

@@ -1,7 +1,7 @@
 <template>
   <base-page>
     <template slot="body">
-      <v-container class="top">
+      <v-container>
         <v-dialog v-model="dialog" max-width="500px">
           <v-card class="pb-3">
             <v-card-title class="justify-center">
@@ -20,7 +20,7 @@
           </v-card>
         </v-dialog>
         <v-layout column>
-          <v-flex>
+          <v-flex class="flex">
             <v-card max-width="800"
                     class="mx-auto mb-3"
                     v-if="pendingUsers.length > 0">
@@ -59,35 +59,30 @@
               </div>
             </v-card>
             <v-card max-width="800" class="mx-auto">
-              <v-toolbar dark style="background: var(--themeColor)" class="mb-1">
-                <v-toolbar-title>
-                  Users
-                </v-toolbar-title>
-              </v-toolbar>
-              <div mb-5>
-                <v-list class="listAccepted" v-bind:style="{ maxHeight: maxHeight }">
-                  <v-list-tile class="p-2 tile"
-                               :key="user.name"
-                               v-for="(user) in userList">
-                    <v-list-tile-avatar size="50" class="mr-2">
-                      <v-avatar color="blue" size="50">
-                        <span class="headline white--text">
-                          {{ user.name.charAt(0).toUpperCase() }}
-                        </span>
-                      </v-avatar>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                      {{ user.name }}
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-btn icon @click="selectUserToDelete(user)"
-                             v-if="user.id !== currentUser.id">
+              <base-list-header title="Userlist">
+              </base-list-header>
+              <v-data-table :headers="headers"
+                            class="elevation-1 userList"
+                            v-bind:style="{ maxHeight: userListHeight }"
+                            search=""
+                            :items="userList">
+                <template v-slot:items="props">
+                  <tr>
+                    <td class="text-xs-left">
+                      {{ props.item.id }}
+                    </td>
+                    <td class="text-xs-left">
+                      {{ props.item.name }}
+                    </td>
+                    <td class="text-xs-left">
+                      <v-btn icon @click="selectUserToDelete(props.item)"
+                             v-if="props.item.id !== currentUser.id">
                         <v-icon>delete</v-icon>
                       </v-btn>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                </v-list>
-              </div>
+                    </td>
+                  </tr>
+                </template>
+              </v-data-table>
             </v-card>
             <v-progress-circular
               indeterminate
@@ -107,29 +102,29 @@ import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import Footer from '../baseComponents/Footer';
 import Header from '../baseComponents/Header';
+import BaseListHeader from '../baseComponents/BaseListHeader';
 
 export default {
   name: 'UserListPage',
-  components: { Header, Footer, BasePage },
+  components: { BaseListHeader, Header, Footer, BasePage },
   data() {
     return {
       loading: false,
+      userListHeight: '',
+      pendingUserListHeight: '',
       dialog: false,
       userToDelete: null,
       userToDeleteName: '',
+      headers: [
+        { text: 'Userid', width: 8, sortable: true, value: 'id' },
+        { text: 'Username', width: 650, sortable: true, value: 'name' },
+        { text: 'Actions', sortable: false },
+      ],
     };
   },
   computed: {
     ...mapGetters(['userList', 'pendingUsers']),
     ...mapGetters({ currentUser: 'user' }),
-    maxHeight() {
-      if (this.pendingUsers.length >= 2) {
-        return '39vh';
-      } else if (this.pendingUsers.length === 1) {
-        return '51vh';
-      }
-      return '69vh';
-    },
   },
   methods: {
     ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
@@ -164,21 +159,44 @@ export default {
     async created() {
       await this.fetchUserList();
     },
+    // calculate remaining space for Userlist by subtracting other components'
+    // height from the user's window height
+    screenHeight() {
+      let pendingUserListHeight;
+      if (this.pendingUsers.length >= 2) {
+        pendingUserListHeight = 200;
+      } else if (this.pendingUsers.length === 1) {
+        pendingUserListHeight = 138;
+      } else {
+        pendingUserListHeight = 0;
+      }
+      const height = `${window.innerHeight - 420 - pendingUserListHeight}px`;
+      console.log(pendingUserListHeight);
+      console.log(height);
+      this.userListHeight = `${window.innerHeight - 420 - pendingUserListHeight}px`;
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.screenHeight);
+      this.screenHeight();
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.screenHeight);
   },
 };
 </script>
 
 <style scoped>
-  .listAccepted {
-    overflow-y: scroll;
-  }
-
   .listPending {
     overflow-y: scroll;
     max-height: 200px;
   }
-
   .tile:hover {
     background-color: #dddddd;
+  }
+  .userList {
+    overflow-y: auto;
   }
 </style>
