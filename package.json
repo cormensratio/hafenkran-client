@@ -1,6 +1,6 @@
 {
   "name": "hafenkranclient",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "The VueJs client for the cluster-based computing software Hafenkran",
   "author": "Team Hafenkran",
   "private": true,
