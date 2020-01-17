@@ -75,7 +75,7 @@ export default {
               this.setSnack('Login successful');
               this.$router.push('/experimentlist');
             } else {
-              this.setSnack('Login failed');
+              // this.setSnack('Login failed');
               this.loading = false;
             }
             this.triggerSnack();
