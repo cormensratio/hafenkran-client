@@ -24,7 +24,7 @@
             <v-text-field label="Hours"
                           type="number"
                           outline
-                          class="time-input"
+                          class="time-input mr-1"
                           v-model="bookedHours"
                           min="0"
             >
@@ -47,14 +47,14 @@
         </div>
         <v-layout>
           <v-flex>
-            <v-text-field label="RAM"
+            <file-size-input label="RAM"
                           v-model="ram"
                           outline type="number"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
-                          class="resource-input"
+                          class="resource-input mr-1"
             >
-            </v-text-field>
+            </file-size-input>
           </v-flex>
           <v-flex>
             <v-text-field label="CPU Cores"
@@ -90,10 +90,11 @@ import { mapActions, mapMutations, mapGetters } from 'vuex';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
 import FileSizeCell from './FileSizeCell';
+import FileSizeInput from './FileSizeInput';
 
 export default {
   name: 'StartExperimentMenu',
-  components: { FileSizeCell },
+  components: { FileSizeInput, FileSizeCell },
   mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
