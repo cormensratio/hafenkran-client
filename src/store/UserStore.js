@@ -28,10 +28,10 @@ const UserStore = {
       { id: 9, name: 'Legolas', isAdmin: false, email: '' },
       { id: 10, name: 'Doritos', isAdmin: false, email: '' },
       { id: 11, name: 'Nudelauflauf', isAdmin: false, email: '' },
-      { id: 12, name: 'testuser2', isAdmin: false, email: '' },
-      { id: 8, name: 'Superman', isAdmin: false, email: '' },
     ],
     pendingUsers: [
+      { id: 12, name: 'testuser2', isAdmin: false, email: '' },
+      { id: 12, name: 'testuser2', isAdmin: false, email: '' },
     ],
   },
   getters: {
