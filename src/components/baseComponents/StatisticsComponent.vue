@@ -1,10 +1,14 @@
 <template>
   <div v-if="chartData.length > 0" class="chart-container">
-    <vega-lite :data="spec.data.values"
-               mark="line"
-               :encoding="spec.data.encoding"
+    <vega-lite :data="chartData"
+               :mark="spec.mark"
+               :encoding="encoding"
+               :spec="spec"
                class="chart"
     ></vega-lite>
+  </div>
+  <div v-else>
+    No chart data to display...
   </div>
 </template>
 
@@ -18,6 +22,7 @@ export default {
   name: 'StatisticsComponent',
   props: {
     chartData: '',
+    encoding: {},
   },
   data() {
     return {
@@ -28,12 +33,11 @@ export default {
             type: 'json',
           },
           values: [],
-          encoding: {
-            x: { field: 'x', type: 'ordinal' },
-            y: { field: 'y', type: 'quantitative' },
-          },
         },
         mark: 'line',
+        autosize: 'fit',
+        height: 400,
+        width: 600,
       },
     };
   },
@@ -53,12 +57,5 @@ export default {
   .chart {
     width: 100%;
     height: 100%;
-  }
-</style>
-
-<style>
-  .marks {
-    width: 100%;
-    height: 100% !important;
   }
 </style>

@@ -1,134 +1,130 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <base-page>
     <template slot="body">
-      <v-container class="top">
-        <v-layout column>
-          <v-flex>
-            <v-card class="flex">
-              <v-toolbar dark style="background: var(--themeColor)">
-                <v-toolbar-title color="white" class="justify-center">
-                  {{ execution.name }}
-                </v-toolbar-title>
-              </v-toolbar>
-              <v-card-text class="text-left details">
-            <span class="mb-3">
-              Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
-            </span>
-                <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
+      <div class="container">
+        <v-card class="flex">
+          <v-toolbar dark style="background: var(--themeColor)">
+            <v-toolbar-title color="white" class="justify-center">
+              {{ execution.name }}
+            </v-toolbar-title>
+            <v-toolbar-items class="ml-5">
+              <v-btn flat dark @click="activeTab = 1"
+                     v-bind:class="{ 'active': (activeTab === 1)}">
+                <v-icon class="mr-1">info</v-icon>
+                Execution Information
+              </v-btn>
+              <v-btn flat dark @click="activeTab = 2"
+                     v-bind:class="{ 'active': (activeTab === 2)}">
+                <v-icon class="mr-1">insert_chart</v-icon>
+                Statistics
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <div v-if="activeTab === 1">
+            <v-card-text class="text-left details">
+                <span class="mb-3">
+                  Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
+                </span>
+              <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
                   Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </span>
-                <span class="mb-3">Runtime: {{runtime}}</span>
-                <div class="status">
-                  <span>Status:</span>
-                  <status-cell :status="execution.status" class="cell"/>
-                </div>
-              </v-card-text>
-              <v-progress-circular
-                indeterminate
-                color="#106ee0"
-                v-if="loading"
+              <span class="mb-3">Runtime: {{runtime}}</span>
+              <div class="status">
+                <span>Status:</span>
+                <status-cell :status="execution.status" class="cell"/>
+              </div>
+            </v-card-text>
+            <v-progress-circular
+              indeterminate
+              color="#106ee0"
+              v-if="loading"
+            />
+            <v-card-actions>
+              <v-flex>
+                <v-btn class="error right"
+                       @click="setExecution()">
+                  <v-icon>delete_forever</v-icon>
+                </v-btn>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
+                           @click="executionCancel(execution.id)" v-on="on">
+                      <v-icon right dark left>cancel</v-icon>
+                    </v-btn>
+                    <v-btn class="right replay" v-else
+                           @click="showContextMenu($event, execution.experimentId)" v-on="on">
+                      <v-icon>replay</v-icon>
+                    </v-btn>
+                  </template>
+                  <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
+                  <span v-else>Repeat this execution</span>
+                </v-tooltip>
+                <v-btn class="logs left" dark style="background-color: var(--themeColor)"
+                       @click="getLogs">
+                  Load Logs
+                </v-btn>
+                <v-btn dark style="background-color: var(--themeColor)"
+                       @click="downloadResults()" class="left">
+                  Download Results
+                  <v-icon right>cloud_download</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-card-actions>
+            <div class="m-1">
+              <v-container class="scroll-y black white--text">
+                <v-layout column
+                          style="height: 25vh">
+                  <div class="text-left">Logs are getting updated here:</div>
+                  <div class="text-left"
+                       :key="id" v-for="(log, id) in logs">{{ log }}
+                  </div>
+                  <v-progress-circular
+                    indeterminate
+                    color="#106ee0"
+                    v-if="loadingLogs"
+                  />
+                </v-layout>
+              </v-container>
+              <v-text-field
+                v-model="userInput"
+                append-icon="send"
+                label="Enter a command here!"
+                single-line
+                @keyup.enter="sendStdin"
+                @click:append="sendStdin()"
+                type="text"
+                clearable
+                clear-icon="close"
+                outline
               />
-              <v-card-actions>
-                <v-flex>
-                  <v-btn class="error right"
-                         @click="setExecution()">
-                    <v-icon>delete_forever</v-icon>
-                  </v-btn>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                      <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
-                             @click="executionCancel(execution.id)" v-on="on">
-                        <v-icon right dark left>cancel</v-icon>
-                      </v-btn>
-                      <v-btn class="right replay" v-else
-                             @click="showContextMenu($event, execution.experimentId)" v-on="on">
-                        <v-icon>replay</v-icon>
-                      </v-btn>
-                    </template>
-                    <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
-                    <span v-else>Repeat this execution</span>
-                  </v-tooltip>
-                  <v-btn class="logs left" dark style="background-color: var(--themeColor)"
-                         @click="getLogs">
-                    Load Logs
-                  </v-btn>
-                  <v-btn dark style="background-color: var(--themeColor)"
-                         @click="downloadResults()" class="left">
-                    Download Results
-                    <v-icon right>cloud_download</v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-card-actions>
-              <delete-dialog @deleteClicked="executionDelete"
-                             @hideDialog="dialog = false"
-                             :extern-execution="execution"
-                             :extern-dialog="dialog"
-              ></delete-dialog>
-            </v-card>
-          </v-flex>
-          <v-flex class="mt-2">
-            <v-card class="results elevation-5">
-              <v-tabs dark centered icons-and-text grow slider-color="white">
-                <v-tab class="color-theme-blue" @click="activeTab=1">Logs
-                  <v-icon>description</v-icon>
-                </v-tab>
-                <v-tab class="color-theme-blue" @click="activeTab=2">Statistics
-                  <v-icon>insert_chart</v-icon>
-                </v-tab>
-              </v-tabs>
-            </v-card>
-            <div class="content">
-              <div v-if="activeTab === 1">
-                <v-container class="scroll-y black white--text">
-                  <v-layout column
-                  style="height: 25vh">
-                    <div class="text-left">Logs are getting updated here:</div>
-                    <div class="text-left"
-                         :key="id" v-for="(log, id) in logs">{{ log }}
-                    </div>
-                    <v-progress-circular
-                      indeterminate
-                      color="#106ee0"
-                      v-if="loadingLogs"
-                    />
-                  </v-layout>
-                </v-container>
-                <v-text-field
-                  v-model="userInput"
-                  append-icon="send"
-                  label="Enter a command here!"
-                  single-line
-                  @keyup.enter="sendStdin"
-                  @click:append="sendStdin()"
-                  type="text"
-                  clearable
-                  clear-icon="close"
-                  outline
-                />
-              </div>
-              <div v-if="activeTab === 2">
-                <execution-statistics-page :execution-id="execution.id">
-                </execution-statistics-page>
-              </div>
             </div>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <v-menu v-model="showMenu"
-              :position-x="menuPosX"
-              :position-y="menuPosY"
-              :close-on-content-click="false"
-              :close-on-click="false"
-      >
-        <StartExperimentMenu :experiment="selectedExperiment"
-                             @menuClosed="closeMenu">
-        </StartExperimentMenu>
-      </v-menu>
+          </div>
+          <div v-if="activeTab === 2" class="mt-2 p-2">
+            <execution-statistics-page :execution-id="execution.id">
+            </execution-statistics-page>
+          </div>
+          <delete-dialog @deleteClicked="executionDelete"
+                         @hideDialog="dialog = false"
+                         :extern-execution="execution"
+                         :extern-dialog="dialog"
+          ></delete-dialog>
+        </v-card>
+        <v-menu v-model="showMenu"
+                :position-x="menuPosX"
+                :position-y="menuPosY"
+                :close-on-content-click="false"
+                :close-on-click="false"
+        >
+          <StartExperimentMenu :experiment="selectedExperiment"
+                               @menuClosed="closeMenu">
+          </StartExperimentMenu>
+        </v-menu>
+      </div>
     </template>
   </base-page>
 </template>
 
 <script>
-import { isNil, forEach, isEqual, find } from 'lodash';
+import { find, forEach, isEqual, isNil } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -290,17 +286,25 @@ export default {
     updateSelectedExperiment(experimentId) {
       this.selectedExperiment = find(this.experiments, exp => exp.id === experimentId);
     },
+    updateExecution() {
+      this.getExecutionById(this.executionId)
+        .then((execution) => {
+          if (!isNil(execution)) {
+            this.execution = execution;
+          }
+        });
+    },
+  },
+  watch: {
+    executions() {
+      this.updateExecution();
+    },
   },
   async created() {
     if (!isNil(this.executions) && this.executions.length > 0) {
       await this.fetchAllExecutionsOfUser();
     }
-    this.getExecutionById(this.executionId)
-      .then((execution) => {
-        if (!isNil(execution)) {
-          this.execution = execution;
-        }
-      });
+    this.updateExecution();
     setInterval(() => {
       this.calculateRuntime();
     }, 1000);
@@ -327,5 +331,13 @@ export default {
   }
   .replay {
     margin-right: 10px;
+  }
+
+  .statistics-page {
+    height: 100%;
+    width: 100%;
+  }
+  .active {
+    background-color: #307dea;
   }
 </style>
