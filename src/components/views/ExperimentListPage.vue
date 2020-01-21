@@ -66,10 +66,6 @@ export default {
   name: 'ExperimentListPage',
   components: { FileSizeCell, ExperimentFilters, BaseListHeader, BasePage, StartExperimentMenu },
   mixins: [TimeStampMixin, FilterMixin],
-
-  computed: {
-    ...mapGetters(['experiments', 'user', 'userList']),
-  },
   data() {
     return {
       search: '',
@@ -78,23 +74,24 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       showMenu: false,
-      ownerColumn: {
-        text: 'Owner',
-        value: 'ownerId',
-        sortable: true,
-      },
       headers: [
         {
           text: 'Dockerfile Name',
-          align: 'left',
-          sortable: true,
           value: 'name',
+          sortable: true,
         },
-
+        {
+          text: 'Owner',
+          value: 'ownerId',
+          sortable: true,
+        },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(['experiments', 'user', 'userList']),
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
@@ -133,6 +130,9 @@ export default {
         const matching = filter(this.userList, user => user.id === ownerId);
 
         if (!isNil(matching) && matching.length > 0) {
+          if (matching[0].name === this.user.name) {
+            return 'Me';
+          }
           return matching[0].name;
         }
       }
@@ -150,12 +150,6 @@ export default {
     this.$nextTick(() => {
       this.items = this.experiments;
     });
-    if (this.user.isAdmin) {
-      this.headers.splice(-2, 0, {
-        text: 'Owner',
-        value: 'name',
-        sortable: true });
-    }
   },
 };
 </script>
