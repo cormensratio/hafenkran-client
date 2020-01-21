@@ -163,12 +163,14 @@ export default {
     // height from the user's window height
     screenHeight() {
       let pendingUserListHeight;
-      if (this.pendingUsers.length >= 2) {
-        pendingUserListHeight = 40;
+      if (this.pendingUsers.length >= 3) {
+        pendingUserListHeight = 100;
+      } else if (this.pendingUsers.length >= 2) {
+        pendingUserListHeight = 60;
       } else if (this.pendingUsers.length === 1) {
         pendingUserListHeight = 0;
       } else {
-        pendingUserListHeight = -175;
+        pendingUserListHeight = -165;
       }
       const height = `${window.innerHeight - 420 - pendingUserListHeight}px`;
       console.log(pendingUserListHeight);
