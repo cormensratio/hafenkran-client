@@ -2,7 +2,7 @@
   <v-expansion-panel class="toolbar-header">
     <v-expansion-panel-content style="background: var(--themeColor)">
       <template slot="actions">
-        <v-icon color="white">$vuetify.icons.expand</v-icon>
+        <v-icon color="white">filter_list</v-icon>
       </template>
       <template slot="header">
         <div class="title">{{title}}</div>

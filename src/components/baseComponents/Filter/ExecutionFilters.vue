@@ -24,7 +24,6 @@
                        @update="applyFilter($event)"
                        ref="userFilter"
                        class="filter-box"
-                       v-if="user.isAdmin"
       >
       </filter-combobox>
     </div>
@@ -59,13 +58,12 @@
 import { mapGetters } from 'vuex';
 import { uniq, map, isNil, forEach } from 'lodash';
 import FilterUsersCombobox from './FilterUsersCombobox';
-import BaseFilterComponent from './BaseFilterComponent';
 import FilterDateTime from './FilterDateTime';
 import FilterCombobox from './FilterCombobox';
 
 export default {
   name: 'ExecutionFilters',
-  components: { FilterCombobox, FilterDateTime, BaseFilterComponent, FilterUsersCombobox },
+  components: { FilterCombobox, FilterDateTime, FilterUsersCombobox },
   data() {
     return {
       searchString: '',
