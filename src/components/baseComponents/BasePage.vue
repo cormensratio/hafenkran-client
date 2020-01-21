@@ -8,7 +8,7 @@
       {{ snack }}
       <v-btn flat color="accent" @click=showSnack(false)>Close</v-btn>
     </v-snackbar>
-    <Footer></Footer>
+    <Footer class="hafen-footer"></Footer>
   </div>
 </template>
 
@@ -34,5 +34,10 @@ export default {
   .base-page {
     height: 100%;
     margin-top: 10px;
+  }
+  @media only screen and (max-height: 900px){
+    .hafen-footer{
+      display: none;
+    }
   }
 </style>
