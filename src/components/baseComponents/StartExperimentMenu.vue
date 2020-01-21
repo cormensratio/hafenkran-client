@@ -127,7 +127,7 @@ export default {
       return Math.round(this.ram / 1000);
     },
     /**
-     * Converts booked ram to unit MilliCore
+     * Converts booked cpu to unit MilliCore
      * @returns {number}
      */
     bookedCpu() {
