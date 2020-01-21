@@ -57,13 +57,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import { uniq, map, isNil, forEach } from 'lodash';
-import FilterUsersCombobox from './FilterUsersCombobox';
 import FilterDateTime from './FilterDateTime';
 import FilterCombobox from './FilterCombobox';
 
 export default {
   name: 'ExecutionFilters',
-  components: { FilterCombobox, FilterDateTime, FilterUsersCombobox },
+  components: { FilterCombobox, FilterDateTime },
   data() {
     return {
       searchString: '',

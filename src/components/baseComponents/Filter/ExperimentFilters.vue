@@ -44,12 +44,11 @@
 import { mapGetters } from 'vuex';
 import { uniq, map, isNil, forEach } from 'lodash';
 import FilterCombobox from './FilterCombobox';
-import FilterUsersCombobox from './FilterUsersCombobox';
 import FilterDateTime from './FilterDateTime';
 
 export default {
   name: 'ExperimentFilters',
-  components: { FilterCombobox, FilterUsersCombobox, FilterDateTime },
+  components: { FilterCombobox, FilterDateTime },
   data() {
     return {
       searchString: '',
