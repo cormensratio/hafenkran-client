@@ -109,6 +109,7 @@ export default {
       selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
+        { text: 'Owner', value: 'ownerId', sortable: false },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
@@ -194,6 +195,9 @@ export default {
         const matching = filter(this.userList, user => user.id === ownerId);
 
         if (!isNil(matching) && matching.length > 0) {
+          if (matching[0].name === this.user.name) {
+            return 'Me';
+          }
           return matching[0].name;
         }
       }
@@ -211,12 +215,6 @@ export default {
     this.$nextTick(() => {
       this.items = this.executions;
     });
-    if (this.user.isAdmin) {
-      this.headers.splice(-4, 0, {
-        text: 'Owner',
-        value: 'name',
-        sortable: true });
-    }
   },
 };
 </script>

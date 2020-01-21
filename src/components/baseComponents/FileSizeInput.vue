@@ -5,9 +5,12 @@
                   :rules="rules"
                   v-model="selectedValue"
     >
+      <template slot="prepend-inner">
+        <slot name="prepend-inner"></slot>
+      </template>
       <template slot="append">
-                <span class="pt-3">{{selectedUnit}}</span>
-                <v-icon class="icon-padding" @click="openMenu($event)">keyboard_arrow_down</v-icon>
+        <span class="pt-3">{{selectedUnit}}</span>
+        <v-icon class="icon-padding" @click="openMenu($event)">keyboard_arrow_down</v-icon>
       </template>
     </v-text-field>
     <v-menu v-model="showMenu"
