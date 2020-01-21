@@ -56,6 +56,7 @@ export default {
   components: { StatisticsComponent },
   data() {
     return {
+      fetchMetricsLoopID: '',
       displayedMetrics: [],
       timeFrameOptions: [
         {
@@ -167,6 +168,9 @@ export default {
           this.getRamChartData();
         }
       }
+    },
+    startUpdateMetricsLoop() {
+
     },
   },
   async mounted() {
