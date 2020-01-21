@@ -76,6 +76,9 @@
                       </v-avatar>
                       {{ props.item.name }}
                     </td>
+                    <td>
+                      {{ props.item.email }}
+                    </td>
                     <td class="text-xs-left">
                       <v-btn icon @click="selectUserToDelete(props.item)"
                              v-if="props.item.id !== currentUser.id">
@@ -118,7 +121,8 @@ export default {
       userToDelete: null,
       userToDeleteName: '',
       headers: [
-        { text: 'Username', width: 700, sortable: true, value: 'name' },
+        { text: 'Username', width: 400, sortable: true, value: 'name' },
+        { text: 'Email', width: 300, sortable: true, value: 'email' },
         { text: 'Actions', sortable: false },
       ],
     };
@@ -159,6 +163,7 @@ export default {
     },
     async created() {
       await this.fetchUserList();
+      debugger;
     },
     // calculate remaining space for Userlist by subtracting other components'
     // height from the user's window height
@@ -173,9 +178,6 @@ export default {
       } else {
         pendingUserListHeight = -165;
       }
-      const height = `${window.innerHeight - 420 - pendingUserListHeight}px`;
-      console.log(pendingUserListHeight);
-      console.log(height);
       this.userListHeight = `${window.innerHeight - 420 - pendingUserListHeight}px`;
     },
   },
