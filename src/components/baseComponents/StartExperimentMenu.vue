@@ -119,6 +119,20 @@ export default {
     bookedTime() {
       return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
     },
+    /**
+     * Returns booked RAM in KiB
+     * @returns {number}
+     */
+    bookedRam() {
+      return Math.round(this.ram / 1000);
+    },
+    /**
+     * Converts booked ram to unit MilliCore
+     * @returns {number}
+     */
+    bookedCpu() {
+      return this.cpu * 1000;
+    },
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
@@ -127,7 +141,6 @@ export default {
       this.$emit('menuClosed');
     },
     ramChanged(value) {
-      debugger;
       this.ram = value;
     },
     async startExperiment() {
@@ -135,8 +148,8 @@ export default {
       if (!isNil(this.experimentId)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
-          ram: this.ram * 0.9765625, // convert bytes to kibibyte
-          cpu: this.cpu * 1000, // convert to milli core
+          ram: this.bookedRam,
+          cpu: this.bookedCpu,
           bookedTime: this.bookedTime,
         });
         this.loading = false;

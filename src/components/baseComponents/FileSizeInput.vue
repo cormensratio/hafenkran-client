@@ -87,6 +87,9 @@ export default {
       this.selectedValue = this.initialValue;
     }
   },
+  mounted() {
+    this.emitInput();
+  },
 };
 </script>
 
