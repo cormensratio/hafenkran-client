@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panel class="toolbar-header">
-    <v-expansion-panel-content style="background: #106ee0">
+    <v-expansion-panel-content style="background: var(--themeColor)">
       <template slot="actions">
         <v-icon color="white">$vuetify.icons.expand</v-icon>
       </template>

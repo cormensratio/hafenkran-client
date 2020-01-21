@@ -50,6 +50,7 @@
             </v-text-field>
           </v-flex>
         </v-layout>
+        <filter-combobox type="user" label="Owner"></filter-combobox>
       </v-container>
     </v-card-text>
   </v-card>
