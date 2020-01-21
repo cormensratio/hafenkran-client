@@ -22,16 +22,22 @@
           </v-toolbar>
           <div v-if="activeTab === 1">
             <v-card-text class="text-left details">
+              <v-flex>
+                <div class="col">
                 <span class="mb-3">
                   Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
                 </span>
-              <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
-                  Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </span>
-              <span class="mb-3">Runtime: {{runtime}}</span>
-              <div class="status">
-                <span>Status:</span>
-                <status-cell :status="execution.status" class="cell"/>
-              </div>
+                  <span class="mb-3">Runtime: {{runtime}}</span>
+                  <div class="status">
+                    <span>Status:</span>
+                    <status-cell :status="execution.status" class="cell"/>
+                  </div>
+                </div>
+                <div class="col">
+                  <p class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
+                    Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </p>
+                </div>
+              </v-flex>
             </v-card-text>
             <v-progress-circular
               indeterminate
@@ -40,6 +46,18 @@
             />
             <v-card-actions>
               <v-flex>
+                <v-select :items="intervals"
+                          outline>
+                </v-select>
+                <v-btn class="logs left" dark style="background-color: var(--themeColor)"
+                       @click="getLogs">
+                  Load Logs
+                </v-btn>
+                <v-btn dark style="background-color: var(--themeColor)"
+                       @click="downloadResults()" class="left">
+                  Download Results
+                  <v-icon right>cloud_download</v-icon>
+                </v-btn>
                 <v-btn class="error right"
                        @click="setExecution()">
                   <v-icon>delete_forever</v-icon>
@@ -58,15 +76,6 @@
                   <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
                   <span v-else>Repeat this execution</span>
                 </v-tooltip>
-                <v-btn class="logs left" dark style="background-color: var(--themeColor)"
-                       @click="getLogs">
-                  Load Logs
-                </v-btn>
-                <v-btn dark style="background-color: var(--themeColor)"
-                       @click="downloadResults()" class="left">
-                  Download Results
-                  <v-icon right>cloud_download</v-icon>
-                </v-btn>
               </v-flex>
             </v-card-actions>
             <div class="m-1">
@@ -154,6 +163,8 @@ export default {
       menuPosY: 0,
       showMenu: false,
       selectedExperiment: {},
+      loadLogsInterval: 5,
+      intervals: [1, 2, 5, 10, 'off'],
     };
   },
   props: {
@@ -166,10 +177,10 @@ export default {
     ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
-      this.loadingLogs = true;
+      this.loading = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
-          this.loadingLogs = false;
+          this.loading = false;
           if (!isNil(newLog)) {
             this.logs = [];
             const logArray = newLog.split(/\r?\n/);
@@ -301,13 +312,12 @@ export default {
     },
   },
   async created() {
+    setInterval(this.getLogs, this.loadLogsInterval * 1000);
+    setInterval(this.calculateRuntime, 1000);
     if (!isNil(this.executions) && this.executions.length > 0) {
       await this.fetchAllExecutionsOfUser();
     }
     this.updateExecution();
-    setInterval(() => {
-      this.calculateRuntime();
-    }, 1000);
   },
 };
 </script>
