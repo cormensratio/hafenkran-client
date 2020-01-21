@@ -27,12 +27,10 @@
                        v-if="user.isAdmin"
       >
       </filter-combobox>
-      <v-spacer></v-spacer>
-      <v-btn @click="clearAllFilters">Clear all</v-btn>
     </div>
     <div class="lower-filters">
       <v-text-field append-icon="search"
-                    label="Search by name"
+                    label="Quick search by name"
                     single-line outline
                     @input="quickSearch()"
                     v-model="searchString"
@@ -51,9 +49,8 @@
                         class="filter-box"
       >
       </filter-date-time>
-    </div>
-    <div class="clear-button-container">
-
+      <v-spacer></v-spacer>
+      <v-btn class="clear-button" @click="clearAllFilters">Clear all</v-btn>
     </div>
   </div>
 </template>
@@ -161,5 +158,8 @@ export default {
     max-width: 38vh;
     width: 38vh;
     margin-right: 10px;
+  }
+  .clear-button {
+    align-self: center;
   }
 </style>
