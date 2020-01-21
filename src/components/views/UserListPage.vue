@@ -69,9 +69,11 @@
                 <template v-slot:items="props">
                   <tr>
                     <td class="text-xs-left">
-                      {{ props.item.id }}
-                    </td>
-                    <td class="text-xs-left">
+                      <v-avatar color="blue" size="50" class="mt-2 mb-2 mr-2 ml-n2">
+                        <span class="headline white--text">
+                          {{ props.item.name.charAt(0).toUpperCase() }}
+                        </span>
+                      </v-avatar>
                       {{ props.item.name }}
                     </td>
                     <td class="text-xs-left">
@@ -116,8 +118,7 @@ export default {
       userToDelete: null,
       userToDeleteName: '',
       headers: [
-        { text: 'Userid', width: 8, sortable: true, value: 'id' },
-        { text: 'Username', width: 650, sortable: true, value: 'name' },
+        { text: 'Username', width: 700, sortable: true, value: 'name' },
         { text: 'Actions', sortable: false },
       ],
     };
@@ -164,7 +165,7 @@ export default {
     screenHeight() {
       let pendingUserListHeight;
       if (this.pendingUsers.length >= 3) {
-        pendingUserListHeight = 100;
+        pendingUserListHeight = 120;
       } else if (this.pendingUsers.length >= 2) {
         pendingUserListHeight = 60;
       } else if (this.pendingUsers.length === 1) {

@@ -3,10 +3,12 @@ const SnackbarStore = {
     snack: '',
     snackShow: false,
     timer: '',
+    color: '',
   },
   getters: {
     snack: state => state.snack,
     snackShow: state => state.snackShow,
+    color: state => state.color,
   },
   mutations: {
     setSnack(state, snack) {
@@ -14,6 +16,9 @@ const SnackbarStore = {
     },
     showSnack(state, show) {
       state.snackShow = show;
+    },
+    setColor(state, color) {
+      state.color = color;
     },
   },
   actions: {
@@ -24,6 +29,7 @@ const SnackbarStore = {
       commit('showSnack', true);
       this.timer = setTimeout(() => {
         commit('setSnack', '');
+        commit('setColor', 'black');
         commit('showSnack', false);
       }, 3000);
     },
