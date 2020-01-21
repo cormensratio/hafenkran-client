@@ -9,7 +9,8 @@
           <div class="mt-2"><file-size-cell :size="experiment.size"></file-size-cell></div>
           <div v-if="previousRam > 0" class="mt-2">
             <b>Previously run for: </b>{{ previousHours }} Hours {{ previousMinutes }} Minutes
-            <b>with</b> {{ previousRam }} Ram and {{ previousCpu }} Cpu</div>
+            <b>with</b> <file-size-cell>{{ previousRam }}</file-size-cell>
+            Ram and {{ previousCpu }} Cpu</div>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -48,8 +49,10 @@
         <v-layout>
           <v-flex>
             <file-size-input label="RAM"
-                          v-model="ram"
+                          @input="ramChanged($event)"
                           outline type="number"
+                          :initialValue="ram"
+                          :initialUnit="'GB'"
                           :rules="[rules.required, rules.positiveNumbers]"
                           min="1"
                           class="resource-input mr-1"
@@ -123,13 +126,17 @@ export default {
     closeMenu() {
       this.$emit('menuClosed');
     },
+    ramChanged(value) {
+      debugger;
+      this.ram = value;
+    },
     async startExperiment() {
       this.loading = true;
       if (!isNil(this.experimentId)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
-          ram: this.ram,
-          cpu: this.cpu,
+          ram: this.ram * 0.9765625, // convert bytes to kibibyte
+          cpu: this.cpu * 1000, // convert to milli core
           bookedTime: this.bookedTime,
         });
         this.loading = false;

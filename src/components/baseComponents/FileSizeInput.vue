@@ -5,14 +5,9 @@
                   :rules="rules"
                   v-model="selectedValue"
     >
-<!--      <template slot="append-outer">-->
-<!--        <v-select :items="units"-->
-<!--                  outline class="unit-select"-->
-<!--                  v-model="selectedUnit"></v-select>-->
-<!--      </template>-->
       <template slot="append">
-                <span>{{selectedUnit}}</span>
-                <v-icon @click="openMenu($event)">keyboard_arrow_down</v-icon>
+                <span class="pt-3">{{selectedUnit}}</span>
+                <v-icon class="icon-padding" @click="openMenu($event)">keyboard_arrow_down</v-icon>
       </template>
     </v-text-field>
     <v-menu v-model="showMenu"
@@ -38,23 +33,18 @@ export default {
   props: {
     rules: undefined,
     label: '',
-    initialValue: 4,
-    initialUnit: 'GB',
+    initialValue: Number,
+    initialUnit: String,
   },
   data() {
     return {
-      selectedValue: '2',
+      selectedValue: 0,
       selectedUnit: 'GB',
       showMenu: false,
       menuPosX: 0,
       menuPosY: 0,
       units: ['B', 'KB', 'MB', 'GB'],
     };
-  },
-  computed: {
-    inputValue() {
-      return `${this.selectedValue} ${this.selectedUnit}`;
-    },
   },
   methods: {
     openMenu(e) {
@@ -66,6 +56,26 @@ export default {
     },
     selectUnit(unit) {
       this.selectedUnit = unit;
+      this.emitInput();
+    },
+    emitInput() {
+      let outPut = this.selectedValue;
+
+      switch (this.selectedUnit) {
+        case 'KB':
+          outPut *= 1024;
+          break;
+        case 'MB':
+          outPut *= 1024 * 1024;
+          break;
+        case 'GB':
+          outPut *= 1024 * 1024 * 1024;
+          break;
+        default:
+          break;
+      }
+
+      this.$emit('input', outPut);
     },
   },
   created() {
@@ -81,5 +91,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .icon-padding {
+    padding-top: 12px;
+  }
 </style>
