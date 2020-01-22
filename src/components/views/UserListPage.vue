@@ -181,8 +181,8 @@ export default {
     ...mapActions(['triggerSnack', 'deleteUser', 'denyUser', 'acceptUser', 'fetchUserList']),
     selectUser(e, user) {
       this.showMenu = false;
-      this.menuPosX = e.clientX;
-      this.menuPosY = e.clientY;
+      this.menuPosX = 1355;
+      this.menuPosY = e.clientY - 20;
       this.selectedUser = user;
       this.$nextTick(() => {
         this.showMenu = true;
