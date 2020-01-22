@@ -211,10 +211,10 @@ export default {
   },
   async created() {
     await this.fetchAllExecutionsOfUser();
-    await this.fetchUserList();
     this.$nextTick(() => {
       this.items = this.executions;
     });
+    this.fetchUserList();
   },
 };
 </script>
