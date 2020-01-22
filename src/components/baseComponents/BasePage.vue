@@ -35,7 +35,7 @@ export default {
     height: 100%;
     margin-top: 10px;
   }
-  @media only screen and (max-height: 900px){
+  @media only screen and (max-height: 850px){
     .hafen-footer{
       display: none;
     }
