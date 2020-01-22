@@ -24,7 +24,7 @@
         </template>
       </v-select>
       <v-btn class="reload-button" @click="fetchMetrics">
-        <v-icon>replay</v-icon>
+        <v-icon class="mr-1">replay</v-icon>
         Reload Metrics
       </v-btn>
     </div>
@@ -56,6 +56,8 @@ export default {
   components: { StatisticsComponent },
   data() {
     return {
+      fetchMetricsLoopID: '',
+      fetchInterval: 60000,
       displayedMetrics: [],
       timeFrameOptions: [
         {
@@ -83,10 +85,6 @@ export default {
         {
           text: 'mm:ss',
           value: 'utcminutesseconds',
-        },
-        {
-          text: 'ss',
-          value: 'utcseconds',
         },
       ],
       selectedTimeFrame: {},
@@ -138,6 +136,10 @@ export default {
         this.ramChartData = data;
       }
     },
+    /**
+     * Sets the displayed metrics according to the frame the user selected
+     * @param selection
+     */
     selectionFrameChanged(selection) {
       if (!isNil(selection)) {
         if (isNaN(selection)) {
@@ -165,14 +167,27 @@ export default {
           this.displayedMetrics = this.metrics.metricList;
           this.getCpuChartData();
           this.getRamChartData();
+          return true;
         }
       }
+      return false;
+    },
+    startFetchMetricsLoop() {
+      this.fetchMetricsLoopID = window.setInterval(() => {
+        this.fetchMetrics();
+      }, this.fetchInterval);
     },
   },
   async mounted() {
-    await this.fetchMetrics();
+    const fetchSuccessful = await this.fetchMetrics();
+    if (fetchSuccessful) {
+      this.startFetchMetricsLoop();
+    }
     this.selectedTimeFormat = this.timeFormatOptions[1];
     this.selectedTimeFrame = this.timeFrameOptions[0];
+  },
+  destroyed() {
+    window.clearInterval(this.fetchMetricsLoopID);
   },
 };
 </script>
