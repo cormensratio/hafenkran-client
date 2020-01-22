@@ -18,7 +18,7 @@ const UserStore = {
     },
     userList: [
       { id: 1, name: 'testuser', isAdmin: false, email: '' },
-      { id: 2, name: 'Bruce Wayne', isAdmin: false, email: '' },
+      { id: 2, name: 'Bruce Wayne', isAdmin: false, email: 'Joker@gmail.com' },
       { id: 3, name: 'Harry Potter', isAdmin: false, email: '' },
       { id: 4, name: 'Tony Stark', isAdmin: false, email: '' },
       { id: 5, name: 'Pepper Pots', isAdmin: false, email: '' },

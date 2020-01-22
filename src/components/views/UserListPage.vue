@@ -26,16 +26,17 @@
                 :close-on-click="false"
         >
           <v-card>
-            <v-card-title class="" style="background: var(--themeColor); color: white">
-              <div class="align-items-stretch">
-                <span class="left">{{ selectedUser.name }}</span>
-                <v-icon @click="closeMenu" class="float-right">close</v-icon>
+            <v-card-title style="background: var(--themeColor); color: white">
+              <div class="userinfoHeader">
+                <span class="left">Userinfo</span>
+                <v-icon @click="closeMenu"
+                        class="right">close</v-icon>
               </div>
             </v-card-title>
-            <v-card-text class="align-content-between">
-              <p>Username: {{ selectedUser.name }}</p>
-              <p>Userid: {{ selectedUser.id }}</p>
-              <p>User Email: {{ selectedUser.email }}</p>
+            <v-card-text class="text-left">
+              <p>Name: {{ selectedUser.name }}</p>
+              <p>Id: {{ selectedUser.id }}</p>
+              <p>Email: {{ selectedUser.email }}</p>
             </v-card-text>
           </v-card>
         </v-menu>
@@ -86,8 +87,8 @@
                 <v-toolbar-items>
                   <v-text-field append-icon="search"
                                 color="white"
-                                style="position: absolute; right: 10px;"
-                                label="Quick search by name"
+                                style="position: absolute; right: 10px; min-width: 230px"
+                                label="Search by name or email"
                                 v-ripple
                                 v-model="search"
                   >
@@ -101,8 +102,7 @@
                             :items="userList">
                 <template v-slot:items="props">
                   <tr>
-                    <td class="text-xs-left"
-                        @click="selectUser($event, props.item)">
+                    <td class="text-xs-left">
                       <v-avatar color="blue" size="50" class="mt-2 mb-2 mr-2 ml-n2">
                         <span class="headline white--text">
                           {{ props.item.name.charAt(0).toUpperCase() }}
@@ -110,14 +110,19 @@
                       </v-avatar>
                       {{ props.item.name }}
                     </td>
-                    <td>
+                    <td class="text-left">
                       {{ props.item.email }}
                     </td>
-                    <td class="text-xs-left">
-                      <v-btn icon @click="selectUserToDelete(props.item)"
-                             v-if="props.item.id !== currentUser.id">
-                        <v-icon>delete</v-icon>
-                      </v-btn>
+                    <td class="text-left pl-1">
+                      <div class="text-left">
+                        <v-btn icon @click="selectUser($event, props.item)">
+                          <v-icon>person</v-icon>
+                        </v-btn>
+                        <v-btn icon @click="selectUserToDelete(props.item)"
+                               v-if="props.item.id !== currentUser.id">
+                          <v-icon>delete</v-icon>
+                        </v-btn>
+                      </div>
                     </td>
                   </tr>
                 </template>
@@ -161,8 +166,8 @@ export default {
       menuPosY: 0,
       selectedUser: '',
       headers: [
-        { text: 'Username', width: 400, sortable: true, value: 'name' },
-        { text: 'Email', width: 300, sortable: true, value: 'email' },
+        { text: 'Name', width: 400, sortable: true, value: 'name' },
+        { text: 'Email', width: 240, sortable: true, value: 'email' },
         { text: 'Actions', sortable: false },
       ],
     };
@@ -222,7 +227,7 @@ export default {
     screenHeight() {
       let pendingUserListHeight;
       if (this.pendingUsers.length >= 3) {
-        pendingUserListHeight = 120;
+        pendingUserListHeight = 125;
       } else if (this.pendingUsers.length >= 2) {
         pendingUserListHeight = 60;
       } else if (this.pendingUsers.length === 1) {
@@ -255,5 +260,11 @@ export default {
   }
   .userList {
     overflow-y: auto;
+  }
+  .textAlign p {
+    text-align: left;
+  }
+  .userinfoHeader {
+    width: 100%;
   }
 </style>
