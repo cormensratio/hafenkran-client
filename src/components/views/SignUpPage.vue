@@ -109,15 +109,15 @@ export default {
       return isEqual(this.password, this.confirmPassword);
     },
     async register() {
-      if (isNil(this.userName) && isNil(this.userEmail) && isNil(this.password)
-        && isNil(this.confirmPassword)) {
-        this.setSnack('Please fill out all text fields!');
+      if (isNil(this.userName) || isNil(this.userEmail) || isNil(this.password)
+        || isNil(this.confirmPassword)) {
+        this.setSnack('Please fill in all fields!');
         this.triggerSnack();
         return;
       }
 
       if (!this.arePasswordsEqual()) {
-        this.setSnack('Passwords are not equal!');
+        this.setSnack('Passwords do not match!');
         this.triggerSnack();
         return;
       }
@@ -130,7 +130,7 @@ export default {
       });
 
       if (!isNil(response)) {
-        this.setSnack('Signup successful. Please wait until the admin accepts your request.');
+        this.setSnack('Signup successful. Please wait until an admin activates your account.');
         this.$router.push('/login');
       } else {
         this.setSnack('Signup failed');

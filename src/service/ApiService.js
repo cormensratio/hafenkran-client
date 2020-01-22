@@ -32,7 +32,6 @@ export default class ApiService {
     })
       .catch((error) => {
         // console.log(`Response to ${url} failed: `, error);
-        debugger;
         store.commit('setSnack', error.response.data.message);
         store.dispatch('triggerSnack');
       });
