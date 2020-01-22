@@ -19,6 +19,26 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-menu v-model="showMenu"
+                :position-x="menuPosX"
+                :position-y="menuPosY"
+                :close-on-content-click="false"
+                :close-on-click="false"
+        >
+          <v-card>
+            <v-card-title class="" style="background: var(--themeColor); color: white">
+              <div class="align-items-stretch">
+                <span class="left">{{ selectedUser.name }}</span>
+                <v-icon @click="closeMenu" class="float-right">close</v-icon>
+              </div>
+            </v-card-title>
+            <v-card-text class="align-content-between">
+              <p>Username: {{ selectedUser.name }}</p>
+              <p>Userid: {{ selectedUser.id }}</p>
+              <p>User Email: {{ selectedUser.email }}</p>
+            </v-card-text>
+          </v-card>
+        </v-menu>
         <v-layout column>
           <v-flex class="flex">
             <v-card max-width="800"
@@ -59,16 +79,30 @@
               </div>
             </v-card>
             <v-card max-width="800" class="mx-auto">
-              <base-list-header title="Userlist">
-              </base-list-header>
+              <v-toolbar dark style="background: var(--themeColor)" class="mb-1">
+                <v-toolbar-title>
+                  Userlist
+                </v-toolbar-title>
+                <v-toolbar-items>
+                  <v-text-field append-icon="search"
+                                color="white"
+                                style="position: absolute; right: 10px;"
+                                label="Quick search by name"
+                                v-ripple
+                                v-model="search"
+                  >
+                  </v-text-field>
+                </v-toolbar-items>
+              </v-toolbar>
               <v-data-table :headers="headers"
                             class="elevation-1 userList"
                             v-bind:style="{ maxHeight: userListHeight }"
-                            search=""
+                            :search="search"
                             :items="userList">
                 <template v-slot:items="props">
                   <tr>
-                    <td class="text-xs-left">
+                    <td class="text-xs-left"
+                        @click="selectUser($event, props.item)">
                       <v-avatar color="blue" size="50" class="mt-2 mb-2 mr-2 ml-n2">
                         <span class="headline white--text">
                           {{ props.item.name.charAt(0).toUpperCase() }}
@@ -108,18 +142,24 @@ import BasePage from '../baseComponents/BasePage';
 import Footer from '../baseComponents/Footer';
 import Header from '../baseComponents/Header';
 import BaseListHeader from '../baseComponents/BaseListHeader';
+import UserSettingsPage from './UserSettingsPage';
 
 export default {
   name: 'UserListPage',
-  components: { BaseListHeader, Header, Footer, BasePage },
+  components: { UserSettingsPage, BaseListHeader, Header, Footer, BasePage },
   data() {
     return {
       loading: false,
       userListHeight: '',
       pendingUserListHeight: '',
       dialog: false,
+      search: '',
       userToDelete: null,
       userToDeleteName: '',
+      showMenu: false,
+      menuPosX: 0,
+      menuPosY: 0,
+      selectedUser: '',
       headers: [
         { text: 'Username', width: 400, sortable: true, value: 'name' },
         { text: 'Email', width: 300, sortable: true, value: 'email' },
@@ -134,6 +174,18 @@ export default {
   methods: {
     ...mapMutations(['updateIsAccepted', 'setSnack', 'showSnack']),
     ...mapActions(['triggerSnack', 'deleteUser', 'denyUser', 'acceptUser', 'fetchUserList']),
+    selectUser(e, user) {
+      this.showMenu = false;
+      this.menuPosX = e.clientX;
+      this.menuPosY = e.clientY;
+      this.selectedUser = user;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
+    },
+    closeMenu() {
+      this.showMenu = false;
+    },
     selectUserToDelete(user) {
       this.dialog = true;
       this.userToDelete = user;
