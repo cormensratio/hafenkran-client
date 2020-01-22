@@ -21,23 +21,22 @@
             </v-toolbar-items>
           </v-toolbar>
           <div v-if="activeTab === 1">
-            <v-card-text class="text-left details">
-              <v-flex>
-                <div class="col">
-                <span class="mb-3">
-                  Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
-                </span>
-                  <span class="mb-3">Runtime: {{runtime}}</span>
-                  <div class="status">
-                    <span>Status:</span>
-                    <status-cell :status="execution.status" class="cell"/>
-                  </div>
+            <v-card-text class="row">
+              <div class="column text-lg-left mr-5" style="width: 25%">
+                <h3>Execution Info</h3>
+                <p>Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}</p>
+                <p>Runtime: {{runtime}}</p>
+                <div class="status">
+                  <span>Status:</span>
+                  <status-cell :status="execution.status" class="cell"/>
                 </div>
-                <div class="col">
-                  <p class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
-                    Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </p>
-                </div>
-              </v-flex>
+              </div>
+              <div class="column text-lg-left">
+                <h3>Selected Options</h3>
+                <p>CPU Cores: {{execution.cpu}}</p>
+                <p>RAM: {{execution.ram}}MB</p>
+                <p>Max Runtime: {{msToTime(execution.bookedTime * 1000)}}</p>
+              </div>
             </v-card-text>
             <v-progress-circular
               indeterminate
@@ -45,9 +44,8 @@
               v-if="loading"
             />
             <v-card-actions>
-              <v-flex>
                 <v-select :items="intervals"
-                          outline>
+                          style="max-width: 100px; max-height: max-content">
                 </v-select>
                 <v-btn class="logs left" dark style="background-color: var(--themeColor)"
                        @click="getLogs">
@@ -76,7 +74,6 @@
                   <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
                   <span v-else>Repeat this execution</span>
                 </v-tooltip>
-              </v-flex>
             </v-card-actions>
             <div class="m-1">
               <v-container class="scroll-y black white--text">
@@ -177,10 +174,10 @@ export default {
     ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
-      this.loading = true;
+      this.loadingLogs = true;
       ExecutionDetailService.getExecutionLogsbyId(this.executionId)
         .then((newLog) => {
-          this.loading = false;
+          this.loadingLogs = false;
           if (!isNil(newLog)) {
             this.logs = [];
             const logArray = newLog.split(/\r?\n/);
