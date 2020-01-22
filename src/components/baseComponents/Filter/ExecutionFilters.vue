@@ -1,23 +1,72 @@
 <template>
-  <base-filter-component @applyFilters="applyFilters($event)"
-                         @quickSearch="quickSearch($event)"
-                          :filters="executionFilters"
-  >
-  </base-filter-component>
+  <div class="filter-container">
+    <div class="upper-filters">
+      <filter-combobox ref="nameFilter"
+                       :items="filters.name.filterOptions"
+                       :label="filters.name.label"
+                       :value="filters.name.value"
+                       @update="applyFilter($event)"
+                       class="filter-box"
+      >
+      </filter-combobox>
+      <filter-combobox :items="filters.status.filterOptions"
+                       :label="filters.status.label"
+                       :value="filters.status.value"
+                       @update="applyFilter($event)"
+                       ref="statusFilter"
+                       class="filter-box"
+      >
+      </filter-combobox>
+      <filter-combobox :items="filters.user.filterOptions"
+                       :label="filters.user.label"
+                       :value="filters.user.value"
+                       :type="filters.user.type"
+                       @update="applyFilter($event)"
+                       ref="userFilter"
+                       class="filter-box"
+      >
+      </filter-combobox>
+    </div>
+    <div class="lower-filters">
+      <v-text-field append-icon="search"
+                    label="Quick search by name"
+                    single-line outline
+                    @input="quickSearch()"
+                    v-model="searchString"
+                    class="filter-box"
+      >
+      </v-text-field>
+      <filter-date-time :label="filters.startTime.label"
+                        :value="filters.startTime.value"
+                        @update="applyFilter($event)"
+                        class="filter-box"
+      >
+      </filter-date-time>
+      <filter-date-time :label="filters.cancelTime.label"
+                        :value="filters.cancelTime.value"
+                        @update="applyFilter($event)"
+                        class="filter-box"
+      >
+      </filter-date-time>
+      <v-spacer></v-spacer>
+      <v-btn class="clear-button" @click="clearAllFilters">Clear all</v-btn>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { uniq, map } from 'lodash';
-import FilterUsersCombobox from './FilterUsersCombobox';
-import BaseFilterComponent from './BaseFilterComponent';
+import { uniq, map, isNil, forEach } from 'lodash';
 import FilterDateTime from './FilterDateTime';
+import FilterCombobox from './FilterCombobox';
 
 export default {
   name: 'ExecutionFilters',
-  components: { FilterDateTime, BaseFilterComponent, FilterUsersCombobox },
+  components: { FilterCombobox, FilterDateTime },
   data() {
     return {
+      searchString: '',
+      selectedFilters: {},
       filters: {
         name: {
           label: 'Name',
@@ -57,31 +106,57 @@ export default {
     statusOptions() {
       return uniq(map(this.executions, this.filters.status.value));
     },
-    startTimeOptions() {
-      return uniq(map(this.executions, this.filters.startTime.value));
-    },
-    cancelTimeOptions() {
-      return uniq(map(this.executions, this.filters.cancelTime.value));
-    },
-    executionFilters() {
-      this.updateFilterOptions();
-      return this.filters;
-    },
   },
   methods: {
-    applyFilters(appliedFilters) {
-      this.$emit('applyFilters', appliedFilters);
+    clearAllFilters() {
+      this.selectedFilters = {};
+      forEach(this.$refs, (ref) => {
+        ref.clearSelected();
+      });
+      this.$emit('applyFilters', this.selectedFilters);
     },
-    quickSearch(input) {
-      this.$emit('quickSearch', input);
+    applyFilter(filter) {
+      if (!isNil(filter)) {
+        const key = Object.keys(filter)[0];
+        this.selectedFilters[key] = filter[key];
+        this.$emit('applyFilters', this.selectedFilters);
+      }
+    },
+    quickSearch() {
+      this.$emit('quickSearch', this.searchString);
     },
     updateFilterOptions() {
       this.filters.name.filterOptions = this.nameOptions;
       this.filters.status.filterOptions = this.statusOptions;
     },
   },
+  mounted() {
+    this.updateFilterOptions();
+  },
 };
 </script>
 
 <style scoped>
+  .filter-container {
+    background: white;
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+  }
+  .upper-filters {
+    display: flex;
+    flex-direction: row;
+  }
+  .lower-filters {
+    display: flex;
+    flex-direction: row;
+  }
+  .filter-box {
+    max-width: 38vh;
+    width: 38vh;
+    margin-right: 10px;
+  }
+  .clear-button {
+    align-self: center;
+  }
 </style>
