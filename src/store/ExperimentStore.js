@@ -56,6 +56,17 @@ const ExperimentStore = {
       }
       return null;
     },
+    async shareExperiment(state, { experimentId, userId }) {
+      if (!isNil(experimentId) && !isNil(userId)) {
+        const response = await ApiService.doPost(
+          `${serviceUrl}/experiments/${experimentId}/share/${userId}`, {},
+        );
+        if (!isNil(response)) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
 };
 
