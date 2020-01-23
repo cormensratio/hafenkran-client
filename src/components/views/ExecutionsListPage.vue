@@ -77,7 +77,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isNil, isEqual, filter, find } from 'lodash';
+import { isNil, isEqual, find } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';

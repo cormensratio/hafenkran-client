@@ -56,30 +56,22 @@
       </v-container>
       <v-dialog v-model="showMenu" width="400">
         <StartExperimentMenu :experiment="selectedExperiment"
-                             @menuClosed="closeMenu"
+                             @menuClosed="closeMenus"
         >
         </StartExperimentMenu>
       </v-dialog>
-      <v-dialog v-model="showShareMenu">
-        <ShareMenu :experiment="selectedExperiment"></ShareMenu>
+      <v-dialog v-model="showShareMenu" width="400">
+        <ShareMenu :experiment="selectedExperiment"
+                   @menuClosed="closeMenus"
+        ></ShareMenu>
       </v-dialog>
-<!--      <v-menu v-model="showMenu"-->
-<!--              :position-x="menuPosX"-->
-<!--              :position-y="menuPosY"-->
-<!--              :close-on-content-click="false"-->
-<!--              :close-on-click="false"-->
-<!--      >-->
-<!--        <StartExperimentMenu :experiment="selectedExperiment"-->
-<!--                             @menuClosed="closeMenu">-->
-<!--        </StartExperimentMenu>-->
-<!--      </v-menu>-->
     </template>
   </base-page>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { filter, isNil } from 'lodash';
+import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -123,7 +115,8 @@ export default {
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
     ...mapMutations(['showSnack']),
-    closeMenu() {
+    closeMenus() {
+      this.showShareMenu = false;
       this.showMenu = false;
     },
     showStartExperimentMenu(selectedExperiment) {
