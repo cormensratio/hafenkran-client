@@ -4,9 +4,18 @@
     <v-card-text>
       <div>
         <div>
-          <v-combobox outline small-chips
+          <v-combobox outline
                       v-model="selectedUsers"
-          ></v-combobox>
+                      :items="usersToShare"
+                      :item-text="getItemText"
+          >
+            <template slot="selection" slot-scope="data">
+              <v-chip :small="true" v-if="data.item">{{data.item.name}}</v-chip>
+            </template>
+            <template slot="append">
+              <v-icon @click="clearSelected">close</v-icon>
+            </template>
+          </v-combobox>
           <v-btn style="background: var(--themeColor); color: white;"
                  @click="share"
           >
@@ -15,10 +24,8 @@
         </div>
         <div v-if="experiment.permittedUsers && experiment.permittedUsers.length > 0">
           <v-divider></v-divider>
-          <v-list>
-            <v-list-tile>
-              <v-list-tile-title>Already shared with:</v-list-tile-title>
-            </v-list-tile>
+          <div class="list-title">Already shared with:</div>
+          <v-list class="permitted-user-list">
             <v-list-tile class="p-2 tile"
                          :key="user.name"
                          v-for="(user) in experiment.permittedUsers">
@@ -47,6 +54,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
+import { filter, some } from 'lodash';
 import UsersMixin from '../../mixins/UsersMixin';
 
 export default {
@@ -55,15 +63,30 @@ export default {
   data() {
     return {
       selectedUsers: [],
-      usersToShare: [],
     };
   },
   props: {
     experiment: {},
   },
+  computed: {
+    /**
+     * Returns users that are not the user himself and that dont have permission to the experiment
+     * @returns {Array}
+     */
+    usersToShare() {
+      return filter(this.userList, user => user.id !== this.user.id
+          && some(this.experiment.permittedUsers, u => u.id === user.id).length === 0);
+    },
+  },
   methods: {
     ...mapMutations(['setSnack']),
     ...mapActions(['triggerSnack', 'shareExperiment']),
+    getItemText(item) {
+      return item.name;
+    },
+    clearSelected() {
+      this.selectedUsers = [];
+    },
     share() {
       this.$emit('menuClosed');
     },
@@ -76,5 +99,15 @@ export default {
 <style scoped>
   .tile:hover {
     background-color: #dddddd;
+  }
+  .permitted-user-list {
+    overflow-y: scroll;
+    max-height: 40vh;
+  }
+  .permitted-user-list::-webkit-scrollbar {
+    display: none;
+  }
+  .list-title {
+    font-size: 13pt;
   }
 </style>
