@@ -20,7 +20,7 @@
               <tr>
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left" v-if="user.isAdmin">
-                  {{ getUserNameOfExecution(props.item.ownerId) }}
+                  {{ getUserNameFromId(props.item.ownerId) }}
                 </td>
                 <td class="text-xs-left">
                   {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
@@ -86,6 +86,7 @@ import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
 import FilterMixin from '../../mixins/FilterMixin';
 import DeleteDialog from '../baseComponents/DeleteDialog';
+import UsersMixin from '../../mixins/UsersMixin';
 
 
 export default {
@@ -96,7 +97,7 @@ export default {
     StatusCell,
     BasePage,
     StartExperimentMenu },
-  mixins: [TimeStampMixin, FilterMixin],
+  mixins: [TimeStampMixin, FilterMixin, UsersMixin],
   data() {
     return {
       search: '',
@@ -118,7 +119,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['executions', 'user', 'userList', 'experiments']),
+    ...mapGetters(['executions', 'user', 'experiments']),
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'cancelExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
@@ -189,19 +190,6 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
-    },
-    getUserNameOfExecution(ownerId) {
-      if (!isNil(ownerId)) {
-        const matching = filter(this.userList, user => user.id === ownerId);
-
-        if (!isNil(matching) && matching.length > 0) {
-          if (matching[0].name === this.user.name) {
-            return 'Me';
-          }
-          return matching[0].name;
-        }
-      }
-      return '';
     },
   },
   watch: {

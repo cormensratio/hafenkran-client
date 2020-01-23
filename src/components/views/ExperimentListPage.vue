@@ -20,14 +20,32 @@
                 class="elevation-1"
               >
                 <template v-slot:items="props">
-                  <tr @click="showContextMenu($event, props.item)">
+                  <tr>
                     <td class="text-xs-left">{{ props.item.name }}</td>
                     <td class="text-xs-left" v-if="user.isAdmin">
-                      {{ getUserNameOfExperiment(props.item.ownerId) }}
+                      {{ getUserNameFromId(props.item.ownerId) }}
                     </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
+                    </td>
+                    <td class="justify-center action-container">
+                      <v-tooltip bottom class="mr-1">
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="showStartExperimentMenu(props.item)"
+                                  color="black" dark v-on="on">play_arrow
+                          </v-icon>
+                        </template>
+                        <span>Start Execution</span>
+                      </v-tooltip>
+                      <v-tooltip bottom class="mr-1">
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="showShareDialog(props.item)"
+                                  color="black" dark v-on="on">share
+                          </v-icon>
+                        </template>
+                        <span>Share Experiment</span>
+                      </v-tooltip>
                     </td>
                   </tr>
                 </template>
@@ -36,23 +54,32 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-menu v-model="showMenu"
-              :position-x="menuPosX"
-              :position-y="menuPosY"
-              :close-on-content-click="false"
-              :close-on-click="false"
-      >
+      <v-dialog v-model="showMenu" width="400">
         <StartExperimentMenu :experiment="selectedExperiment"
-                             @menuClosed="closeMenu">
+                             @menuClosed="closeMenu"
+        >
         </StartExperimentMenu>
-      </v-menu>
+      </v-dialog>
+      <v-dialog v-model="showShareMenu">
+        <ShareMenu :experiment="selectedExperiment"></ShareMenu>
+      </v-dialog>
+<!--      <v-menu v-model="showMenu"-->
+<!--              :position-x="menuPosX"-->
+<!--              :position-y="menuPosY"-->
+<!--              :close-on-content-click="false"-->
+<!--              :close-on-click="false"-->
+<!--      >-->
+<!--        <StartExperimentMenu :experiment="selectedExperiment"-->
+<!--                             @menuClosed="closeMenu">-->
+<!--        </StartExperimentMenu>-->
+<!--      </v-menu>-->
     </template>
   </base-page>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isNil, filter } from 'lodash';
+import { filter, isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -60,60 +87,55 @@ import FileSizeCell from '../baseComponents/FileSizeCell';
 import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExperimentFilters from '../baseComponents/Filter/ExperimentFilters';
 import FilterMixin from '../../mixins/FilterMixin';
+import ShareMenu from '../baseComponents/ShareMenu';
+import UsersMixin from '../../mixins/UsersMixin';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { FileSizeCell, ExperimentFilters, BaseListHeader, BasePage, StartExperimentMenu },
-  mixins: [TimeStampMixin, FilterMixin],
+  components: {
+    ShareMenu,
+    FileSizeCell,
+    ExperimentFilters,
+    BaseListHeader,
+    BasePage,
+    StartExperimentMenu,
+  },
+  mixins: [TimeStampMixin, FilterMixin, UsersMixin],
   data() {
     return {
       search: '',
-      showDetails: false,
       selectedExperiment: {},
-      menuPosX: 0,
-      menuPosY: 0,
       showMenu: false,
+      showShareMenu: false,
       headers: [
-        {
-          text: 'Dockerfile Name',
-          value: 'name',
-          sortable: true,
-        },
-        {
-          text: 'Owner',
-          value: 'ownerId',
-          sortable: true,
-        },
+        { text: 'Dockerfile Name', value: 'name', sortable: true },
+        { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
+        { text: 'Actions', sortable: false, align: 'center', width: '8%' },
       ],
     };
   },
   computed: {
-    ...mapGetters(['experiments', 'user', 'userList']),
+    ...mapGetters(['experiments', 'user']),
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
     ...mapMutations(['showSnack']),
-    async showExecutions(experiment) {
-      const experimentId = experiment.id;
-
-      if (!isNil(experimentId)) {
-        await this.fetchExecutionsByExperimentId(experimentId);
-        this.$router.push('/executionlist');
-      }
-    },
     closeMenu() {
       this.showMenu = false;
     },
-    showContextMenu(e, selectedExperiment) {
-      this.showMenu = false;
-      this.menuPosX = e.clientX;
-      this.menuPosY = e.clientY;
+    showStartExperimentMenu(selectedExperiment) {
       this.selectedExperiment = selectedExperiment;
       this.$nextTick(() => {
         this.showMenu = true;
+      });
+    },
+    showShareDialog(selectedExperiment) {
+      this.selectedExperiment = selectedExperiment;
+      this.$nextTick(() => {
+        this.showShareMenu = true;
       });
     },
     applyFilters(filters) {
@@ -125,19 +147,6 @@ export default {
     quickSearch(input) {
       this.search = input;
     },
-    getUserNameOfExperiment(ownerId) {
-      if (!isNil(ownerId)) {
-        const matching = filter(this.userList, user => user.id === ownerId);
-
-        if (!isNil(matching) && matching.length > 0) {
-          if (matching[0].name === this.user.name) {
-            return 'Me';
-          }
-          return matching[0].name;
-        }
-      }
-      return '';
-    },
   },
   watch: {
     experiments() {
@@ -145,14 +154,18 @@ export default {
     },
   },
   async created() {
-    await this.fetchUserList();
-    await this.fetchExperiments();
+    this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;
     });
+    this.fetchUserList();
   },
 };
 </script>
 
 <style scoped>
+  .action-container {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
