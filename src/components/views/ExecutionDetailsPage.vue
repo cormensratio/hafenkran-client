@@ -22,7 +22,7 @@
           </v-toolbar>
           <div v-if="activeTab === 1">
             <v-card-text class="row">
-              <div class="column text-lg-left mr-5" style="width: 25%">
+              <div class="column text-lg-left mr-5 ml-2" style="width: 25%">
                 <h3>Execution Info</h3>
                 <p>Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}</p>
                 <p>Runtime: {{runtime}}</p>
@@ -44,10 +44,20 @@
               v-if="loading"
             />
             <v-card-actions>
+              <v-flex>
                 <v-select :items="intervals"
-                          style="max-width: 100px; max-height: max-content">
+                          label="Log Fetching Interval"
+                          item-text="title"
+                          item-value="value"
+                          style="max-width: 150px; max-height: 40px"
+                          v-model="selectedInterval"
+                          @change="selectInterval()"
+                          class="left m-0 p-0">
                 </v-select>
-                <v-btn class="logs left" dark style="background-color: var(--themeColor)"
+                <v-btn class="logs left"
+                       v-if="selectedInterval === 0"
+                       dark
+                       style="background-color: var(--themeColor)"
                        @click="getLogs">
                   Load Logs
                 </v-btn>
@@ -74,6 +84,7 @@
                   <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
                   <span v-else>Repeat this execution</span>
                 </v-tooltip>
+              </v-flex>
             </v-card-actions>
             <div class="m-1">
               <v-container class="scroll-y black white--text">
@@ -160,8 +171,15 @@ export default {
       menuPosY: 0,
       showMenu: false,
       selectedExperiment: {},
-      loadLogsInterval: 5,
-      intervals: [1, 2, 5, 10, 'off'],
+      intervals: [
+        { title: 'off', value: 0 },
+        { title: '1 second', value: 1 },
+        { title: '2 seconds', value: 2 },
+        { title: '5 seconds', value: 5 },
+        { title: '10 seconds', value: 10 },
+      ],
+      selectedInterval: 0,
+      runningInterval: null,
     };
   },
   props: {
@@ -187,6 +205,25 @@ export default {
             this.triggerSnack();
           }
         });
+    },
+    selectInterval() {
+      if (this.selectedInterval === 0) {
+        if (!isNil(this.runningInterval)) {
+          clearInterval(this.runningInterval);
+        }
+        this.setSnack('Auto-reloading Logs turned off');
+        this.triggerSnack();
+        this.getLogs();
+      } else {
+        if (!isNil(this.runningInterval)) {
+          clearInterval(this.runningInterval);
+        }
+        this.setSnack(`Logs are now getting fetched every ${this.selectedInterval} seconds`);
+        this.triggerSnack();
+        this.runningInterval = setInterval(() => {
+          this.getLogs();
+        }, this.selectedInterval * 1000);
+      }
     },
     setExecution() {
       this.dialog = !this.dialog;
@@ -309,12 +346,13 @@ export default {
     },
   },
   async created() {
-    setInterval(this.getLogs, this.loadLogsInterval * 1000);
-    setInterval(this.calculateRuntime, 1000);
     if (!isNil(this.executions) && this.executions.length > 0) {
       await this.fetchAllExecutionsOfUser();
     }
     this.updateExecution();
+    setInterval(() => {
+      this.calculateRuntime();
+    }, 1000);
   },
 };
 </script>
@@ -325,17 +363,21 @@ export default {
     flex-direction: column;
     font-size: 12pt;
   }
+
   .status {
     display: flex;
     flex-direction: row;
   }
+
   .cell {
     margin-top: -8px;
     margin-left: 5px;
   }
+
   .color-theme-blue {
     background: var(--themeColor);
   }
+
   .replay {
     margin-right: 10px;
   }
@@ -344,6 +386,7 @@ export default {
     height: 100%;
     width: 100%;
   }
+
   .active {
     background-color: #307dea;
   }
