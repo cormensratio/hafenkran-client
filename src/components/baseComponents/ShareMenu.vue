@@ -4,8 +4,9 @@
     <v-card-text>
       <div>
         <div>
-          <v-combobox outline
+          <v-combobox outline multiple
                       v-model="selectedUsers"
+                      label="Possible users"
                       :items="usersToShare"
                       :item-text="getItemText"
           >
@@ -62,7 +63,7 @@ export default {
   mixins: [UsersMixin],
   data() {
     return {
-      selectedUsers: [],
+      selectedUsers: null,
     };
   },
   props: {
@@ -75,7 +76,7 @@ export default {
      */
     usersToShare() {
       return filter(this.userList, user => user.id !== this.user.id
-          && some(this.experiment.permittedUsers, u => u.id === user.id).length === 0);
+          && !some(this.experiment.permittedUsers, u => u.id === user.id));
     },
   },
   methods: {
