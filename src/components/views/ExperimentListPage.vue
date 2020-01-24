@@ -130,7 +130,7 @@ export default {
         const matching = filter(this.userList, user => user.id === ownerId);
 
         if (!isNil(matching) && matching.length > 0) {
-          if (matching[0].name === this.user.name) {
+          if (matching[0].id === this.user.id) {
             return 'Me';
           }
           return matching[0].name;
