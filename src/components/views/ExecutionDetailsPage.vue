@@ -49,17 +49,18 @@
                           label="Log Fetching Interval"
                           item-text="title"
                           item-value="value"
-                          style="max-width: 150px; max-height: 40px"
+                          outline
+                          style="max-width: 195px; max-height: 60px"
                           v-model="selectedInterval"
                           @change="selectInterval()"
-                          class="left m-0 p-0">
+                          class="left m-0 p-0 mr-2">
                 </v-select>
                 <v-btn class="logs left"
                        v-if="selectedInterval === 0"
                        dark
                        style="background-color: var(--themeColor)"
                        @click="getLogs">
-                  Load Logs
+                  Load Logs manually
                 </v-btn>
                 <v-btn dark style="background-color: var(--themeColor)"
                        @click="downloadResults()" class="left">
@@ -173,10 +174,10 @@ export default {
       selectedExperiment: {},
       intervals: [
         { title: 'off', value: 0 },
-        { title: '1 second', value: 1 },
-        { title: '2 seconds', value: 2 },
-        { title: '5 seconds', value: 5 },
-        { title: '10 seconds', value: 10 },
+        { title: 'every 5 seconds', value: 5 },
+        { title: 'every 10 seconds', value: 10 },
+        { title: 'every 30 seconds', value: 30 },
+        { title: 'every minute', value: 60 },
       ],
       selectedInterval: 0,
       runningInterval: null,
