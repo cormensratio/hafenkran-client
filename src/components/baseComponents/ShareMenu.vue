@@ -6,7 +6,7 @@
         <div>
           <v-combobox outline multiple
                       v-model="selectedUsers"
-                      label="Possible users"
+                      label="Possible users to share with"
                       :items="usersToShare"
                       :item-text="getItemText"
           >
@@ -23,13 +23,15 @@
             Share
           </v-btn>
         </div>
-        <div v-if="experiment.permittedUsers && experiment.permittedUsers.length > 0">
+        <div v-if="permittedUserWasRemoved || alreadyPermittedUsers.length > 0">
           <v-divider></v-divider>
+        </div>
+        <div v-if="alreadyPermittedUsers.length > 0">
           <div class="list-title">Already shared with:</div>
           <v-list class="permitted-user-list">
             <v-list-tile class="p-2 tile"
                          :key="user.name"
-                         v-for="(user) in experiment.permittedUsers">
+                         v-for="(user) in alreadyPermittedUsers">
               <v-list-tile-avatar size="50" class="mr-2">
                 <v-avatar color="blue" size="50">
                         <span class="headline white--text">
@@ -41,13 +43,19 @@
                 {{ user.name }}
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn icon @click="deny(user)">
+                <v-btn icon @click="removeUser(user)">
                   <v-icon color="red">close</v-icon>
                 </v-btn>
               </v-list-tile-action>
             </v-list-tile>
           </v-list>
         </div>
+        <v-btn @click="saveRemovedUsers"
+               style="background: var(--themeColor); color: white;"
+               v-if="permittedUserWasRemoved"
+        >
+          Save removed users
+        </v-btn>
       </div>
     </v-card-text>
   </v-card>
@@ -55,7 +63,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { filter, some } from 'lodash';
+import { filter, some, isNil } from 'lodash';
 import UsersMixin from '../../mixins/UsersMixin';
 
 export default {
@@ -63,7 +71,9 @@ export default {
   mixins: [UsersMixin],
   data() {
     return {
+      permittedUserWasRemoved: false,
       selectedUsers: null,
+      alreadyPermittedUsers: [],
     };
   },
   props: {
@@ -71,17 +81,17 @@ export default {
   },
   computed: {
     /**
-     * Returns users that are not the user himself and that dont have permission to the experiment
+     * Returns users, that are not the user himself and that dont have permission to the experiment
      * @returns {Array}
      */
     usersToShare() {
       return filter(this.userList, user => user.id !== this.user.id
-          && !some(this.experiment.permittedUsers, u => u.id === user.id));
+          && !some(this.alreadyPermittedUsers, u => u.id === user.id));
     },
   },
   methods: {
     ...mapMutations(['setSnack']),
-    ...mapActions(['triggerSnack', 'shareExperiment']),
+    ...mapActions(['triggerSnack', 'updatePermittedUsers']),
     getItemText(item) {
       return item.name;
     },
@@ -91,8 +101,30 @@ export default {
     share() {
       this.$emit('menuClosed');
     },
-    deny(user) {
+    async updatePermissions() {
+      const permittedUsers = this.alreadyPermittedUsers.concat(this.selectedUsers);
+      return this.updatePermittedUsers(
+        { experimentId: this.experiment.id, permittedUsers },
+      );
     },
+    async saveRemovedUsers() {
+      const success = await this.updatePermissions();
+
+      if (success) {
+        this.permittedUserWasRemoved = false;
+        this.setSnack('Successfully removed permissions from selected users');
+        this.triggerSnack();
+      }
+    },
+    removeUser(user) {
+      this.alreadyPermittedUsers = filter(this.alreadyPermittedUsers, u => u.id !== user.id);
+      this.permittedUserWasRemoved = true;
+    },
+  },
+  created() {
+    if (!isNil(this.experiment.permittedUsers)) {
+      this.alreadyPermittedUsers = this.experiment.permittedUsers;
+    }
   },
 };
 </script>

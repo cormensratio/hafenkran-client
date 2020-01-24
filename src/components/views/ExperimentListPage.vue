@@ -60,7 +60,7 @@
         >
         </StartExperimentMenu>
       </v-dialog>
-      <v-dialog v-model="showShareMenu" width="400">
+      <v-dialog v-if="showShareMenu" v-model="showShareMenu" width="400">
         <ShareMenu :experiment="selectedExperiment"
                    @menuClosed="closeMenus"
         ></ShareMenu>

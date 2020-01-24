@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, find } from 'lodash';
+import { isNil } from 'lodash';
 import store from './store';
 import ApiService from '../service/ApiService';
 
@@ -37,13 +37,6 @@ const ExperimentStore = {
         commit('updateExperiments', newExperiments);
       }
     },
-    async getExperimentNameFromId({ state }, id) {
-      const experiment = find(state.experiments, ['experimentId', id]);
-      if (!isNil(experiment)) {
-        return experiment.name;
-      }
-      return 'No name Found';
-    },
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
         const response = await ApiService.doPost(
@@ -56,10 +49,10 @@ const ExperimentStore = {
       }
       return null;
     },
-    async shareExperiment(state, { experimentId, userId }) {
-      if (!isNil(experimentId) && !isNil(userId)) {
+    async updatePermittedUsers(state, { experimentId, permittedUsers }) {
+      if (!isNil(experimentId) && !isNil(permittedUsers)) {
         const response = await ApiService.doPost(
-          `${serviceUrl}/experiments/${experimentId}/share/${userId}`, {},
+          `${serviceUrl}/experiments/${experimentId}/share`, { permittedUsers },
         );
         if (!isNil(response)) {
           return true;
