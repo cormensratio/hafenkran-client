@@ -193,19 +193,26 @@ export default {
     ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
-      this.loadingLogs = true;
-      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
-        .then((newLog) => {
-          this.loadingLogs = false;
-          if (!isNil(newLog)) {
-            this.logs = [];
-            const logArray = newLog.split(/\r?\n/);
-            forEach(logArray, log => this.logs.push(log));
-          } else {
-            this.setSnack('Couldn\'t fetch any logs');
-            this.triggerSnack();
-          }
-        });
+      if (this.execution.status === 'RUNNING'
+        || this.execution.status === 'WAITING') {
+        this.loadingLogs = true;
+        ExecutionDetailService.getExecutionLogsbyId(this.executionId)
+          .then((newLog) => {
+            this.loadingLogs = false;
+            if (!isNil(newLog)) {
+              this.logs = [];
+              const logArray = newLog.split(/\r?\n/);
+              forEach(logArray, log => this.logs.push(log));
+            } else {
+              this.setSnack('Couldn\'t fetch any logs');
+              this.triggerSnack();
+            }
+          });
+      } else if (!isNil(this.runningInterval)) {
+        clearInterval(this.runningInterval);
+        this.runningInterval = null;
+        this.selectedInterval = 0; // sets the Log Fetching Interval to 'off'
+      }
     },
     selectInterval() {
       if (this.selectedInterval === 0) {
@@ -354,6 +361,15 @@ export default {
     setInterval(() => {
       this.calculateRuntime();
     }, 1000);
+    if (this.selectedInterval !== 0) {
+      this.runningInterval = setInterval(() => {
+        this.getLogs();
+      }, this.selectedInterval);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.runningInterval);
+    this.runningInterval = null;
   },
 };
 </script>
