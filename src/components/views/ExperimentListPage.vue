@@ -147,7 +147,7 @@ export default {
     },
   },
   async created() {
-    this.fetchExperiments();
+    await this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;
     });
