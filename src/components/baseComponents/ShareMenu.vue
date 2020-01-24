@@ -98,7 +98,12 @@ export default {
     clearSelected() {
       this.selectedUsers = [];
     },
-    share() {
+    async share() {
+      const success = await this.updatePermissions();
+      if (success) {
+        this.setSnack('Successfully shared experiment');
+        this.triggerSnack();
+      }
       this.$emit('menuClosed');
     },
     async updatePermissions() {
