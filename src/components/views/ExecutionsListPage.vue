@@ -31,19 +31,44 @@
                 <td class="text-xs-left">
                   <status-cell :status="props.item.status"></status-cell>
                 </td>
-                <td class="text-xs-left">
-                  <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
-                  <v-btn v-if="!hasTerminated(props.item.status)"
-                         @click="executionCancel(props.item.id)">Cancel</v-btn>
-                  <v-btn v-else @click="showContextMenu($event, props.item.experimentId)">
-                  Repeat
-                  </v-btn>
-                  <v-btn class="error"
-                         @click="setExecution(props.item)"
-                         :disabled="!hasTerminated(props.item.status)"
-                  >
-                    Delete
-                  </v-btn>
+                <td class="justify-center action-column">
+                  <div class="action-container">
+                    <v-tooltip bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="navigateToDetails(props.item.id)"
+                                color="black" dark v-on="on">info
+                        </v-icon>
+                      </template>
+                      <span>Execution Details</span>
+                    </v-tooltip>
+                    <v-tooltip v-if="!hasTerminated(props.item.status)"
+                               bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="executionCancel(props.item.id)"
+                                color="black" dark v-on="on">cancel
+                        </v-icon>
+                      </template>
+                      <span>Cancel Execution</span>
+                    </v-tooltip>
+                    <v-tooltip v-else class="mr-1" bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="showContextMenu($event, props.item.experimentId)"
+                                color="black" dark v-on="on">replay
+                        </v-icon>
+                      </template>
+                      <span>Repeat Execution</span>
+                    </v-tooltip>
+                    <v-tooltip bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="setExecution(props.item)"
+                                :disabled="!hasTerminated(props.item.status)"
+                                color="red" dark v-on="on">delete
+                        </v-icon>
+                      </template>
+                      <span>Delete Execution</span>
+                    </v-tooltip>
+
+                  </div>
                 </td>
               </tr>
             </template>
@@ -113,7 +138,7 @@ export default {
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
-        { text: 'Actions', sortable: false },
+        { text: 'Actions', sortable: false, align: 'center', width: '10%' },
       ],
     };
   },
@@ -195,7 +220,7 @@ export default {
         const matching = filter(this.userList, user => user.id === ownerId);
 
         if (!isNil(matching) && matching.length > 0) {
-          if (matching[0].name === this.user.name) {
+          if (matching[0].id === this.user.id) {
             return 'Me';
           }
           return matching[0].name;
@@ -211,14 +236,17 @@ export default {
   },
   async created() {
     await this.fetchAllExecutionsOfUser();
-    await this.fetchUserList();
     this.$nextTick(() => {
       this.items = this.executions;
     });
+    this.fetchUserList();
   },
 };
 </script>
 
 <style scoped>
-
+  .action-container {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
