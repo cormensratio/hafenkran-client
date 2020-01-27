@@ -30,7 +30,7 @@
               <div class="userinfoHeader">
                 <span class="left">Userinfo</span>
                 <v-icon @click="closeMenu"
-                        class="right">close</v-icon>
+                        class="right closeWindow">close</v-icon>
               </div>
             </v-card-title>
             <v-card-text class="text-left">
@@ -115,13 +115,28 @@
                     </td>
                     <td class="text-left pl-1">
                       <div class="text-left">
-                        <v-btn icon @click="selectUser($event, props.item)">
-                          <v-icon>person</v-icon>
-                        </v-btn>
-                        <v-btn icon @click="selectUserToDelete(props.item)"
-                               v-if="props.item.id !== currentUser.id">
-                          <v-icon>delete</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on }">
+                            <v-btn icon @click="selectUser($event, props.item)" v-on="on">
+                              <v-icon>person</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>
+                            Show details
+                          </span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on }">
+                            <v-btn icon @click="selectUserToDelete(props.item)"
+                                   v-on="on"
+                                   v-if="props.item.id !== currentUser.id">
+                              <v-icon>delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>
+                            Delete user
+                          </span>
+                        </v-tooltip>
                       </div>
                     </td>
                   </tr>
@@ -266,5 +281,8 @@ export default {
   }
   .userinfoHeader {
     width: 100%;
+  }
+  .closeWindow:hover {
+    color: white;
   }
 </style>
