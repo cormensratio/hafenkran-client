@@ -122,7 +122,7 @@ export default {
         { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
-        { text: 'Actions', sortable: false, align: 'center', width: '8%' },
+        { text: 'Actions', sortable: false, align: 'center', width: '10%' },
       ],
     };
   },
