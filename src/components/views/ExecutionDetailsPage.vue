@@ -44,48 +44,51 @@
               v-if="loading"
             />
             <v-card-actions>
-              <v-flex>
-                <v-select :items="intervals"
-                          label="Log Fetching Interval"
-                          item-text="title"
-                          item-value="value"
-                          outline
-                          style="max-width: 195px; max-height: 60px"
-                          v-model="selectedInterval"
-                          @change="selectInterval()"
-                          class="left m-0 p-0 mr-2">
-                </v-select>
-                <v-btn class="logs left"
-                       v-if="selectedInterval === 0"
-                       dark
-                       style="background-color: var(--themeColor)"
-                       @click="getLogs">
-                  Load Logs manually
-                </v-btn>
-                <v-btn dark style="background-color: var(--themeColor)"
-                       @click="downloadResults()" class="left">
-                  Download Results
-                  <v-icon right>cloud_download</v-icon>
-                </v-btn>
-                <v-btn class="error right"
-                       @click="setExecution()">
-                  <v-icon>delete_forever</v-icon>
-                </v-btn>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
-                           @click="executionCancel(execution.id)" v-on="on">
-                      <v-icon right dark left>cancel</v-icon>
-                    </v-btn>
-                    <v-btn class="right replay" v-else
-                           @click="showContextMenu($event, execution.experimentId)" v-on="on">
-                      <v-icon>replay</v-icon>
-                    </v-btn>
-                  </template>
-                  <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
-                  <span v-else>Repeat this execution</span>
-                </v-tooltip>
-              </v-flex>
+              <v-layout class="justify-space-between buttons">
+                <v-layout class="justify-start align-end">
+                  <v-select :items="intervals"
+                            label="Log Fetching Interval"
+                            item-text="title"
+                            item-value="value"
+                            outline
+                            style="max-width: 195px; max-height: 60px; margin-bottom: 0px;"
+                            v-model="selectedInterval"
+                            @change="selectInterval()">
+                  </v-select>
+                  <v-btn v-if="selectedInterval === 0"
+                         dark
+                         style="background-color: var(--themeColor)"
+                         @click="getLogs">
+                    Load Logs manually
+                  </v-btn>
+                  <v-btn dark
+                         style="background-color: var(--themeColor); margin-left: 2px"
+                         @click="downloadResults()">
+                    Download Results
+                    <v-icon right>cloud_download</v-icon>
+                  </v-btn>
+                </v-layout>
+                <v-layout class="justify-end align-end">
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-if="!hasTerminated(execution.status)" class="replay"
+                             @click="executionCancel(execution.id)" v-on="on">
+                        <v-icon right dark left>cancel</v-icon>
+                      </v-btn>
+                      <v-btn class="replay" v-else
+                             @click="showContextMenu($event, execution.experimentId)" v-on="on">
+                        <v-icon>replay</v-icon>
+                      </v-btn>
+                    </template>
+                    <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
+                    <span v-else>Repeat this execution</span>
+                  </v-tooltip>
+                  <v-btn class="error"
+                         @click="setExecution()">
+                    <v-icon>delete_forever</v-icon>
+                  </v-btn>
+                </v-layout>
+              </v-layout>
             </v-card-actions>
             <div class="m-1">
               <v-container class="scroll-y black white--text">
@@ -395,10 +398,6 @@ export default {
     background: var(--themeColor);
   }
 
-  .replay {
-    margin-right: 10px;
-  }
-
   .statistics-page {
     height: 100%;
     width: 100%;
@@ -406,5 +405,10 @@ export default {
 
   .active {
     background-color: #307dea;
+  }
+
+  .buttons > * > * {
+    margin-left: 2px;
+    margin-right: 2px;
   }
 </style>
