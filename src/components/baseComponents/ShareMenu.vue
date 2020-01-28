@@ -30,17 +30,17 @@
           <div class="list-title">Already shared with:</div>
           <v-list class="permitted-user-list">
             <v-list-tile class="p-2 tile"
-                         :key="user.name"
+                         :key="user"
                          v-for="(user) in alreadyPermittedUsers">
               <v-list-tile-avatar size="50" class="mr-2">
                 <v-avatar color="blue" size="50">
                         <span class="headline white--text">
-                          {{ user.name.charAt(0).toUpperCase() }}
+                          {{ getUserNameFromId(user).charAt(0).toUpperCase() }}
                         </span>
                 </v-avatar>
               </v-list-tile-avatar>
               <v-list-tile-content>
-                {{ user.name }}
+                {{ getUserNameFromId(user) }}
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-btn icon @click="removeUser(user)">
@@ -63,7 +63,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { filter, some, isNil, map } from 'lodash';
+import { filter, some, isNil, map, isEqual } from 'lodash';
 import UsersMixin from '../../mixins/UsersMixin';
 
 export default {
@@ -129,7 +129,8 @@ export default {
   },
   created() {
     if (!isNil(this.experiment.permittedUsers)) {
-      this.alreadyPermittedUsers = this.experiment.permittedUsers;
+      this.alreadyPermittedUsers = filter(this.experiment.permittedUsers,
+        id => !isEqual(id, this.user.id));
     }
   },
 };

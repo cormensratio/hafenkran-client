@@ -22,7 +22,7 @@
                 <template v-slot:items="props">
                   <tr>
                     <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-left" v-if="user.isAdmin">
+                    <td class="text-xs-left">
                       {{ getUserNameFromId(props.item.ownerId) }}
                     </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
@@ -180,11 +180,11 @@ export default {
     },
   },
   async created() {
+    await this.fetchUserList();
     await this.fetchExperiments();
     this.$nextTick(() => {
       this.items = this.experiments;
     });
-    this.fetchUserList();
   },
 };
 </script>
