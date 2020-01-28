@@ -132,11 +132,16 @@ export default {
       this.showConfirmDialog = false;
     },
     async updatePassword() {
-      if (this.arePasswordsEqual()) {
-        this.updateNewUserInfo(undefined, this.newPassword);
-        this.showConfirmDialog = true;
+      if (this.newPassword.length > 7 && this.confirmNewPassword.length > 7) {
+        if (this.arePasswordsEqual()) {
+          this.updateNewUserInfo(undefined, this.newPassword);
+          this.showConfirmDialog = true;
+        } else {
+          this.setSnack('Passwords do not match!');
+          this.triggerSnack();
+        }
       } else {
-        this.setSnack('Passwords are not equal!');
+        this.setSnack('Passwords need to contain at least 8 characters!');
         this.triggerSnack();
       }
     },
