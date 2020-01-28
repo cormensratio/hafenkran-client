@@ -63,7 +63,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { filter, some, isNil } from 'lodash';
+import { filter, some, isNil, map } from 'lodash';
 import UsersMixin from '../../mixins/UsersMixin';
 
 export default {
@@ -107,7 +107,8 @@ export default {
       this.$emit('menuClosed');
     },
     async updatePermissions() {
-      const permittedUsers = this.alreadyPermittedUsers.concat(this.selectedUsers);
+      let permittedUsers = this.alreadyPermittedUsers.concat(this.selectedUsers);
+      permittedUsers = map(permittedUsers, u => u.id);
       return this.updatePermittedUsers(
         { experimentId: this.experiment.id, permittedUsers },
       );
