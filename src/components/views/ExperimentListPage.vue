@@ -46,6 +46,14 @@
                         </template>
                         <span>Share Experiment</span>
                       </v-tooltip>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="setExperiment(props.item)"
+                                  color="red" dark v-on="on">delete
+                          </v-icon>
+                        </template>
+                        <span>Delete this Experiment</span>
+                      </v-tooltip>
                     </td>
                   </tr>
                 </template>
@@ -54,6 +62,12 @@
           </v-flex>
         </v-layout>
       </v-container>
+      <delete-dialog @deleteClicked="experimentDelete"
+                     @hideDialog="deleteDialog = false"
+                     :extern-execution="selectedExperiment.id"
+                     :extern-dialog="deleteDialog"
+                     :header-message="'Are you sure you want to delete this Experiment?'"
+      />
       <v-dialog v-model="showMenu" width="400">
         <StartExperimentMenu :experiment="selectedExperiment"
                              @menuClosed="closeMenus"
@@ -81,11 +95,13 @@ import ExperimentFilters from '../baseComponents/Filter/ExperimentFilters';
 import FilterMixin from '../../mixins/FilterMixin';
 import ShareMenu from '../baseComponents/ShareMenu';
 import UsersMixin from '../../mixins/UsersMixin';
+import DeleteDialog from '../baseComponents/DeleteDialog';
 
 
 export default {
   name: 'ExperimentListPage',
   components: {
+    DeleteDialog,
     ShareMenu,
     FileSizeCell,
     ExperimentFilters,
@@ -100,6 +116,7 @@ export default {
       selectedExperiment: {},
       showMenu: false,
       showShareMenu: false,
+      deleteDialog: false,
       headers: [
         { text: 'Dockerfile Name', value: 'name', sortable: true },
         { text: 'Owner', value: 'ownerId', sortable: true },
@@ -115,6 +132,22 @@ export default {
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
     ...mapMutations(['showSnack']),
+    setExperiment(experiment) {
+      this.deleteDialog = true;
+      this.selectedExperiment = experiment;
+    },
+    async experimentDelete(id) {
+      if (!isNil(id)) {
+        this.deleteDialog = false;
+        const deletedExperiment = await this.deleteExperiment(id);
+        if (deletedExperiment !== null) {
+          this.setSnack(`${deletedExperiment.name} has been deleted`);
+        } else {
+          this.setSnack('Experiment could not be deleted');
+        }
+        this.triggerSnack();
+      }
+    },
     closeMenus() {
       this.showShareMenu = false;
       this.showMenu = false;

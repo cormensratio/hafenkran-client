@@ -60,6 +60,18 @@ const ExperimentStore = {
       }
       return false;
     },
+    async deleteExperiment(state, { experimentId }) {
+      if (!isNil(experimentId)) {
+        const response = await ApiService.doPost(
+          `${serviceUrl}/experiments/`,
+        );
+
+        if (!isNil(response)) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
 };
 

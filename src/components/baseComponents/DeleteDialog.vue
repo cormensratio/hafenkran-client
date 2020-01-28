@@ -6,7 +6,7 @@
       <v-card class="pb-3">
         <v-card-title>
           <h2>
-            Are you sure you want to delete this Execution?
+            {{ headerMessage }}
           </h2>
         </v-card-title>
         <v-card-actions class="justify-center">
@@ -23,8 +23,9 @@
 export default {
   name: 'DeleteDialog',
   props: {
-    externExecution: {},
+    id: {},
     externDialog: false,
+    headerMessage: String,
   },
   data() {
     return {
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     deleteClicked() {
-      this.$emit('deleteClicked', this.externExecution.id);
+      this.$emit('deleteClicked', this.id);
     },
     hideDialog() {
       this.$emit('hideDialog');

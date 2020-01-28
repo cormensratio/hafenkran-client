@@ -67,7 +67,6 @@
                       </template>
                       <span>Delete Execution</span>
                     </v-tooltip>
-
                   </div>
                 </td>
               </tr>
@@ -75,9 +74,10 @@
           </v-data-table>
         </v-card>
         <delete-dialog @deleteClicked="executionDelete"
-                       @hideDialog="dialog = false"
-                       :extern-execution="selectedExecution"
-                       :extern-dialog="dialog"
+                       @hideDialog="deleteDialog = false"
+                       :extern-execution="selectedExecution.id"
+                       :extern-dialog="deleteDialog"
+                       :header-message="'Are you sure you want to delete this Execution?'"
         />
         <v-progress-circular
           size="50"
@@ -131,7 +131,7 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       loading: false,
-      dialog: false,
+      deleteDialog: false,
       selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
@@ -153,7 +153,7 @@ export default {
       this.$router.push(`/execution/${id}`);
     },
     setExecution(item) {
-      this.dialog = !this.dialog;
+      this.deleteDialog = !this.deleteDialog;
       this.selectedExecution = item;
     },
     async executionCancel(id) {
@@ -168,7 +168,7 @@ export default {
       this.triggerSnack();
     },
     async executionDelete(id) {
-      this.dialog = false;
+      this.deleteDialog = false;
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {
