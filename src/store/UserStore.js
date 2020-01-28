@@ -147,8 +147,7 @@ const UserStore = {
     },
     getUserById({ state }, givenId) {
       if (!isNil(givenId)) {
-        const returnUser = find(state.userList, user => user.id === givenId);
-        return returnUser;
+        return find(state.userList, user => user.id === givenId);
       }
       return null;
     },
