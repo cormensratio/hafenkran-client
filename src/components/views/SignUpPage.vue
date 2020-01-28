@@ -79,7 +79,7 @@
   </base-page>
 </template>
 <script>
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEmpty, isEqual } from 'lodash';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
@@ -105,22 +105,22 @@ export default {
   methods: {
     ...mapActions(['triggerSnack', 'registerUser']),
     ...mapMutations(['setSnack']),
-    arePasswordsEqual() {
-      return isEqual(this.password, this.confirmPassword);
-    },
     async register() {
-      if (isNil(this.userName) || isNil(this.userEmail) || isNil(this.password)
-        || isNil(this.confirmPassword)) {
+      if (isEmpty(this.userName) || isEmpty(this.userEmail) || isEmpty(this.password)
+        || isEmpty(this.confirmPassword)) {
         this.setSnack('Please fill in all fields!');
         this.triggerSnack();
         return;
-      }
-
-      if (!this.arePasswordsEqual()) {
+      } else if (this.password.length < 8 && this.confirmPassword.length < 8) {
+        this.setSnack('Passwords must contain at least 8 Characters');
+        this.triggerSnack();
+        return;
+      } else if (!isEqual(this.password, this.confirmPassword)) {
         this.setSnack('Passwords do not match!');
         this.triggerSnack();
         return;
       }
+
 
       const response = await this.registerUser({
         username: this.userName,
@@ -132,8 +132,6 @@ export default {
       if (!isNil(response)) {
         this.setSnack('Signup successful. Please wait until an admin activates your account.');
         this.$router.push('/login');
-      } else {
-        this.setSnack('Signup failed');
       }
       this.triggerSnack();
     },
