@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, isEqual, filter } from 'lodash';
+import { isNil, isEqual, filter, find } from 'lodash';
 import ApiService from '../service/ApiService';
 import AuthService from '../service/AuthService';
 
@@ -142,6 +142,13 @@ const UserStore = {
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
+      }
+      return null;
+    },
+    getUserById({ state }, givenId) {
+      if (!isNil(givenId)) {
+        const returnUser = find(state.userList, user => user.id === givenId);
+        return returnUser;
       }
       return null;
     },

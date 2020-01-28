@@ -5,6 +5,9 @@
         <v-form>
           <v-container>
             <v-layout column align-center>
+              <h1>
+                User Settings of {{ currentUser.name }}
+              </h1>
               <v-flex class="mt-4">
                 <span class="input-heading">Change your password</span>
                 <v-divider/>
@@ -88,6 +91,7 @@ export default {
   mixins: [RulesMixin],
   data() {
     return {
+      currentUser: '',
       newEmail: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -103,12 +107,21 @@ export default {
       },
     };
   },
+  props: {
+    userid: String,
+  },
   computed: {
     ...mapGetters(['user', 'isAuthenticated', 'snackShow', 'snack']),
   },
+  watch: {
+    async userid() {
+      this.currentUser = await this.getUserById(this.userid);
+      console.log(this.currentUser);
+    },
+  },
   methods: {
     ...mapMutations(['setSnack']),
-    ...mapActions(['updateUser', 'triggerSnack']),
+    ...mapActions(['updateUser', 'triggerSnack', 'getUserById']),
     arePasswordsEqual() {
       return isEqual(this.newPassword, this.confirmNewPassword);
     },
@@ -150,8 +163,8 @@ export default {
       }
     },
     updateNewUserInfo(email, newPassword) {
-      this.newUserInformation.email = email || this.user.email;
-      this.newUserInformation.isAdmin = this.user.isAdmin;
+      this.newUserInformation.email = email || this.currentUser.email;
+      this.newUserInformation.isAdmin = this.currentUser.isAdmin;
       this.newUserInformation.newPassword = newPassword || '';
     },
     clearFields() {
@@ -160,6 +173,9 @@ export default {
       this.confirmNewPassword = '';
       this.newEmail = '';
     },
+  },
+  async created() {
+    this.currentUser = await this.getUserById(this.userid);
   },
 };
 </script>
