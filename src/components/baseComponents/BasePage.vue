@@ -4,7 +4,7 @@
     <div class="page-container">
       <slot name="body"></slot>
     </div>
-    <v-snackbar v-model="snackShow" :timeout="0" right>
+    <v-snackbar v-model="snackShow" :color="color" :timeout="0" right>
       {{ snack }}
       <v-btn flat color="accent" @click=showSnack(false)>Close</v-btn>
     </v-snackbar>
@@ -22,7 +22,7 @@ export default {
   name: 'BasePage',
   components: { StartPage, Footer, Header },
   computed: {
-    ...mapGetters(['snackShow', 'snack']),
+    ...mapGetters(['snackShow', 'snack', 'color']),
   },
   methods: {
     ...mapMutations(['showSnack']),
