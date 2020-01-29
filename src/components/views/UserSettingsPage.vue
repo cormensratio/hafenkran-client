@@ -78,7 +78,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isEqual, isNil, isEmpty } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import RulesMixin from '../../mixins/Rules';
 
