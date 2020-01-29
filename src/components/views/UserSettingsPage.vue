@@ -78,7 +78,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isEqual, isNil } from 'lodash';
+import { isEqual, isNil, isEmpty } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import RulesMixin from '../../mixins/Rules';
 
@@ -146,12 +146,13 @@ export default {
       }
     },
     async updateEmail() {
-      if (!isEqual(this.newEmail, '')) {
+      if ((this.rules.emailRegex.test(this.newEmail))) {
         this.updateNewUserInfo(this.newEmail, undefined);
         this.showConfirmDialog = true;
       } else {
-        this.setSnack('Same e-mail address not allowed.');
+        this.setSnack('Please enter a valid email! E.g. email@example.com');
         this.triggerSnack();
+        this.newEmail = '';
       }
     },
     updateNewUserInfo(email, newPassword) {
