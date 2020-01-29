@@ -235,7 +235,6 @@ export default {
     },
     async created() {
       await this.fetchUserList();
-      debugger;
     },
     // calculate remaining space for Userlist by subtracting other components'
     // height from the user's window height
