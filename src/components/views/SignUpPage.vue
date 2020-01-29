@@ -119,6 +119,10 @@ export default {
         this.setSnack('Passwords do not match!');
         this.triggerSnack();
         return;
+      } else if (!this.rules.emailRegex.test(this.userEmail)) {
+        this.setSnack('Please enter a valid email! E.g. email@example.com');
+        this.triggerSnack();
+        return;
       }
 
 
