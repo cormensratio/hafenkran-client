@@ -276,7 +276,7 @@ export default {
       this.triggerSnack();
     },
     calculateRuntime() {
-      if (!isNil(this.execution.startedAt) && !isNil(this.execution.terminatedAt)) {
+      if (!isNil(this.execution.startedAt)) {
         const terminated = moment(this.execution.terminatedAt);
         const startedAt = moment(this.execution.startedAt);
         const now = moment(new Date());
