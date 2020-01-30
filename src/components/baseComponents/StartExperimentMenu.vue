@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     closeMenu() {
       this.$emit('menuClosed');
     },
@@ -145,7 +145,8 @@ export default {
     },
     async startExperiment() {
       this.loading = true;
-      if (!isNil(this.experimentId)) {
+      if (!isNil(this.experimentId)
+        && this.checkInputs(this.bookedTime, this.bookedCpu, this.ram)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
           ram: this.bookedRam,
@@ -164,8 +165,9 @@ export default {
         } else {
           this.setSnack('Execution could not be started');
         }
-        this.triggerSnack();
       }
+      this.loading = false;
+      this.triggerSnack();
     },
     checkMinutes() {
       if (this.bookedMinutes >= 60) {
@@ -179,6 +181,15 @@ export default {
       if (!isNil(this.experiment)) {
         this.experimentId = this.experiment.id;
       }
+    },
+    checkInputs(time, cpu, ram) {
+      if (this.rules.positiveNumbers(time)
+        && this.rules.positiveNumbers(cpu) && this.rules.positiveNumbers(ram)) {
+        return true;
+      }
+      this.setSnack('You need to provide RAM, CPU and Time');
+      this.setColor('error');
+      return false;
     },
   },
   updated() {
