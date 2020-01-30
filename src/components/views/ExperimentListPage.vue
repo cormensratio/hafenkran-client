@@ -20,14 +20,43 @@
                 class="elevation-1"
               >
                 <template v-slot:items="props">
-                  <tr @click="showContextMenu($event, props.item)">
+                  <tr>
                     <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-left" v-if="user.isAdmin">
-                      {{ getUserNameOfExperiment(props.item.ownerId) }}
+                    <td class="text-xs-left">
+                      {{ getUserNameFromId(props.item.ownerId) }}
                     </td>
                     <td class="text-xs-left">{{ getTimeStamp(props.item.createdAt)}}</td>
                     <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
+                    </td>
+                    <td class="action-container">
+                      <v-tooltip bottom class="mr-1">
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="showStartExperimentMenu(props.item)"
+                                  color="black" dark v-on="on">play_arrow
+                          </v-icon>
+                        </template>
+                        <span>Start Execution</span>
+                      </v-tooltip>
+                      <v-tooltip bottom class="mr-1" v-if="props.item.ownerId === user.id">
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="showShareDialog(props.item)"
+                                  color="black" dark v-on="on">share
+                          </v-icon>
+                        </template>
+                        <span>Share Experiment</span>
+                      </v-tooltip>
+                      <div v-else color="transparent"
+                           style="width: 24px" class="mr-1">
+                      </div>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon @click="setExperiment(props.item)"
+                                  color="red" dark v-on="on">delete
+                          </v-icon>
+                        </template>
+                        <span>Delete this Experiment</span>
+                      </v-tooltip>
                     </td>
                   </tr>
                 </template>
@@ -36,23 +65,31 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-menu v-model="showMenu"
-              :position-x="menuPosX"
-              :position-y="menuPosY"
-              :close-on-content-click="false"
-              :close-on-click="false"
-      >
+      <delete-dialog @deleteClicked="experimentDelete"
+                     @hideDialog="deleteDialog = false"
+                     :id="selectedExperiment.id"
+                     :extern-dialog="deleteDialog"
+                     :header-message="'Are you sure you want to delete this Experiment?'"
+                     :hint="deleteHint"
+      />
+      <v-dialog v-model="showMenu" width="400">
         <StartExperimentMenu :experiment="selectedExperiment"
-                             @menuClosed="closeMenu">
+                             @menuClosed="closeMenus"
+        >
         </StartExperimentMenu>
-      </v-menu>
+      </v-dialog>
+      <v-dialog v-if="showShareMenu" v-model="showShareMenu" width="400">
+        <ShareMenu :experiment="selectedExperiment"
+                   @menuClosed="closeMenus"
+        ></ShareMenu>
+      </v-dialog>
     </template>
   </base-page>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isNil, filter } from 'lodash';
+import { isNil } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StartExperimentMenu from '../baseComponents/StartExperimentMenu';
@@ -60,60 +97,83 @@ import FileSizeCell from '../baseComponents/FileSizeCell';
 import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExperimentFilters from '../baseComponents/Filter/ExperimentFilters';
 import FilterMixin from '../../mixins/FilterMixin';
+import ShareMenu from '../baseComponents/ShareMenu';
+import UsersMixin from '../../mixins/UsersMixin';
+import DeleteDialog from '../baseComponents/DeleteDialog';
 
 
 export default {
   name: 'ExperimentListPage',
-  components: { FileSizeCell, ExperimentFilters, BaseListHeader, BasePage, StartExperimentMenu },
-  mixins: [TimeStampMixin, FilterMixin],
+  components: {
+    DeleteDialog,
+    ShareMenu,
+    FileSizeCell,
+    ExperimentFilters,
+    BaseListHeader,
+    BasePage,
+    StartExperimentMenu,
+  },
+  mixins: [TimeStampMixin, FilterMixin, UsersMixin],
   data() {
     return {
       search: '',
-      showDetails: false,
       selectedExperiment: {},
-      menuPosX: 0,
-      menuPosY: 0,
       showMenu: false,
+      showShareMenu: false,
+      deleteDialog: false,
+      experimentDeleteMessage: '',
       headers: [
-        {
-          text: 'Dockerfile Name',
-          value: 'name',
-          sortable: true,
-        },
-        {
-          text: 'Owner',
-          value: 'ownerId',
-          sortable: true,
-        },
+        { text: 'Dockerfile Name', value: 'name', sortable: true },
+        { text: 'Owner', value: 'ownerId', sortable: true },
         { text: 'Uploaded', value: 'createdAt', sortable: true },
         { text: 'Size', value: 'size', sortable: true },
+        { text: 'Actions', sortable: false, align: 'center', width: '10%' },
       ],
     };
   },
   computed: {
-    ...mapGetters(['experiments', 'user', 'userList']),
+    ...mapGetters(['experiments', 'user']),
+    deleteHint() {
+      if (this.selectedExperiment.ownerId === this.user.id) {
+        return 'It also will be deleted for users you shared the experiment with!';
+      }
+      return '';
+    },
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
-    ...mapMutations(['showSnack']),
-    async showExecutions(experiment) {
-      const experimentId = experiment.id;
-
-      if (!isNil(experimentId)) {
-        await this.fetchExecutionsByExperimentId(experimentId);
-        this.$router.push('/executionlist');
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList', 'deleteExperiment']),
+    ...mapMutations(['setSnack']),
+    setExperiment(experiment) {
+      this.deleteDialog = true;
+      this.selectedExperiment = experiment;
+    },
+    async experimentDelete(id) {
+      if (!isNil(id)) {
+        this.deleteDialog = false;
+        const deletedExperiment = await this.deleteExperiment({ experimentId: id });
+        if (!isNil(deletedExperiment)) {
+          this.fetchExperiments();
+          this.setSnack('Experiment has been deleted');
+        } else {
+          this.setSnack('Experiment could not be deleted');
+        }
+        this.triggerSnack();
       }
     },
-    closeMenu() {
+    closeMenus() {
+      this.showShareMenu = false;
       this.showMenu = false;
     },
-    showContextMenu(e, selectedExperiment) {
-      this.showMenu = false;
-      this.menuPosX = e.clientX;
-      this.menuPosY = e.clientY;
+    showStartExperimentMenu(selectedExperiment) {
       this.selectedExperiment = selectedExperiment;
       this.$nextTick(() => {
         this.showMenu = true;
+      });
+    },
+    showShareDialog(selectedExperiment) {
+      this.selectedExperiment = selectedExperiment;
+      this.$nextTick(() => {
+        this.showShareMenu = true;
       });
     },
     applyFilters(filters) {
@@ -124,19 +184,6 @@ export default {
     },
     quickSearch(input) {
       this.search = input;
-    },
-    getUserNameOfExperiment(ownerId) {
-      if (!isNil(ownerId)) {
-        const matching = filter(this.userList, user => user.id === ownerId);
-
-        if (!isNil(matching) && matching.length > 0) {
-          if (matching[0].id === this.user.id) {
-            return 'Me';
-          }
-          return matching[0].name;
-        }
-      }
-      return '';
     },
   },
   watch: {
@@ -155,4 +202,8 @@ export default {
 </script>
 
 <style scoped>
+  .action-container {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>

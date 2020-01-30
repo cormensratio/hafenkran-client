@@ -20,7 +20,6 @@
                         v-model="newPassword"
                         label="New password"
                         :type="showPassword ? 'text' : 'password'"
-                        @keyup.enter="updatePassword"
                         single-line
                         outline
                         counter
@@ -30,7 +29,6 @@
                         v-model="confirmNewPassword"
                         label="Confirm new password"
                         :type="showPassword ? 'text' : 'password'"
-                        @keyup.enter="updatePassword"
                         single-line
                         outline
                         counter
@@ -45,7 +43,6 @@
                       <v-text-field
                         v-model="newEmail"
                         label="New email"
-                        @keyup.enter="updateEmail"
                         single-line
                         outline
                         :rules="[rules.emailRules]"
@@ -129,7 +126,6 @@ export default {
   watch: {
     async userid() {
       this.currentUser = await this.getUserById(this.userid);
-      console.log(this.currentUser);
     },
   },
   methods: {
@@ -162,7 +158,7 @@ export default {
       if (this.newPassword.length > 7 && this.confirmNewPassword.length > 7) {
         if (this.arePasswordsEqual()) {
           this.updateNewUserInfo(undefined, this.newPassword);
-          if (this.userid === this.user.id) {
+          if (this.userid === this.user.id || this.currentUser.isAdmin) {
             this.showConfirmDialog = true;
           } else {
             this.updateUserInfo();
@@ -179,7 +175,7 @@ export default {
     async updateEmail() {
       if ((this.rules.emailRegex.test(this.newEmail))) {
         this.updateNewUserInfo(this.newEmail, undefined);
-        if (this.userid === this.user.id) {
+        if (this.userid === this.user.id || this.currentUser.isAdmin) {
           this.showConfirmDialog = true;
         } else {
           this.updateUserInfo();
@@ -213,13 +209,6 @@ export default {
   .input-heading {
     font-size: xx-large;
   }
-
-  .input-size {
-  }
-
-  .save-button {
-  }
-
   .toolbar {
     background: var(--themeColor);
   }

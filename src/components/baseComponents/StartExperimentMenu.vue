@@ -1,7 +1,7 @@
 <template>
   <v-card class="p-3">
     <v-card-text class="details-container">
-      <v-icon @click="closeMenu" class="float-right mb-4">close</v-icon>
+      <v-icon @click="closeMenu" class="float-right">close</v-icon>
       <v-layout column>
         <v-flex class="text-left">
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>

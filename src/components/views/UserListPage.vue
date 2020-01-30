@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <base-page>
     <template slot="body">
       <v-container>
@@ -27,7 +27,7 @@
         >
           <v-card>
             <v-card-title style="background: var(--themeColor); color: white">
-              <div class="userinfoHeader">
+              <div class="user-info-header">
                 <span class="left">Userinfo</span>
                 <v-icon @click="closeMenu"
                         class="right closeWindow">close</v-icon>
@@ -87,7 +87,7 @@
                 <v-toolbar-items>
                   <v-text-field append-icon="search"
                                 color="white"
-                                style="position: absolute; right: 10px; min-width: 230px"
+                                class="search-box"
                                 label="Search by name or email"
                                 v-ripple
                                 v-model="search"
@@ -307,10 +307,15 @@ export default {
   .textAlign p {
     text-align: left;
   }
-  .userinfoHeader {
+  .user-info-header {
     width: 100%;
   }
   .closeWindow:hover {
     color: white;
+  }
+  .search-box {
+    position: absolute;
+    right: 10px;
+    min-width: 240px
   }
 </style>

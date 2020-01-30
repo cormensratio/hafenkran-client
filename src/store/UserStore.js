@@ -132,7 +132,6 @@ const UserStore = {
     },
     async deleteUser({ dispatch }, id) {
       const response = await ApiService.doPost(`${serviceUrl}/users/${id}/delete`);
-      console.log(response);
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
