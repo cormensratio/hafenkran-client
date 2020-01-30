@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
@@ -68,23 +69,25 @@ export default {
     ...mapMutations(['setSnack', 'showSnack']),
     loginUser() {
       this.loading = true;
-      if (!this.isAuthenticated) {
-        this.login({ name: this.userName, password: this.password })
-          .then((response) => {
-            if (response) {
-              this.setSnack('Login successful');
-              this.$router.push('/experimentlist');
-            } else {
-              if (this.snack.includes('Error')) {
+      if (!isEmpty(this.userName) && !isEmpty(this.password)) {
+        if (!this.isAuthenticated) {
+          this.login({ name: this.userName, password: this.password })
+            .then((response) => {
+              if (response) {
+                this.setSnack('Login successful');
+                this.$router.push('/experimentlist');
+              } else if (this.snack.includes('Error')) {
                 this.setSnack('This user does not exist!');
               } else if (this.snack.includes('Unauthorized')) {
                 this.setSnack('Wrong username or password!');
               }
-              this.loading = false;
-            }
-            this.triggerSnack();
-          });
+            });
+        }
+      } else {
+        this.setSnack('Please enter a username and password!');
       }
+      this.triggerSnack();
+      this.loading = false;
     },
   },
 };
