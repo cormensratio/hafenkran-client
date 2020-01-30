@@ -11,7 +11,7 @@
               <v-btn flat dark @click="activeTab = 1"
                      v-bind:class="{ 'active': (activeTab === 1)}">
                 <v-icon class="mr-1">info</v-icon>
-                Execution Information
+                General Information
               </v-btn>
               <v-btn flat dark @click="activeTab = 2"
                      v-bind:class="{ 'active': (activeTab === 2)}">
@@ -51,7 +51,7 @@
                             item-text="title"
                             item-value="value"
                             outline
-                            style="max-width: 195px; max-height: 60px; margin-bottom: 0px;"
+                            style="max-width: 200px; max-height: 60px; margin-bottom: 0px;"
                             v-model="selectedInterval"
                             @change="selectInterval()">
                   </v-select>
