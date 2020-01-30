@@ -265,27 +265,31 @@ export default {
       this.triggerSnack();
     },
     calculateRuntime() {
-      const terminated = moment(this.execution.terminatedAt);
-      const startedAt = moment(this.execution.startedAt);
-      const now = moment(new Date());
-      switch (this.execution.status) {
-        case 'RUNNING':
-          this.runtime = this.msToTime(moment(now.diff(startedAt)));
-          break;
-        case 'FINISHED':
-        case 'FAILED':
-        case 'ABORTED':
-        case 'CANCELED':
-          this.runtime = this.msToTime(moment(terminated)
-            .diff(startedAt));
-          break;
-        case 'WAITING':
-          this.runtime = 'This execution has not started yet!';
-          break;
-        case '':
-        default:
-          this.runtime = 'There has been an Error!';
-          break;
+      if (!isNil(this.execution.startedAt) && !isNil(this.execution.terminatedAt)) {
+        const terminated = moment(this.execution.terminatedAt);
+        const startedAt = moment(this.execution.startedAt);
+        const now = moment(new Date());
+        switch (this.execution.status) {
+          case 'RUNNING':
+            this.runtime = this.msToTime(moment(now.diff(startedAt)));
+            break;
+          case 'FINISHED':
+          case 'FAILED':
+          case 'ABORTED':
+          case 'CANCELED':
+            this.runtime = this.msToTime(moment(terminated)
+              .diff(startedAt));
+            break;
+          case 'WAITING':
+            this.runtime = 'This execution has not started yet!';
+            break;
+          case '':
+          default:
+            this.runtime = 'There has been an Error!';
+            break;
+        }
+      } else {
+        this.runtime = 'Runtime cannot be calculated yet';
       }
     },
     pad(num) {
