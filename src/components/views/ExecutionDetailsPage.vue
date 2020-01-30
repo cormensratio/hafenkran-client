@@ -11,7 +11,7 @@
               <v-btn flat dark @click="activeTab = 1"
                      v-bind:class="{ 'active': (activeTab === 1)}">
                 <v-icon class="mr-1">info</v-icon>
-                Execution Information
+                General Information
               </v-btn>
               <v-btn flat dark @click="activeTab = 2"
                      v-bind:class="{ 'active': (activeTab === 2)}">
@@ -21,16 +21,21 @@
             </v-toolbar-items>
           </v-toolbar>
           <div v-if="activeTab === 1">
-            <v-card-text class="text-left details">
-                <span class="mb-3">
-                  Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}
-                </span>
-              <span class="mb-3">CPU Cores: {{execution.cpu}},  RAM: {{execution.ram}}MB,
-                  Max Runtime: {{msToTime(execution.bookedTime * 1000)}} </span>
-              <span class="mb-3">Runtime: {{runtime}}</span>
-              <div class="status">
-                <span>Status:</span>
-                <status-cell :status="execution.status" class="cell"/>
+            <v-card-text class="row">
+              <div class="column text-lg-left mr-5 ml-2" style="width: 25%">
+                <h3>Execution Info</h3>
+                <p>Start Date: {{ getTimeStamp(execution.startedAt) || '-' }}</p>
+                <p>Runtime: {{runtime}}</p>
+                <div class="status">
+                  <span>Status:</span>
+                  <status-cell :status="execution.status" class="cell"/>
+                </div>
+              </div>
+              <div class="column text-lg-left">
+                <h3>Selected Options</h3>
+                <p>CPU Cores: {{execution.cpu}}</p>
+                <p>RAM: {{execution.ram}}MB</p>
+                <p>Max Runtime: {{msToTime(execution.bookedTime * 1000)}}</p>
               </div>
             </v-card-text>
             <v-progress-circular
@@ -39,35 +44,51 @@
               v-if="loading"
             />
             <v-card-actions>
-              <v-flex>
-                <v-btn class="error right"
-                       @click="setExecution()">
-                  <v-icon>delete</v-icon>
-                </v-btn>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn v-if="!hasTerminated(execution.status)" class="right replay"
-                           @click="executionCancel(execution.id)" v-on="on">
-                      <v-icon right dark left>cancel</v-icon>
-                    </v-btn>
-                    <v-btn class="right replay" v-else
-                           @click="showContextMenu($event, execution.experimentId)" v-on="on">
-                      <v-icon>replay</v-icon>
-                    </v-btn>
-                  </template>
-                  <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
-                  <span v-else>Repeat this execution</span>
-                </v-tooltip>
-                <v-btn class="logs left" dark style="background-color: var(--themeColor)"
-                       @click="getLogs">
-                  Load Logs
-                </v-btn>
-                <v-btn dark style="background-color: var(--themeColor)"
-                       @click="downloadResults()" class="left">
-                  Download Results
-                  <v-icon right>cloud_download</v-icon>
-                </v-btn>
-              </v-flex>
+              <v-layout class="justify-space-between buttons">
+                <v-layout class="justify-start align-end">
+                  <v-select :items="intervals"
+                            label="Log Fetching Interval"
+                            item-text="title"
+                            item-value="value"
+                            outline
+                            style="max-width: 200px; max-height: 60px; margin-bottom: 0px;"
+                            v-model="selectedInterval"
+                            @change="selectInterval()">
+                  </v-select>
+                  <v-btn v-if="selectedInterval === 0"
+                         dark
+                         style="background-color: var(--themeColor)"
+                         @click="getLogs">
+                    Load Logs manually
+                  </v-btn>
+                  <v-btn dark
+                         style="background-color: var(--themeColor); margin-left: 2px"
+                         @click="downloadResults()">
+                    Download Results
+                    <v-icon right>cloud_download</v-icon>
+                  </v-btn>
+                </v-layout>
+                <v-layout class="justify-end align-end">
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-if="!hasTerminated(execution.status)" class="replay"
+                             @click="executionCancel(execution.id)" v-on="on">
+                        <v-icon right dark left>cancel</v-icon>
+                      </v-btn>
+                      <v-btn class="replay" v-else
+                             @click="showContextMenu($event, execution.experimentId)" v-on="on">
+                        <v-icon>replay</v-icon>
+                      </v-btn>
+                    </template>
+                    <span v-if="!hasTerminated(execution.status)">Cancel this Execution</span>
+                    <span v-else>Repeat this execution</span>
+                  </v-tooltip>
+                  <v-btn class="error"
+                         @click="setExecution()">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                </v-layout>
+              </v-layout>
             </v-card-actions>
             <div class="m-1">
               <v-container class="scroll-y black white--text">
@@ -154,6 +175,15 @@ export default {
       menuPosY: 0,
       showMenu: false,
       selectedExperiment: {},
+      intervals: [
+        { title: 'off', value: 0 },
+        { title: 'every 5 seconds', value: 5 },
+        { title: 'every 10 seconds', value: 10 },
+        { title: 'every 30 seconds', value: 30 },
+        { title: 'every minute', value: 60 },
+      ],
+      selectedInterval: 0,
+      runningInterval: null,
     };
   },
   props: {
@@ -166,19 +196,45 @@ export default {
     ...mapActions(['getExecutionById', 'cancelExecution', 'deleteExecution', 'triggerSnack', 'fetchAllExecutionsOfUser']),
     ...mapMutations(['setSnack', 'showSnack']),
     getLogs() {
-      this.loadingLogs = true;
-      ExecutionDetailService.getExecutionLogsbyId(this.executionId)
-        .then((newLog) => {
-          this.loadingLogs = false;
-          if (!isNil(newLog)) {
-            this.logs = [];
-            const logArray = newLog.split(/\r?\n/);
-            forEach(logArray, log => this.logs.push(log));
-          } else {
-            this.setSnack('Couldn\'t fetch any logs');
-            this.triggerSnack();
-          }
-        });
+      if (this.execution.status === 'RUNNING'
+        || this.execution.status === 'WAITING') {
+        this.loadingLogs = true;
+        ExecutionDetailService.getExecutionLogsbyId(this.executionId)
+          .then((newLog) => {
+            this.loadingLogs = false;
+            if (!isNil(newLog)) {
+              this.logs = [];
+              const logArray = newLog.split(/\r?\n/);
+              forEach(logArray, log => this.logs.push(log));
+            } else {
+              this.setSnack('Couldn\'t fetch any logs');
+              this.triggerSnack();
+            }
+          });
+      } else if (!isNil(this.runningInterval)) {
+        clearInterval(this.runningInterval);
+        this.runningInterval = null;
+        this.selectedInterval = 0; // sets the Log Fetching Interval to 'off'
+      }
+    },
+    selectInterval() {
+      if (this.selectedInterval === 0) {
+        if (!isNil(this.runningInterval)) {
+          clearInterval(this.runningInterval);
+        }
+        this.setSnack('Auto-reloading Logs turned off');
+        this.triggerSnack();
+        this.getLogs();
+      } else {
+        if (!isNil(this.runningInterval)) {
+          clearInterval(this.runningInterval);
+        }
+        this.setSnack(`Logs are now getting fetched every ${this.selectedInterval} seconds`);
+        this.triggerSnack();
+        this.runningInterval = setInterval(() => {
+          this.getLogs();
+        }, this.selectedInterval * 1000);
+      }
     },
     setExecution() {
       this.dialog = !this.dialog;
@@ -209,27 +265,31 @@ export default {
       this.triggerSnack();
     },
     calculateRuntime() {
-      const terminated = moment(this.execution.terminatedAt);
-      const startedAt = moment(this.execution.startedAt);
-      const now = moment(new Date());
-      switch (this.execution.status) {
-        case 'RUNNING':
-          this.runtime = this.msToTime(moment(now.diff(startedAt)));
-          break;
-        case 'FINISHED':
-        case 'FAILED':
-        case 'ABORTED':
-        case 'CANCELED':
-          this.runtime = this.msToTime(moment(terminated)
-            .diff(startedAt));
-          break;
-        case 'WAITING':
-          this.runtime = 'This execution has not started yet!';
-          break;
-        case '':
-        default:
-          this.runtime = 'There has been an Error!';
-          break;
+      if (!isNil(this.execution.startedAt) && !isNil(this.execution.terminatedAt)) {
+        const terminated = moment(this.execution.terminatedAt);
+        const startedAt = moment(this.execution.startedAt);
+        const now = moment(new Date());
+        switch (this.execution.status) {
+          case 'RUNNING':
+            this.runtime = this.msToTime(moment(now.diff(startedAt)));
+            break;
+          case 'FINISHED':
+          case 'FAILED':
+          case 'ABORTED':
+          case 'CANCELED':
+            this.runtime = this.msToTime(moment(terminated)
+              .diff(startedAt));
+            break;
+          case 'WAITING':
+            this.runtime = 'This execution has not started yet!';
+            break;
+          case '':
+          default:
+            this.runtime = 'There has been an Error!';
+            break;
+        }
+      } else {
+        this.runtime = 'Runtime cannot be calculated yet';
       }
     },
     pad(num) {
@@ -308,6 +368,15 @@ export default {
     setInterval(() => {
       this.calculateRuntime();
     }, 1000);
+    if (this.selectedInterval !== 0) {
+      this.runningInterval = setInterval(() => {
+        this.getLogs();
+      }, this.selectedInterval);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.runningInterval);
+    this.runningInterval = null;
   },
 };
 </script>
@@ -318,26 +387,32 @@ export default {
     flex-direction: column;
     font-size: 12pt;
   }
+
   .status {
     display: flex;
     flex-direction: row;
   }
+
   .cell {
     margin-top: -8px;
     margin-left: 5px;
   }
+
   .color-theme-blue {
     background: var(--themeColor);
-  }
-  .replay {
-    margin-right: 10px;
   }
 
   .statistics-page {
     height: 100%;
     width: 100%;
   }
+
   .active {
     background-color: #307dea;
+  }
+
+  .buttons > * > * {
+    margin-left: 2px;
+    margin-right: 2px;
   }
 </style>
