@@ -67,7 +67,7 @@ const UserStore = {
       let userList;
       let pendingUserList;
       if (!isNil(rawUserList)) {
-        userList = filter(rawUserList, user => user.status === 'ACTIVE');
+        userList = filter(rawUserList, user => (user.status === 'ACTIVE' || user.status === undefined));
         pendingUserList = filter(rawUserList, user => user.status === 'INACTIVE');
 
         commit('updatePendingUserList', pendingUserList);
@@ -148,6 +148,7 @@ const UserStore = {
       return null;
     },
     getUserById({ state }, givenId) {
+      debugger;
       if (!isNil(givenId)) {
         return find(state.userList, user => user.id === givenId);
       }

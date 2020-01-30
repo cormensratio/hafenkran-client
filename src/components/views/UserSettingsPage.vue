@@ -139,7 +139,6 @@ export default {
       return isEqual(this.newPassword, this.confirmNewPassword);
     },
     async updateUserInfo() {
-      this.showConfirmDialog = true;
       this.newUserInformation.password = this.password;
 
       if (!isNil(this.newUserInformation)) {
@@ -160,7 +159,11 @@ export default {
     async updatePassword() {
       if (this.arePasswordsEqual()) {
         this.updateNewUserInfo(undefined, this.newPassword);
-        this.showConfirmDialog = true;
+        if (this.userid === this.user.id) {
+          this.showConfirmDialog = true;
+        } else {
+          this.updateUserInfo();
+        }
       } else {
         this.setSnack('Passwords are not equal!');
         this.triggerSnack();
@@ -169,7 +172,11 @@ export default {
     async updateEmail() {
       if (!isEqual(this.newEmail, '')) {
         this.updateNewUserInfo(this.newEmail, undefined);
-        this.showConfirmDialog = true;
+        if (this.userid === this.user.id) {
+          this.showConfirmDialog = true;
+        } else {
+          this.updateUserInfo();
+        }
       } else {
         this.setSnack('Same e-mail address not allowed.');
         this.triggerSnack();
@@ -188,6 +195,7 @@ export default {
     },
   },
   async created() {
+    await this.fetchUserList();
     this.currentUser = await this.getUserById(this.userid);
   },
 };
