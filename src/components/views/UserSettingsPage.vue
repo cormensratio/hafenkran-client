@@ -133,7 +133,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'setColor']),
     ...mapActions(['updateUser', 'triggerSnack', 'getUserById', 'fetchUserList']),
     arePasswordsEqual() {
       return isEqual(this.newPassword, this.confirmNewPassword);
@@ -147,9 +147,11 @@ export default {
         if (!isNil(updatedUser)) {
           this.clearFields();
           this.setSnack('Successfully updated user information');
+          this.setColor('green');
         } else {
           this.password = '';
           this.setSnack('Failed to update user information!');
+          this.setColor('error');
         }
         this.triggerSnack();
       }
@@ -162,8 +164,7 @@ export default {
           this.updateNewUserInfo(undefined, this.newPassword);
           if (this.userid === this.user.id) {
             this.showConfirmDialog = true;
-          }
-          else {
+          } else {
             this.updateUserInfo();
           }
         } else {
