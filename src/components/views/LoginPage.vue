@@ -61,7 +61,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'isAuthenticated']),
+    ...mapGetters(['user', 'isAuthenticated', 'snack']),
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),
@@ -75,7 +75,11 @@ export default {
               this.setSnack('Login successful');
               this.$router.push('/experimentlist');
             } else {
-              this.setSnack('Login failed');
+              if (this.snack.includes('Error')) {
+                this.setSnack('This user does not exist!');
+              } else if (this.snack.includes('Unauthorized')) {
+                this.setSnack('Wrong username or password!');
+              }
               this.loading = false;
             }
             this.triggerSnack();
