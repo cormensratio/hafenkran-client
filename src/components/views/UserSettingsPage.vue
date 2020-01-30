@@ -20,7 +20,6 @@
                         v-model="newPassword"
                         label="New password"
                         :type="showPassword ? 'text' : 'password'"
-                        @keyup.enter="updatePassword"
                         single-line
                         outline
                         counter
@@ -30,7 +29,6 @@
                         v-model="confirmNewPassword"
                         label="Confirm new password"
                         :type="showPassword ? 'text' : 'password'"
-                        @keyup.enter="updatePassword"
                         single-line
                         outline
                         counter
@@ -45,7 +43,6 @@
                       <v-text-field
                         v-model="newEmail"
                         label="New email"
-                        @keyup.enter="updateEmail"
                         single-line
                         outline
                         :rules="[rules.emailRules]"
