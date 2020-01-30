@@ -106,7 +106,7 @@ export default {
     ...mapActions(['triggerSnack', 'registerUser']),
     ...mapMutations(['setSnack']),
     async register() {
-      if (isEmpty(this.userName) || isEmpty(this.userEmail) || isEmpty(this.password)
+      if (isEmpty(this.userName.trim()) || isEmpty(this.userEmail) || isEmpty(this.password)
         || isEmpty(this.confirmPassword)) {
         this.setSnack('Please fill in all fields!');
         this.triggerSnack();
