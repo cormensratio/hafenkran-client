@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { isNil, find } from 'lodash';
+import { isNil } from 'lodash';
 import store from './store';
 import ApiService from '../service/ApiService';
 
@@ -37,13 +37,6 @@ const ExperimentStore = {
         commit('updateExperiments', newExperiments);
       }
     },
-    async getExperimentNameFromId({ state }, id) {
-      const experiment = find(state.experiments, ['experimentId', id]);
-      if (!isNil(experiment)) {
-        return experiment.name;
-      }
-      return 'No name Found';
-    },
     async runExecution(state, executionDetails) {
       if (!isNil(executionDetails)) {
         const response = await ApiService.doPost(
@@ -55,6 +48,31 @@ const ExperimentStore = {
         }
       }
       return null;
+    },
+    async updatePermittedUsers({ getters }, { experimentId, permittedUsers }) {
+      if (!isNil(experimentId) && !isNil(permittedUsers)) {
+        permittedUsers.push(getters.user.id);
+
+        const response = await ApiService.doPost(
+          `${serviceUrl}/experiments/${experimentId}/permittedUsers`, { permittedUsers },
+        );
+        if (!isNil(response)) {
+          return true;
+        }
+      }
+      return false;
+    },
+    async deleteExperiment(state, { experimentId }) {
+      if (!isNil(experimentId)) {
+        const response = await ApiService.doPost(
+          `${serviceUrl}/experiments/${experimentId}/delete`,
+        );
+
+        if (!isNil(response)) {
+          return true;
+        }
+      }
+      return false;
     },
   },
 };

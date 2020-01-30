@@ -88,7 +88,7 @@
                   </v-tooltip>
                   <v-btn class="error"
                          @click="setExecution()">
-                    <v-icon>delete_forever</v-icon>
+                    <v-icon>delete</v-icon>
                   </v-btn>
                 </v-layout>
               </v-layout>
@@ -276,7 +276,7 @@ export default {
       this.triggerSnack();
     },
     calculateRuntime() {
-      if (!isNil(this.execution.startedAt) && !isNil(this.execution.terminatedAt)) {
+      if (!isNil(this.execution.startedAt)) {
         const terminated = moment(this.execution.terminatedAt);
         const startedAt = moment(this.execution.startedAt);
         const now = moment(new Date());
