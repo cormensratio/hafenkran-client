@@ -41,7 +41,7 @@
           </v-card>
         </v-menu>
         <v-layout column>
-          <v-flex class="flex">
+          <v-flex>
             <v-card max-width="800"
                     class="mx-auto mb-3"
                     v-if="pendingUsers.length > 0">
@@ -230,14 +230,24 @@ export default {
       this.userToDelete = user;
       this.userToDeleteName = user.name;
     },
-    setAccepted(user, choice) {
+    async setAccepted(user, choice) {
+      this.loading = true;
       if (choice === true) {
-        this.acceptUser(user);
-        this.setSnack(`${user.name} has been accepted`);
+        const response = await this.acceptUser(user);
+        if (isNil(response)) {
+          this.setSnack(`${user.name} could not be accepted`);
+        } else {
+          this.setSnack(`${user.name} has been accepted`);
+        }
       } else {
-        this.denyUser(user);
-        this.setSnack(`${user.name} has been declined`);
+        const response = await this.denyUser(user);
+        if (isNil(response)) {
+          this.setSnack(`${user.name} could not be denied`);
+        } else {
+          this.setSnack(`${user.name} has been declined`);
+        }
       }
+      this.loading = false;
       this.triggerSnack();
     },
     async deleteUserFromList(user) {
@@ -268,7 +278,7 @@ export default {
       } else {
         pendingUserListHeight = -165;
       }
-      this.userListHeight = `${window.innerHeight - 420 - pendingUserListHeight}px`;
+      this.userListHeight = `${window.innerHeight - 425 - pendingUserListHeight}px`;
     },
   },
   mounted() {
