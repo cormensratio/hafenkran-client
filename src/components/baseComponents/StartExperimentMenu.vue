@@ -154,7 +154,6 @@ export default {
         });
         this.loading = false;
         if (!isNil(startedExecution)) {
-          this.setSnack('Experiment started successfully');
           this.previousRam = startedExecution.ram;
           this.previousCpu = startedExecution.cpu;
           this.previousMinutes = this.bookedMinutes;
@@ -163,7 +162,7 @@ export default {
           this.$router.push('/executionlist');
           this.closeMenu();
         } else {
-          this.setSnack('Experiment could not be started');
+          this.setSnack('Execution could not be started');
         }
         this.triggerSnack();
       }
