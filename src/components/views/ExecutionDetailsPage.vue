@@ -42,7 +42,7 @@
               <v-flex>
                 <v-btn class="error right"
                        @click="setExecution()">
-                  <v-icon>delete_forever</v-icon>
+                  <v-icon>delete</v-icon>
                 </v-btn>
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
