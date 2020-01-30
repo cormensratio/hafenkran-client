@@ -146,11 +146,11 @@ export default {
 
         if (!isNil(updatedUser)) {
           this.clearFields();
-          this.setSnack('Successfully updated user information');
           this.setColor('green');
+          this.setSnack('Successfully updated user information');
         } else {
           this.password = '';
-          this.setSnack('Failed to update user information!');
+          this.setSnack('Incorrect password!!');
           this.setColor('error');
         }
         this.triggerSnack();
