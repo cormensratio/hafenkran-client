@@ -2,75 +2,90 @@
   <base-page>
     <template slot="body">
       <template>
-        <v-form>
-          <v-container>
-            <v-layout column align-center>
-              <v-flex class="mt-4">
-                <span class="input-heading">Change your password</span>
-                <v-divider/>
-                <div class="input-size">
-                  <v-text-field
-                    v-model="newPassword"
-                    label="New password"
-                    :type="showPassword ? 'text' : 'password'"
-                    single-line
-                    outline
-                    counter
-                    :rules="[rules.min]"
-                  />
-                  <v-text-field
-                    v-model="confirmNewPassword"
-                    label="Confirm new password"
-                    :type="showPassword ? 'text' : 'password'"
-                    single-line
-                    outline
-                    counter
-                    :rules="[rules.min]"
-                  />
-                </div>
-                <v-btn class="save-button" ma-2 @click="updatePassword()">Save password</v-btn>
-                <v-spacer class="mt-4"></v-spacer>
-                <span class="input-heading">Change your e-mail address</span>
-                <v-divider/>
-                <div class="input-size">
-                  <v-text-field
-                    v-model="newEmail"
-                    label="New email"
-                    single-line
-                    outline
-                    :rules="[rules.emailRules]"
-                  />
-                  </div>
-                <v-btn class="save-button" @click="updateEmail()">Save email</v-btn>
-              </v-flex>
-            </v-layout>
-            <v-snackbar v-model="snackShow" right>
-              {{ snack }}
-              <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
-            </v-snackbar>
-            <v-dialog v-model="showConfirmDialog" width="300">
-              <v-card>
-                <v-card-title>Type in your password to confirm update</v-card-title>
-                <v-card-text>
-                  <v-text-field
-                    v-model="password"
-                    label="Current password"
-                    :type="showPassword ? 'text' : 'password'"
-                    single-line
-                    outline
-                  />
-                </v-card-text>
-                <v-card-actions class="justify-center">
-                  <v-btn style="background: var(--themeColor)"
-                         @click="updateUserInfo">
-                    Confirm
-                  </v-btn>
-                  <v-btn @click="showConfirmDialog = false">Cancel</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-container>
-        </v-form>
+        <v-container>
+          <v-card class="mx-auto white" width="750">
+            <v-toolbar dark class="toolbar">
+              <v-toolbar-title color="white" class="justify-center">
+                User Settings of {{ currentUser.name }}
+              </v-toolbar-title>
+            </v-toolbar>
+            <v-form>
+              <v-container>
+                <v-layout column align-center>
+                  <v-flex class="mt-4">
+                    <span class="input-heading">Change your password</span>
+                    <v-divider/>
+                    <div class="input-size">
+                      <v-text-field
+                        v-model="newPassword"
+                        label="New password"
+                        :type="showPassword ? 'text' : 'password'"
+                        @keyup.enter="updatePassword"
+                        single-line
+                        outline
+                        counter
+                        :rules="[rules.min]"
+                      />
+                      <v-text-field
+                        v-model="confirmNewPassword"
+                        label="Confirm new password"
+                        :type="showPassword ? 'text' : 'password'"
+                        @keyup.enter="updatePassword"
+                        single-line
+                        outline
+                        counter
+                        :rules="[rules.min]"
+                      />
+                    </div>
+                    <v-btn class="save-button" ma-2 @click="updatePassword()">Save password</v-btn>
+                    <v-spacer class="mt-4"></v-spacer>
+                    <span class="input-heading">Change your e-mail address</span>
+                    <v-divider/>
+                    <div class="input-size">
+                      <v-text-field
+                        v-model="newEmail"
+                        label="New email"
+                        @keyup.enter="updateEmail"
+                        single-line
+                        outline
+                        :rules="[rules.emailRules]"
+                      />
+                    </div>
+                    <v-btn class="save-button" @click="updateEmail()">Save email</v-btn>
+                  </v-flex>
+                </v-layout>
+                <v-snackbar v-model="snackShow" right>
+                  {{ snack }}
+                  <v-btn flat color="accent" @click.native="showSnackbar = false">Close</v-btn>
+                </v-snackbar>
+                <v-dialog v-model="showConfirmDialog" width="300">
+                  <v-card>
+                    <v-card-title>Type in your password to confirm update</v-card-title>
+                    <v-card-text>
+                      <v-text-field
+                        ref="enterPassword"
+                        v-model="password"
+                        label="Current password"
+                        :type="showPassword ? 'text' : 'password'"
+                        @keyup.enter="updateUserInfo"
+                        single-line
+                        outline
+                      />
+                    </v-card-text>
+                    <v-card-actions class="justify-center">
+                      <v-btn style="background: var(--themeColor)"
+                             dark
+                             @click="updateUserInfo">
+                        Confirm
+                      </v-btn>
+                      <v-btn @click="showConfirmDialog = false">Cancel</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-container>
+            </v-form>
+          </v-card>
+        </v-container>
       </template>
     </template>
   </base-page>
@@ -88,6 +103,7 @@ export default {
   mixins: [RulesMixin],
   data() {
     return {
+      currentUser: '',
       newEmail: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -96,6 +112,7 @@ export default {
       showPassword: false,
       showConfirmDialog: false,
       newUserInformation: {
+        id: this.userid,
         newPassword: '',
         email: '',
         isAdmin: false,
@@ -103,17 +120,25 @@ export default {
       },
     };
   },
+  props: {
+    userid: String,
+  },
   computed: {
     ...mapGetters(['user', 'isAuthenticated', 'snackShow', 'snack']),
   },
+  watch: {
+    async userid() {
+      this.currentUser = await this.getUserById(this.userid);
+      console.log(this.currentUser);
+    },
+  },
   methods: {
     ...mapMutations(['setSnack']),
-    ...mapActions(['updateUser', 'triggerSnack']),
+    ...mapActions(['updateUser', 'triggerSnack', 'getUserById', 'fetchUserList']),
     arePasswordsEqual() {
       return isEqual(this.newPassword, this.confirmNewPassword);
     },
     async updateUserInfo() {
-      this.showConfirmDialog = true;
       this.newUserInformation.password = this.password;
 
       if (!isNil(this.newUserInformation)) {
@@ -126,15 +151,19 @@ export default {
           this.password = '';
           this.setSnack('Failed to update user information!');
         }
-
         this.triggerSnack();
       }
+      this.fetchUserList();
       this.showConfirmDialog = false;
     },
     async updatePassword() {
       if (this.arePasswordsEqual()) {
         this.updateNewUserInfo(undefined, this.newPassword);
-        this.showConfirmDialog = true;
+        if (this.userid === this.user.id) {
+          this.showConfirmDialog = true;
+        } else {
+          this.updateUserInfo();
+        }
       } else {
         this.setSnack('Passwords are not equal!');
         this.triggerSnack();
@@ -143,15 +172,19 @@ export default {
     async updateEmail() {
       if (!isEqual(this.newEmail, '')) {
         this.updateNewUserInfo(this.newEmail, undefined);
-        this.showConfirmDialog = true;
+        if (this.userid === this.user.id) {
+          this.showConfirmDialog = true;
+        } else {
+          this.updateUserInfo();
+        }
       } else {
         this.setSnack('Same e-mail address not allowed.');
         this.triggerSnack();
       }
     },
     updateNewUserInfo(email, newPassword) {
-      this.newUserInformation.email = email || this.user.email;
-      this.newUserInformation.isAdmin = this.user.isAdmin;
+      this.newUserInformation.email = email || this.currentUser.email;
+      this.newUserInformation.isAdmin = this.currentUser.isAdmin;
       this.newUserInformation.newPassword = newPassword || '';
     },
     clearFields() {
@@ -161,15 +194,25 @@ export default {
       this.newEmail = '';
     },
   },
+  async created() {
+    await this.fetchUserList();
+    this.currentUser = await this.getUserById(this.userid);
+  },
 };
 </script>
 
 <style scoped>
-  .input-heading{
+  .input-heading {
     font-size: xx-large;
   }
-  .input-size{
+
+  .input-size {
   }
-  .save-button{
+
+  .save-button {
+  }
+
+  .toolbar {
+    background: var(--themeColor);
   }
 </style>

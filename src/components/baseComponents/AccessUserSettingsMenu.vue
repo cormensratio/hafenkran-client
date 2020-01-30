@@ -11,7 +11,7 @@
           <v-list-tile>
             <div class="list-title">{{user.name}}</div>
           </v-list-tile>
-          <v-list-tile @click="navigateToSettings" class="option">
+          <v-list-tile @click="navigateToSettings(user.id)" class="option">
             <v-icon class="mr-1">account_circle</v-icon>
             User settings
           </v-list-tile>
@@ -41,10 +41,10 @@ export default {
         this.$router.push('/');
       });
     },
-    navigateToSettings() {
+    navigateToSettings(userid) {
       if (this.isAuthenticated) {
         if (!isEqual(this.$route.fullPath, '/settings')) {
-          this.$router.push('/settings');
+          this.$router.push(`/users/${userid}`);
         }
       } else {
         this.$router.push('/login');

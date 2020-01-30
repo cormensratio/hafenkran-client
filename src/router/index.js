@@ -82,9 +82,10 @@ const router = new Router({
       },
     },
     {
-      path: '/settings',
+      path: '/users/:userid',
       name: 'UserSettings',
       component: UserSettingsPage,
+      props: true,
       meta: {
         requiresAuth: false,
       },
