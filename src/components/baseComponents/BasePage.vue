@@ -6,7 +6,10 @@
     </div>
     <v-snackbar v-model="snackShow" :color="color" :timeout="0" right>
       {{ snack }}
-      <v-btn flat color="info" @click=showSnack(false)>Close</v-btn>
+      <v-btn v-if="color === 'green' || color === 'error'"
+             flat color="white" @click=showSnack(false)>Close
+      </v-btn>
+      <v-btn v-else flat color="info" @click=showSnack(false)>Close</v-btn>
     </v-snackbar>
     <Footer class="hafen-footer"></Footer>
   </div>
