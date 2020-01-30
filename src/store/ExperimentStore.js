@@ -63,7 +63,7 @@ const ExperimentStore = {
     async deleteExperiment(state, { experimentId }) {
       if (!isNil(experimentId)) {
         const response = await ApiService.doPost(
-          `${serviceUrl}/experiments/`,
+          `${serviceUrl}/experiments/${experimentId}/delete`,
         );
 
         if (!isNil(response)) {
