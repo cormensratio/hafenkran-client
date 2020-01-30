@@ -46,6 +46,9 @@
                         </template>
                         <span>Share Experiment</span>
                       </v-tooltip>
+                      <div v-else color="transparent"
+                           style="width: 24px" class="mr-1">
+                      </div>
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                           <v-icon @click="setExperiment(props.item)"
