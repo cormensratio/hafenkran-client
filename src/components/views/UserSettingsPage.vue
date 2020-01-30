@@ -100,6 +100,7 @@ export default {
       showPassword: false,
       showConfirmDialog: false,
       newUserInformation: {
+        id: this.userid,
         newPassword: '',
         email: '',
         isAdmin: false,

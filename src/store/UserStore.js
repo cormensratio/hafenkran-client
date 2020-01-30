@@ -104,17 +104,19 @@ const UserStore = {
       }
       return null;
     },
-    async updateUser({ commit, state }, { email, password, newPassword, isAdmin }) {
+    async updateUser({ commit, state }, { id, email, password, newPassword, isAdmin }) {
       const newUserInformation = {
-        id: state.user.id,
+        id,
         password,
         email,
         newPassword,
         isAdmin,
       };
-      const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update`, newUserInformation);
+      const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update/${id}`, newUserInformation);
       if (!isNil(updatedUser)) {
-        commit('updateUser', updatedUser);
+        if (updatedUser.id === state.user.id) {
+          commit('updateUser', updatedUser);
+        }
         console.log('Successfully updated user information.');
         return updatedUser;
       }
@@ -136,7 +138,7 @@ const UserStore = {
       commit('updateUser', emptyStore.user);
     },
     async acceptUser({ dispatch }, user) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
+      const response = await ApiService.doPost(`${serviceUrl}/users/update/${user.id}`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
