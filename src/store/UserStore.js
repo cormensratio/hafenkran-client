@@ -97,7 +97,7 @@ const UserStore = {
         newPassword,
         isAdmin,
       };
-      const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/update/${id}`, newUserInformation);
+      const updatedUser = await ApiService.doPost(`${process.env.USER_SERVICE_URL}/users/${id}/update`, newUserInformation);
       if (!isNil(updatedUser)) {
         if (updatedUser.id === state.user.id) {
           commit('updateUser', updatedUser);
@@ -123,7 +123,7 @@ const UserStore = {
       commit('updateUser', emptyStore.user);
     },
     async acceptUser({ dispatch }, user) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/update/${user.id}`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
+      const response = await ApiService.doPost(`${serviceUrl}/users/${user.id}/update`, { id: user.id, password: 'a', newPassword: '', email: '', status: 'ACTIVE', isAdmin: '' });
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
@@ -131,7 +131,7 @@ const UserStore = {
       return null;
     },
     async deleteUser({ dispatch }, id) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${id}`);
+      const response = await ApiService.doPost(`${serviceUrl}/users/${id}/delete`);
       console.log(response);
       if (!isNil(response)) {
         dispatch('fetchUserList');
@@ -140,7 +140,7 @@ const UserStore = {
       return null;
     },
     async denyUser({ dispatch }, user) {
-      const response = await ApiService.doPost(`${serviceUrl}/users/delete/${user.id}`);
+      const response = await ApiService.doPost(`${serviceUrl}/users/${user.id}/delete`);
       if (!isNil(response)) {
         dispatch('fetchUserList');
         return response;
