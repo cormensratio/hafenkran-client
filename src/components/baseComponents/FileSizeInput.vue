@@ -4,6 +4,7 @@
                   :label="label"
                   :rules="rules"
                   v-model="selectedValue"
+                  @input="emitInput"
     >
       <template slot="prepend-inner">
         <slot name="prepend-inner"></slot>
@@ -46,7 +47,7 @@ export default {
       showMenu: false,
       menuPosX: 0,
       menuPosY: 0,
-      units: ['B', 'KB', 'MB', 'GB'],
+      units: ['MB', 'GB'],
     };
   },
   methods: {
@@ -65,9 +66,6 @@ export default {
       let outPut = this.selectedValue;
 
       switch (this.selectedUnit) {
-        case 'KB':
-          outPut *= 1024;
-          break;
         case 'MB':
           outPut *= 1024 * 1024;
           break;
