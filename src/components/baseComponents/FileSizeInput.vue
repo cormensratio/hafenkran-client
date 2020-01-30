@@ -2,6 +2,7 @@
   <div>
     <v-text-field outline type="number"
                   :label="label"
+                  :min="1"
                   :rules="rules"
                   v-model="selectedValue"
                   @input="emitInput"

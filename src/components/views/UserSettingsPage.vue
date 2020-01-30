@@ -129,7 +129,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'setColor']),
     ...mapActions(['updateUser', 'triggerSnack', 'getUserById', 'fetchUserList']),
     arePasswordsEqual() {
       return isEqual(this.newPassword, this.confirmNewPassword);
@@ -142,10 +142,12 @@ export default {
 
         if (!isNil(updatedUser)) {
           this.clearFields();
+          this.setColor('green');
           this.setSnack('Successfully updated user information');
         } else {
           this.password = '';
-          this.setSnack('Failed to update user information!');
+          this.setSnack('Incorrect password!!');
+          this.setColor('error');
         }
         this.triggerSnack();
       }
@@ -153,20 +155,25 @@ export default {
       this.showConfirmDialog = false;
     },
     async updatePassword() {
-      if (this.arePasswordsEqual()) {
-        this.updateNewUserInfo(undefined, this.newPassword);
-        if (this.userid === this.user.id || this.currentUser.isAdmin) {
-          this.showConfirmDialog = true;
+      if (this.newPassword.length > 7 && this.confirmNewPassword.length > 7) {
+        if (this.arePasswordsEqual()) {
+          this.updateNewUserInfo(undefined, this.newPassword);
+          if (this.userid === this.user.id || this.currentUser.isAdmin) {
+            this.showConfirmDialog = true;
+          } else {
+            this.updateUserInfo();
+          }
         } else {
-          this.updateUserInfo();
+          this.setSnack('Passwords do not match!');
+          this.triggerSnack();
         }
       } else {
-        this.setSnack('Passwords are not equal!');
+        this.setSnack('Passwords need to contain at least 8 characters!');
         this.triggerSnack();
       }
     },
     async updateEmail() {
-      if (!isEqual(this.newEmail, '')) {
+      if ((this.rules.emailRegex.test(this.newEmail))) {
         this.updateNewUserInfo(this.newEmail, undefined);
         if (this.userid === this.user.id || this.currentUser.isAdmin) {
           this.showConfirmDialog = true;
@@ -174,8 +181,9 @@ export default {
           this.updateUserInfo();
         }
       } else {
-        this.setSnack('Same e-mail address not allowed.');
+        this.setSnack('Please enter a valid email! E.g. email@example.com');
         this.triggerSnack();
+        this.newEmail = '';
       }
     },
     updateNewUserInfo(email, newPassword) {
@@ -201,13 +209,6 @@ export default {
   .input-heading {
     font-size: xx-large;
   }
-
-  .input-size {
-  }
-
-  .save-button {
-  }
-
   .toolbar {
     background: var(--themeColor);
   }

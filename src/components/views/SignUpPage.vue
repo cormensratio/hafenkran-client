@@ -79,7 +79,7 @@
   </base-page>
 </template>
 <script>
-import { isNil, isEqual } from 'lodash';
+import { isNil, isEmpty, isEqual } from 'lodash';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 import Header from '../baseComponents/Header';
@@ -104,23 +104,27 @@ export default {
   },
   methods: {
     ...mapActions(['triggerSnack', 'registerUser']),
-    ...mapMutations(['setSnack']),
-    arePasswordsEqual() {
-      return isEqual(this.password, this.confirmPassword);
-    },
+    ...mapMutations(['setSnack', 'setColor']),
     async register() {
-      if (isNil(this.userName) && isNil(this.userEmail) && isNil(this.password)
-        && isNil(this.confirmPassword)) {
-        this.setSnack('Please fill out all text fields!');
+      if (isEmpty(this.userName.trim()) || isEmpty(this.userEmail) || isEmpty(this.password)
+        || isEmpty(this.confirmPassword)) {
+        this.setSnack('Please fill in all fields!');
+        this.triggerSnack();
+        return;
+      } else if (this.password.length < 8 && this.confirmPassword.length < 8) {
+        this.setSnack('Passwords must contain at least 8 Characters');
+        this.triggerSnack();
+        return;
+      } else if (!isEqual(this.password, this.confirmPassword)) {
+        this.setSnack('Passwords do not match!');
+        this.triggerSnack();
+        return;
+      } else if (!this.rules.emailRegex.test(this.userEmail)) {
+        this.setSnack('Please enter a valid email! E.g. email@example.com');
         this.triggerSnack();
         return;
       }
 
-      if (!this.arePasswordsEqual()) {
-        this.setSnack('Passwords are not equal!');
-        this.triggerSnack();
-        return;
-      }
 
       const response = await this.registerUser({
         username: this.userName,
@@ -130,10 +134,9 @@ export default {
       });
 
       if (!isNil(response)) {
-        this.setSnack('Signup successful. Please wait until the admin accepts your request.');
+        this.setSnack('Signup successful. Please wait until an admin activates your account.');
+        this.setColor('green');
         this.$router.push('/login');
-      } else {
-        this.setSnack('Signup failed');
       }
       this.triggerSnack();
     },

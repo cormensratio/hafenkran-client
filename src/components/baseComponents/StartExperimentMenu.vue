@@ -37,7 +37,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
-                          min="1"
+                          min="0"
                           @change="checkMinutes"
             >
             </v-text-field>
@@ -54,7 +54,6 @@
                           :initialValue="ram"
                           :initialUnit="'GB'"
                           :rules="[rules.required, rules.positiveNumbers]"
-                          min="1"
                           class="resource-input mr-1"
             >
             </file-size-input>
@@ -136,7 +135,7 @@ export default {
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     closeMenu() {
       this.$emit('menuClosed');
     },
@@ -145,7 +144,8 @@ export default {
     },
     async startExperiment() {
       this.loading = true;
-      if (!isNil(this.experimentId)) {
+      if (!isNil(this.experimentId)
+        && this.checkInputs(this.bookedTime, this.bookedCpu, this.ram)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
           ram: this.bookedRam,
@@ -154,19 +154,21 @@ export default {
         });
         this.loading = false;
         if (!isNil(startedExecution)) {
-          this.setSnack('Experiment started successfully');
           this.previousRam = startedExecution.ram;
           this.previousCpu = startedExecution.cpu;
           this.previousMinutes = this.bookedMinutes;
           this.previousHours = this.bookedHours;
           this.setSnack('Execution started successfully');
+          this.setColor('green');
           this.$router.push('/executionlist');
           this.closeMenu();
         } else {
-          this.setSnack('Experiment could not be started');
+          this.setSnack('Execution could not be started');
+          this.setColor('error');
         }
-        this.triggerSnack();
       }
+      this.loading = false;
+      this.triggerSnack();
     },
     checkMinutes() {
       if (this.bookedMinutes >= 60) {
@@ -180,6 +182,15 @@ export default {
       if (!isNil(this.experiment)) {
         this.experimentId = this.experiment.id;
       }
+    },
+    checkInputs(time, cpu, ram) {
+      if (this.rules.positiveNumbers(time)
+        && this.rules.positiveNumbers(cpu) && this.rules.positiveNumbers(ram)) {
+        return true;
+      }
+      this.setSnack('You need to provide RAM, CPU and Time');
+      this.setColor('error');
+      return false;
     },
   },
   updated() {
