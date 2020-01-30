@@ -77,6 +77,7 @@ export default {
                 this.setSnack('Login successful');
                 this.setColor('green');
                 this.$router.push('/experimentlist');
+                this.triggerSnack();
               } else if (this.snack.includes('Error')) {
                 this.setSnack('This user does not exist!');
                 this.setColor('error');
@@ -89,8 +90,8 @@ export default {
       } else {
         this.setSnack('Please enter a username and password!');
         this.setColor('error');
+        this.triggerSnack();
       }
-      this.triggerSnack();
       this.loading = false;
     },
   },

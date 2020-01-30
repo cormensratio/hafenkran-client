@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     ...mapActions(['triggerSnack', 'registerUser']),
-    ...mapMutations(['setSnack']),
+    ...mapMutations(['setSnack', 'setColor']),
     async register() {
       if (isEmpty(this.userName.trim()) || isEmpty(this.userEmail) || isEmpty(this.password)
         || isEmpty(this.confirmPassword)) {
@@ -135,6 +135,7 @@ export default {
 
       if (!isNil(response)) {
         this.setSnack('Signup successful. Please wait until an admin activates your account.');
+        this.setColor('green');
         this.$router.push('/login');
       }
       this.triggerSnack();

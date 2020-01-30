@@ -114,11 +114,7 @@ export default {
         this.setSnack(`${this.fileName} was successfully uploaded`);
         this.setColor('green');
         this.$router.push('/experimentlist');
-      } else if (this.snack.includes('SQL')) {
-        this.setSnack(`You already have uploaded a Experiment with name: ${this.fileName}`);
-        this.setColor('error');
       }
-      console.log(this.snack);
       this.loading = false;
       this.triggerSnack();
     },

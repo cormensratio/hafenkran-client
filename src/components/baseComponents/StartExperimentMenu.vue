@@ -159,10 +159,12 @@ export default {
           this.previousMinutes = this.bookedMinutes;
           this.previousHours = this.bookedHours;
           this.setSnack('Execution started successfully');
+          this.setColor('green');
           this.$router.push('/executionlist');
           this.closeMenu();
         } else {
           this.setSnack('Execution could not be started');
+          this.setColor('error');
         }
       }
       this.loading = false;
