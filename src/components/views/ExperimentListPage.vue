@@ -67,6 +67,7 @@
                      :extern-execution="selectedExperiment.id"
                      :extern-dialog="deleteDialog"
                      :header-message="'Are you sure you want to delete this Experiment?'"
+                     :hint="deleteHint"
       />
       <v-dialog v-model="showMenu" width="400">
         <StartExperimentMenu :experiment="selectedExperiment"
@@ -117,6 +118,7 @@ export default {
       showMenu: false,
       showShareMenu: false,
       deleteDialog: false,
+      experimentDeleteMessage: '',
       headers: [
         { text: 'Dockerfile Name', value: 'name', sortable: true },
         { text: 'Owner', value: 'ownerId', sortable: true },
@@ -128,6 +130,12 @@ export default {
   },
   computed: {
     ...mapGetters(['experiments', 'user']),
+    deleteHint() {
+      if (this.selectedExperiment.ownerId === this.user.id) {
+        return 'It also will be deleted for users you shared the experiment with!';
+      }
+      return '';
+    },
   },
   methods: {
     ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),

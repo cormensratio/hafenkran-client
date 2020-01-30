@@ -8,6 +8,7 @@
           <h2>
             {{ headerMessage }}
           </h2>
+          <span class="text-muted m-auto">{{hint}}</span>
         </v-card-title>
         <v-card-actions class="justify-center">
           <v-btn class="error" @click="deleteClicked">
@@ -26,6 +27,7 @@ export default {
     id: {},
     externDialog: false,
     headerMessage: String,
+    hint: undefined,
   },
   data() {
     return {
@@ -36,6 +38,11 @@ export default {
   watch: {
     externDialog() {
       this.dialog = this.externDialog;
+    },
+    dialog() {
+      if (!this.dialog) {
+        this.hideDialog();
+      }
     },
   },
   methods: {
