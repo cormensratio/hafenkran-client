@@ -38,7 +38,7 @@
                         </template>
                         <span>Start Execution</span>
                       </v-tooltip>
-                      <v-tooltip bottom class="mr-1">
+                      <v-tooltip bottom class="mr-1" v-if="props.item.ownerId === user.id">
                         <template v-slot:activator="{ on }">
                           <v-icon @click="showShareDialog(props.item)"
                                   color="black" dark v-on="on">share

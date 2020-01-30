@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setSnack']),
-    ...mapActions(['triggerSnack', 'updatePermittedUsers']),
+    ...mapActions(['triggerSnack', 'updatePermittedUsers', 'fetchExperiments']),
     getItemText(item) {
       return item.name;
     },
@@ -110,9 +110,14 @@ export default {
       }
     },
     async updatePermissions(permittedUsers) {
-      return this.updatePermittedUsers(
+      const successful = await this.updatePermittedUsers(
         { experimentId: this.experiment.id, permittedUsers },
       );
+
+      if (successful) {
+        await this.fetchExperiments();
+      }
+      return successful;
     },
     async saveRemovedUsers() {
       const success = await this.updatePermissions(this.alreadyPermittedUsers);

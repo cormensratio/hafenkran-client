@@ -49,8 +49,10 @@ const ExperimentStore = {
       }
       return null;
     },
-    async updatePermittedUsers(state, { experimentId, permittedUsers }) {
+    async updatePermittedUsers({ getters }, { experimentId, permittedUsers }) {
       if (!isNil(experimentId) && !isNil(permittedUsers)) {
+        permittedUsers.push(getters.user.id);
+
         const response = await ApiService.doPost(
           `${serviceUrl}/experiments/${experimentId}/permittedUsers`, { permittedUsers },
         );
