@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     loginUser() {
       this.loading = true;
       if (!this.isAuthenticated) {
@@ -73,9 +73,11 @@ export default {
           .then((response) => {
             if (response) {
               this.setSnack('Login successful');
+              this.setColor('green');
               this.$router.push('/experimentlist');
             } else {
               this.setSnack('Login failed');
+              this.setColor('error');
               this.loading = false;
             }
             this.triggerSnack();
