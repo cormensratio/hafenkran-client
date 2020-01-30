@@ -37,7 +37,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
-                          min="1"
+                          min="0"
                           @change="checkMinutes"
             >
             </v-text-field>
@@ -54,7 +54,6 @@
                           :initialValue="ram"
                           :initialUnit="'GB'"
                           :rules="[rules.required, rules.positiveNumbers]"
-                          min="1"
                           class="resource-input mr-1"
             >
             </file-size-input>
