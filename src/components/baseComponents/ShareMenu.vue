@@ -64,7 +64,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { filter, some, isNil, map, isEqual } from 'lodash';
+import { filter, some, isNil, map } from 'lodash';
 import UsersMixin from '../../mixins/UsersMixin';
 
 export default {
@@ -124,6 +124,7 @@ export default {
 
       if (success) {
         this.permittedUserWasRemoved = false;
+        this.$emit('menuClosed');
         this.setSnack('Successfully removed permissions from selected users');
         this.triggerSnack();
       }
@@ -132,12 +133,15 @@ export default {
       this.alreadyPermittedUsers = filter(this.alreadyPermittedUsers, id => id !== userId);
       this.permittedUserWasRemoved = true;
     },
+    getAlreadyPermittedUsers() {
+      if (!isNil(this.experiment.permittedUsers)) {
+        this.alreadyPermittedUsers = filter(this.experiment.permittedUsers,
+          id => id !== this.user.id);
+      }
+    },
   },
   created() {
-    if (!isNil(this.experiment.permittedUsers)) {
-      this.alreadyPermittedUsers = filter(this.experiment.permittedUsers,
-        id => !isEqual(id, this.user.id));
-    }
+    this.getAlreadyPermittedUsers();
   },
 };
 </script>

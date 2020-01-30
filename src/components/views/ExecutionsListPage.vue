@@ -75,7 +75,7 @@
         </v-card>
         <delete-dialog @deleteClicked="executionDelete"
                        @hideDialog="deleteDialog = false"
-                       :extern-execution="selectedExecution.id"
+                       :id="selectedExecution.id"
                        :extern-dialog="deleteDialog"
                        :header-message="'Are you sure you want to delete this Execution?'"
         />

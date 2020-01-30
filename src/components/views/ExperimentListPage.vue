@@ -29,7 +29,7 @@
                     <td>
                       <file-size-cell :size="props.item.size"></file-size-cell>
                     </td>
-                    <td class="justify-center action-container">
+                    <td class="action-container">
                       <v-tooltip bottom class="mr-1">
                         <template v-slot:activator="{ on }">
                           <v-icon @click="showStartExperimentMenu(props.item)"
@@ -64,7 +64,7 @@
       </v-container>
       <delete-dialog @deleteClicked="experimentDelete"
                      @hideDialog="deleteDialog = false"
-                     :extern-execution="selectedExperiment.id"
+                     :id="selectedExperiment.id"
                      :extern-dialog="deleteDialog"
                      :header-message="'Are you sure you want to delete this Experiment?'"
                      :hint="deleteHint"
@@ -138,8 +138,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList']),
-    ...mapMutations(['showSnack']),
+    ...mapActions(['fetchExperiments', 'fetchExecutionsByExperimentId', 'triggerSnack', 'fetchUserList', 'deleteExperiment']),
+    ...mapMutations(['setSnack']),
     setExperiment(experiment) {
       this.deleteDialog = true;
       this.selectedExperiment = experiment;
@@ -147,8 +147,9 @@ export default {
     async experimentDelete(id) {
       if (!isNil(id)) {
         this.deleteDialog = false;
-        const deletedExperiment = await this.deleteExperiment(id);
-        if (deletedExperiment !== null) {
+        const deletedExperiment = await this.deleteExperiment({ experimentId: id });
+        if (!isNil(deletedExperiment)) {
+          this.fetchExperiments();
           this.setSnack(`${deletedExperiment.name} has been deleted`);
         } else {
           this.setSnack('Experiment could not be deleted');
