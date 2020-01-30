@@ -88,7 +88,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     ...mapActions(['triggerSnack']),
     getFile() {
       this.file = this.$refs.file.files[0];
@@ -116,6 +116,7 @@ export default {
         this.$router.push('/experimentlist');
       } else if (this.snack.includes('SQL')) {
         this.setSnack(`You already have uploaded a Experiment with name: ${this.fileName}`);
+        this.setColor('error');
       }
       console.log(this.snack);
       this.loading = false;
