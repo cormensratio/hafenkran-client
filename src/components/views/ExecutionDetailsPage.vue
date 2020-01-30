@@ -33,8 +33,11 @@
               </div>
               <div class="column text-lg-left">
                 <h3>Selected Options</h3>
-                <p>CPU Cores: {{execution.cpu}}</p>
-                <p>RAM: {{execution.ram}}MB</p>
+                <p>CPU Cores: {{execution.cpu}} MilliCore</p>
+                <div class="ram-info">
+                  RAM:
+                  <file-size-cell class="ml-1" :size="convertKibiBytesToBytes(execution.ram)"/>
+                </div>
                 <p>Max Runtime: {{msToTime(execution.bookedTime * 1000)}}</p>
               </div>
             </v-card-text>
@@ -155,11 +158,19 @@ import StatusCell from '../baseComponents/StatusCell';
 import ExecutionDetailService from '../../service/ExecutionDetailService';
 import ExecutionStatisticsPage from './ExecutionStatisticsPage';
 import DeleteDialog from '../baseComponents/DeleteDialog';
+import FileSizeCell from '../baseComponents/FileSizeCell';
 
 export default {
   name: 'ExecutionDetailsPage',
   mixins: [TimeStampMixin],
-  components: { DeleteDialog, ExecutionStatisticsPage, StatusCell, BasePage, StartExperimentMenu },
+  components: {
+    FileSizeCell,
+    DeleteDialog,
+    ExecutionStatisticsPage,
+    StatusCell,
+    BasePage,
+    StartExperimentMenu,
+  },
   data() {
     return {
       userInput: '',
@@ -354,6 +365,12 @@ export default {
           }
         });
     },
+    convertKibiBytesToBytes(value) {
+      if (!isNil(value) && !isNaN(value)) {
+        return value * 1000;
+      }
+      return 0;
+    },
   },
   watch: {
     executions() {
@@ -396,6 +413,11 @@ export default {
   .cell {
     margin-top: -8px;
     margin-left: 5px;
+  }
+
+  .ram-info {
+    display: flex;
+    margin-bottom: 16px;
   }
 
   .color-theme-blue {

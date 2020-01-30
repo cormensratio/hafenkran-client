@@ -113,11 +113,13 @@
                     <td class="text-left">
                       {{ props.item.email }}
                     </td>
-                    <td class="text-left pl-1">
-                      <div class="text-left">
+                    <td class="text-left p-0">
+                      <div style="width: 100%">
                         <v-tooltip bottom>
                           <template v-slot:activator="{ on }">
-                            <v-btn icon @click="selectUser($event, props.item)" v-on="on">
+                            <v-btn icon @click="selectUser($event, props.item)"
+                                   class="m-0"
+                                   v-on="on">
                               <v-icon>person</v-icon>
                             </v-btn>
                           </template>
@@ -127,7 +129,21 @@
                         </v-tooltip>
                         <v-tooltip bottom>
                           <template v-slot:activator="{ on }">
+                            <v-btn icon
+                                   @click="getToUserSettings(props.item.id)"
+                                   class="m-0"
+                                   v-on="on">
+                              <v-icon>edit</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>
+                            Edit userinfo
+                          </span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on }">
                             <v-btn icon @click="selectUserToDelete(props.item)"
+                                   class="m-0"
                                    v-on="on"
                                    v-if="props.item.id !== currentUser.id">
                               <v-icon>delete</v-icon>
@@ -182,7 +198,7 @@ export default {
       selectedUser: '',
       headers: [
         { text: 'Name', width: 400, sortable: true, value: 'name' },
-        { text: 'Email', width: 240, sortable: true, value: 'email' },
+        { text: 'Email', width: 260, sortable: true, value: 'email' },
         { text: 'Actions', sortable: false },
       ],
     };
@@ -202,6 +218,9 @@ export default {
       this.$nextTick(() => {
         this.showMenu = true;
       });
+    },
+    getToUserSettings(userid) {
+      this.$router.push(`/users/${userid}`);
     },
     closeMenu() {
       this.showMenu = false;
