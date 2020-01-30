@@ -153,7 +153,7 @@ export default {
         const deletedExperiment = await this.deleteExperiment({ experimentId: id });
         if (!isNil(deletedExperiment)) {
           this.fetchExperiments();
-          this.setSnack(`${deletedExperiment.name} has been deleted`);
+          this.setSnack('Experiment has been deleted');
         } else {
           this.setSnack('Experiment could not be deleted');
         }

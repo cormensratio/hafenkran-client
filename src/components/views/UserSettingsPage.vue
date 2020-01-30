@@ -126,7 +126,6 @@ export default {
   watch: {
     async userid() {
       this.currentUser = await this.getUserById(this.userid);
-      console.log(this.currentUser);
     },
   },
   methods: {
@@ -156,7 +155,7 @@ export default {
     async updatePassword() {
       if (this.arePasswordsEqual()) {
         this.updateNewUserInfo(undefined, this.newPassword);
-        if (this.userid === this.user.id) {
+        if (this.userid === this.user.id || this.currentUser.isAdmin) {
           this.showConfirmDialog = true;
         } else {
           this.updateUserInfo();
@@ -169,7 +168,7 @@ export default {
     async updateEmail() {
       if (!isEqual(this.newEmail, '')) {
         this.updateNewUserInfo(this.newEmail, undefined);
-        if (this.userid === this.user.id) {
+        if (this.userid === this.user.id || this.currentUser.isAdmin) {
           this.showConfirmDialog = true;
         } else {
           this.updateUserInfo();
