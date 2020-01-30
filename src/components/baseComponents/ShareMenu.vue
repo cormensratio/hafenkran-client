@@ -19,6 +19,7 @@
           </v-combobox>
           <v-btn style="background: var(--themeColor); color: white;"
                  @click="share"
+                 :disabled="this.selectedUsers.length === 0"
           >
             Share
           </v-btn>
@@ -43,7 +44,7 @@
                 {{ getUserNameFromId(user) }}
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn icon @click="removeUser(user)">
+                <v-btn icon @click="removeUserPermission(user)">
                   <v-icon color="red">close</v-icon>
                 </v-btn>
               </v-list-tile-action>
@@ -72,7 +73,7 @@ export default {
   data() {
     return {
       permittedUserWasRemoved: false,
-      selectedUsers: null,
+      selectedUsers: [],
       alreadyPermittedUsers: [],
     };
   },
@@ -86,7 +87,7 @@ export default {
      */
     usersToShare() {
       return filter(this.userList, user => user.id !== this.user.id
-          && !some(this.alreadyPermittedUsers, u => u.id === user.id));
+          && !some(this.alreadyPermittedUsers, id => id === user.id));
     },
   },
   methods: {
@@ -99,22 +100,22 @@ export default {
       this.selectedUsers = [];
     },
     async share() {
-      const success = await this.updatePermissions();
-      if (success) {
-        this.setSnack('Successfully shared experiment');
-        this.triggerSnack();
+      if (this.selectedUsers.length > 0) {
+        const success = await this.updatePermissions(map(this.selectedUsers, u => u.id));
+        if (success) {
+          this.setSnack('Successfully shared experiment');
+          this.triggerSnack();
+        }
+        this.$emit('menuClosed');
       }
-      this.$emit('menuClosed');
     },
-    async updatePermissions() {
-      let permittedUsers = this.alreadyPermittedUsers.concat(this.selectedUsers);
-      permittedUsers = map(permittedUsers, u => u.id);
+    async updatePermissions(permittedUsers) {
       return this.updatePermittedUsers(
         { experimentId: this.experiment.id, permittedUsers },
       );
     },
     async saveRemovedUsers() {
-      const success = await this.updatePermissions();
+      const success = await this.updatePermissions(this.alreadyPermittedUsers);
 
       if (success) {
         this.permittedUserWasRemoved = false;
@@ -122,8 +123,8 @@ export default {
         this.triggerSnack();
       }
     },
-    removeUser(user) {
-      this.alreadyPermittedUsers = filter(this.alreadyPermittedUsers, u => u.id !== user.id);
+    removeUserPermission(userId) {
+      this.alreadyPermittedUsers = filter(this.alreadyPermittedUsers, id => id !== userId);
       this.permittedUserWasRemoved = true;
     },
   },
