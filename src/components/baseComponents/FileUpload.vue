@@ -12,7 +12,7 @@
             <label>
               <v-icon class="uploadicon" size="150">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
-              <p style="color: #7f7f7f">Click or Drag and Drop to Upload your file!</p>
+              <p style="color: #7f7f7f">Click or Drag and Drop to upload your file!</p>
             </label>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default {
     },
     backgroundColor() {
       if (this.fileOver) {
-        return '#f5f5ff';
+        return '#d0defd';
       }
       return '#ffffff';
     },

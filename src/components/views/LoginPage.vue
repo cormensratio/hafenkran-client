@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     loginUser() {
       this.loading = true;
       if (!isEmpty(this.userName) && !isEmpty(this.password)) {
@@ -75,16 +75,20 @@ export default {
             .then((response) => {
               if (response) {
                 this.setSnack('Login successful');
+                this.setColor('green');
                 this.$router.push('/experimentlist');
               } else if (this.snack.includes('Error')) {
                 this.setSnack('This user does not exist!');
+                this.setColor('error');
               } else if (this.snack.includes('Unauthorized')) {
                 this.setSnack('Wrong username or password!');
+                this.setColor('error');
               }
             });
         }
       } else {
         this.setSnack('Please enter a username and password!');
+        this.setColor('error');
       }
       this.triggerSnack();
       this.loading = false;
