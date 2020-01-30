@@ -6,7 +6,7 @@
     </div>
     <v-snackbar v-model="snackShow" :color="color" :timeout="0" right>
       {{ snack }}
-      <v-btn flat color="accent" @click=showSnack(false)>Close</v-btn>
+      <v-btn flat color="info" @click=showSnack(false)>Close</v-btn>
     </v-snackbar>
     <Footer class="hafen-footer"></Footer>
   </div>
