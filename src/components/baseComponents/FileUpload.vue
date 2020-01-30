@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
@@ -73,6 +73,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['snack']),
     borderWidth() {
       if (this.fileOver) {
         return '5px';
@@ -111,10 +112,12 @@ export default {
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
         this.setSnack(`${this.fileName} was successfully uploaded`);
+        this.setColor('green');
         this.$router.push('/experimentlist');
-      } else {
-        this.setSnack('Experiment could not be uploaded');
+      } else if (this.snack.includes('SQL')) {
+        this.setSnack(`You already have uploaded a Experiment with name: ${this.fileName}`);
       }
+      console.log(this.snack);
       this.loading = false;
       this.triggerSnack();
     },
