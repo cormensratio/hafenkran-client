@@ -100,8 +100,11 @@ export default {
       this.selectedUsers = [];
     },
     async share() {
+      let permittedUsers = this.alreadyPermittedUsers;
       if (this.selectedUsers.length > 0) {
-        const success = await this.updatePermissions(map(this.selectedUsers, u => u.id));
+        permittedUsers = permittedUsers.concat(map(this.selectedUsers, u => u.id));
+
+        const success = await this.updatePermissions(permittedUsers);
         if (success) {
           this.setSnack('Successfully shared experiment');
           this.triggerSnack();
