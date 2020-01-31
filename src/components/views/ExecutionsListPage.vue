@@ -20,7 +20,7 @@
               <tr>
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left" v-if="user.isAdmin">
-                  {{ getUserNameOfExecution(props.item.ownerId) }}
+                  {{ getUserNameFromId(props.item.ownerId) }}
                 </td>
                 <td class="text-xs-left">
                   {{ getTimeStamp(props.item.createdAt) || 'Not started yet' }}
@@ -31,28 +31,53 @@
                 <td class="text-xs-left">
                   <status-cell :status="props.item.status"></status-cell>
                 </td>
-                <td class="text-xs-left">
-                  <v-btn @click="navigateToDetails(props.item.id)">Details</v-btn>
-                  <v-btn v-if="!hasTerminated(props.item.status)"
-                         @click="executionCancel(props.item.id)">Cancel</v-btn>
-                  <v-btn v-else @click="showContextMenu($event, props.item.experimentId)">
-                  Repeat
-                  </v-btn>
-                  <v-btn class="error"
-                         @click="setExecution(props.item)"
-                         :disabled="!hasTerminated(props.item.status)"
-                  >
-                    Delete
-                  </v-btn>
+                <td class="justify-center action-column">
+                  <div class="action-container">
+                    <v-tooltip bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="navigateToDetails(props.item.id)"
+                                color="black" dark v-on="on">info
+                        </v-icon>
+                      </template>
+                      <span>Execution Details</span>
+                    </v-tooltip>
+                    <v-tooltip v-if="!hasTerminated(props.item.status)"
+                               bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="executionCancel(props.item.id)"
+                                color="black" dark v-on="on">cancel
+                        </v-icon>
+                      </template>
+                      <span>Cancel Execution</span>
+                    </v-tooltip>
+                    <v-tooltip v-else class="mr-1" bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="showContextMenu($event, props.item.experimentId)"
+                                color="black" dark v-on="on">replay
+                        </v-icon>
+                      </template>
+                      <span>Repeat Execution</span>
+                    </v-tooltip>
+                    <v-tooltip bottom class="mr-1">
+                      <template v-slot:activator="{ on }">
+                        <v-icon @click="setExecution(props.item)"
+                                :disabled="!hasTerminated(props.item.status)"
+                                color="red" dark v-on="on">delete
+                        </v-icon>
+                      </template>
+                      <span>Delete Execution</span>
+                    </v-tooltip>
+                  </div>
                 </td>
               </tr>
             </template>
           </v-data-table>
         </v-card>
         <delete-dialog @deleteClicked="executionDelete"
-                       @hideDialog="dialog = false"
-                       :extern-execution="selectedExecution"
-                       :extern-dialog="dialog"
+                       @hideDialog="deleteDialog = false"
+                       :id="selectedExecution.id"
+                       :extern-dialog="deleteDialog"
+                       :header-message="'Are you sure you want to delete this Execution?'"
         />
         <v-progress-circular
           size="50"
@@ -77,7 +102,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { isNil, isEqual, filter, find } from 'lodash';
+import { isNil, isEqual, find } from 'lodash';
 import BasePage from '../baseComponents/BasePage';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import StatusCell from '../baseComponents/StatusCell';
@@ -86,6 +111,7 @@ import BaseListHeader from '../baseComponents/BaseListHeader';
 import ExecutionFilters from '../baseComponents/Filter/ExecutionFilters';
 import FilterMixin from '../../mixins/FilterMixin';
 import DeleteDialog from '../baseComponents/DeleteDialog';
+import UsersMixin from '../../mixins/UsersMixin';
 
 
 export default {
@@ -96,7 +122,7 @@ export default {
     StatusCell,
     BasePage,
     StartExperimentMenu },
-  mixins: [TimeStampMixin, FilterMixin],
+  mixins: [TimeStampMixin, FilterMixin, UsersMixin],
   data() {
     return {
       search: '',
@@ -105,19 +131,20 @@ export default {
       menuPosX: 0,
       menuPosY: 0,
       loading: false,
-      dialog: false,
+      deleteDialog: false,
       selectedExecution: {},
       headers: [
         { text: 'Experiment', sortable: true, value: 'name' },
+        { text: 'Owner', value: 'ownerId', sortable: false },
         { text: 'Started at', sortable: true, value: 'createdAt' },
         { text: 'Terminated at', sortable: true, value: 'terminatedAt' },
         { text: 'Status', sortable: true, value: 'status' },
-        { text: 'Actions', sortable: false },
+        { text: 'Actions', sortable: false, align: 'center', width: '10%' },
       ],
     };
   },
   computed: {
-    ...mapGetters(['executions', 'user', 'userList', 'experiments']),
+    ...mapGetters(['executions', 'user', 'experiments']),
   },
   methods: {
     ...mapActions(['fetchAllExecutionsOfUser', 'cancelExecution', 'deleteExecution', 'fetchUserList', 'triggerSnack']),
@@ -126,7 +153,7 @@ export default {
       this.$router.push(`/execution/${id}`);
     },
     setExecution(item) {
-      this.dialog = !this.dialog;
+      this.deleteDialog = !this.deleteDialog;
       this.selectedExecution = item;
     },
     async executionCancel(id) {
@@ -141,7 +168,7 @@ export default {
       this.triggerSnack();
     },
     async executionDelete(id) {
-      this.dialog = false;
+      this.deleteDialog = false;
       this.loading = true;
       const deletedExecution = await this.deleteExecution(id);
       if (deletedExecution !== null) {
@@ -189,16 +216,6 @@ export default {
     quickSearch(input) {
       this.search = input;
     },
-    getUserNameOfExecution(ownerId) {
-      if (!isNil(ownerId)) {
-        const matching = filter(this.userList, user => user.id === ownerId);
-
-        if (!isNil(matching) && matching.length > 0) {
-          return matching[0].name;
-        }
-      }
-      return '';
-    },
   },
   watch: {
     executions() {
@@ -206,21 +223,18 @@ export default {
     },
   },
   async created() {
-    await this.fetchAllExecutionsOfUser();
     await this.fetchUserList();
+    await this.fetchAllExecutionsOfUser();
     this.$nextTick(() => {
       this.items = this.executions;
     });
-    if (this.user.isAdmin) {
-      this.headers.splice(-4, 0, {
-        text: 'Owner',
-        value: 'name',
-        sortable: true });
-    }
   },
 };
 </script>
 
 <style scoped>
-
+  .action-container {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>

@@ -12,7 +12,7 @@
             <label>
               <v-icon class="uploadicon" size="150">file_upload</v-icon>
               <input type="file" ref="file" id="file" style="display:none" @change="getFile"/>
-              <p style="color: #7f7f7f">Click or Drag and Drop to Upload your file!</p>
+              <p style="color: #7f7f7f">Click or Drag and Drop to upload your file!</p>
             </label>
           </div>
         </div>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import BasePage from './BasePage';
 import UploadService from '../../service/UploadService';
 
@@ -73,6 +73,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['snack']),
     borderWidth() {
       if (this.fileOver) {
         return '5px';
@@ -81,13 +82,13 @@ export default {
     },
     backgroundColor() {
       if (this.fileOver) {
-        return '#f5f5ff';
+        return '#d0defd';
       }
       return '#ffffff';
     },
   },
   methods: {
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     ...mapActions(['triggerSnack']),
     getFile() {
       this.file = this.$refs.file.files[0];
@@ -111,9 +112,8 @@ export default {
       const uploadSucceeded = await UploadService.uploadFile(this.file, this.fileName);
       if (uploadSucceeded) {
         this.setSnack(`${this.fileName} was successfully uploaded`);
+        this.setColor('green');
         this.$router.push('/experimentlist');
-      } else {
-        this.setSnack('Experiment could not be uploaded');
       }
       this.loading = false;
       this.triggerSnack();

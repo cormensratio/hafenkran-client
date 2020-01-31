@@ -1,7 +1,7 @@
 <template>
   <v-card class="p-3">
     <v-card-text class="details-container">
-      <v-icon @click="closeMenu" class="float-right mb-4">close</v-icon>
+      <v-icon @click="closeMenu" class="float-right">close</v-icon>
       <v-layout column>
         <v-flex class="text-left">
           <div class="mt-2 mb-3 h3">Experiment: {{ experiment.name }}</div>
@@ -9,7 +9,8 @@
           <div class="mt-2"><file-size-cell :size="experiment.size"></file-size-cell></div>
           <div v-if="previousRam > 0" class="mt-2">
             <b>Previously run for: </b>{{ previousHours }} Hours {{ previousMinutes }} Minutes
-            <b>with</b> {{ previousRam }} Ram and {{ previousCpu }} Cpu</div>
+            <b>with</b> <file-size-cell>{{ previousRam }}</file-size-cell>
+            Ram and {{ previousCpu }} Cpu</div>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -24,7 +25,7 @@
             <v-text-field label="Hours"
                           type="number"
                           outline
-                          class="time-input"
+                          class="time-input mr-1"
                           v-model="bookedHours"
                           min="0"
             >
@@ -36,7 +37,7 @@
                           outline
                           class="time-input"
                           v-model="bookedMinutes"
-                          min="1"
+                          min="0"
                           @change="checkMinutes"
             >
             </v-text-field>
@@ -47,14 +48,15 @@
         </div>
         <v-layout>
           <v-flex>
-            <v-text-field label="RAM"
-                          v-model="ram"
+            <file-size-input label="RAM"
+                          @input="ramChanged($event)"
                           outline type="number"
+                          :initialValue="ram"
+                          :initialUnit="'GB'"
                           :rules="[rules.required, rules.positiveNumbers]"
-                          min="1"
-                          class="resource-input"
+                          class="resource-input mr-1"
             >
-            </v-text-field>
+            </file-size-input>
           </v-flex>
           <v-flex>
             <v-text-field label="CPU Cores"
@@ -90,10 +92,11 @@ import { mapActions, mapMutations, mapGetters } from 'vuex';
 import TimeStampMixin from '../../mixins/TimeStamp';
 import RulesMixin from '../../mixins/Rules';
 import FileSizeCell from './FileSizeCell';
+import FileSizeInput from './FileSizeInput';
 
 export default {
   name: 'StartExperimentMenu',
-  components: { FileSizeCell },
+  components: { FileSizeInput, FileSizeCell },
   mixins: [TimeStampMixin, RulesMixin],
   data() {
     return {
@@ -115,37 +118,57 @@ export default {
     bookedTime() {
       return (this.bookedMinutes * 60) + (this.bookedHours * 60 * 60);
     },
+    /**
+     * Returns booked RAM in KiB
+     * @returns {number}
+     */
+    bookedRam() {
+      return Math.round(this.ram / 1000);
+    },
+    /**
+     * Converts booked cpu to unit MilliCore
+     * @returns {number}
+     */
+    bookedCpu() {
+      return this.cpu * 1000;
+    },
   },
   methods: {
     ...mapActions(['runExecution', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     closeMenu() {
       this.$emit('menuClosed');
     },
+    ramChanged(value) {
+      this.ram = value;
+    },
     async startExperiment() {
       this.loading = true;
-      if (!isNil(this.experimentId)) {
+      if (!isNil(this.experimentId)
+        && this.checkInputs(this.bookedTime, this.bookedCpu, this.ram)) {
         const startedExecution = await this.runExecution({
           experimentId: this.experimentId,
-          ram: this.ram,
-          cpu: this.cpu,
+          ram: this.bookedRam,
+          cpu: this.bookedCpu,
           bookedTime: this.bookedTime,
         });
         this.loading = false;
         if (!isNil(startedExecution)) {
-          this.setSnack('Experiment started successfully');
           this.previousRam = startedExecution.ram;
           this.previousCpu = startedExecution.cpu;
           this.previousMinutes = this.bookedMinutes;
           this.previousHours = this.bookedHours;
           this.setSnack('Execution started successfully');
+          this.setColor('green');
           this.$router.push('/executionlist');
           this.closeMenu();
         } else {
-          this.setSnack('Experiment could not be started');
+          this.setSnack('Execution could not be started');
+          this.setColor('error');
         }
-        this.triggerSnack();
       }
+      this.loading = false;
+      this.triggerSnack();
     },
     checkMinutes() {
       if (this.bookedMinutes >= 60) {
@@ -159,6 +182,15 @@ export default {
       if (!isNil(this.experiment)) {
         this.experimentId = this.experiment.id;
       }
+    },
+    checkInputs(time, cpu, ram) {
+      if (this.rules.positiveNumbers(time)
+        && this.rules.positiveNumbers(cpu) && this.rules.positiveNumbers(ram)) {
+        return true;
+      }
+      this.setSnack('You need to provide RAM, CPU and Time');
+      this.setColor('error');
+      return false;
     },
   },
   updated() {

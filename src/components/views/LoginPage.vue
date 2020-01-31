@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import BasePage from '../baseComponents/BasePage';
 
@@ -61,26 +62,37 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'isAuthenticated']),
+    ...mapGetters(['user', 'isAuthenticated', 'snack']),
   },
   methods: {
     ...mapActions(['login', 'triggerSnack']),
-    ...mapMutations(['setSnack', 'showSnack']),
+    ...mapMutations(['setSnack', 'showSnack', 'setColor']),
     loginUser() {
       this.loading = true;
-      if (!this.isAuthenticated) {
-        this.login({ name: this.userName, password: this.password })
-          .then((response) => {
-            if (response) {
-              this.setSnack('Login successful');
-              this.$router.push('/experimentlist');
-            } else {
-              this.setSnack('Login failed');
-              this.loading = false;
-            }
-            this.triggerSnack();
-          });
+      if (!isEmpty(this.userName) && !isEmpty(this.password)) {
+        if (!this.isAuthenticated) {
+          this.login({ name: this.userName, password: this.password })
+            .then((response) => {
+              if (response) {
+                this.setSnack('Login successful');
+                this.setColor('green');
+                this.$router.push('/experimentlist');
+                this.triggerSnack();
+              } else if (this.snack.includes('Error')) {
+                this.setSnack('This user does not exist!');
+                this.setColor('error');
+              } else if (this.snack.includes('Unauthorized')) {
+                this.setSnack('Wrong username or password!');
+                this.setColor('error');
+              }
+            });
+        }
+      } else {
+        this.setSnack('Please enter a username and password!');
+        this.setColor('error');
+        this.triggerSnack();
       }
+      this.loading = false;
     },
   },
 };

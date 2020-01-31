@@ -5,7 +5,6 @@
                   :value="selectedRangeText"
                   outline
                   readonly
-                  class="filter-text-box"
     >
       <template slot="append">
         <v-icon @click.stop="display = true">event</v-icon>
@@ -297,10 +296,6 @@ export default {
 </script>
 
 <style scoped>
-  .filter-text-box {
-    min-width: 25vh;
-    width: 30vh;
-  }
   .dialog-title {
     font-size: 14pt;
   }

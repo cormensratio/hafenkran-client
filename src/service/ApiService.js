@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { isNil, forOwn } from 'lodash';
 import AuthService, { jwtToken } from './AuthService';
+import store from '../store/store';
 
 export default class ApiService {
   static async doGet(url, config) {
@@ -15,7 +16,10 @@ export default class ApiService {
       return resp.data;
     })
       .catch((error) => {
-        console.log(`Response to ${url} failed: `, error);
+        // console.log(`Response to ${url} failed: `, error);
+        store.commit('setSnack', error.response.data.message);
+        store.commit('setColor', 'error');
+        store.dispatch('triggerSnack');
       });
   }
 
@@ -28,7 +32,10 @@ export default class ApiService {
       return resp.data;
     })
       .catch((error) => {
-        console.log(`Response to ${url} failed: `, error);
+        // console.log(`Response to ${url} failed: `, error);
+        store.commit('setSnack', error.response.data.message);
+        store.commit('setColor', 'error');
+        store.dispatch('triggerSnack');
       });
   }
 
@@ -45,7 +52,10 @@ export default class ApiService {
       return resp.data;
     })
       .catch((error) => {
-        console.log(`Response to ${url} failed: `, error);
+        // console.log(`Response to ${url} failed: `, error);
+        store.commit('setSnack', error.response.data.message);
+        store.commit('setColor', 'error');
+        store.dispatch('triggerSnack');
       });
   }
 
